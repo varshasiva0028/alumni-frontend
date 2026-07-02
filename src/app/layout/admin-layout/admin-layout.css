@@ -1,0 +1,13 @@
+.dashboard-wrapper{
+
+    min-height:95vh;
+
+    background:#ffffff;
+
+    border-radius:55px;
+
+    padding:35px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}

@@ -1,0 +1,169 @@
+                                                                       <div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="row align-items-center mb-4">
+    <div class="col-lg-7 mb-3 mb-lg-0">
+      <div class="d-flex align-items-center gap-3">
+        <div class="p-3 bg-primary-subtle text-primary rounded-4 fs-4 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+          <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <div>
+          <h2 class="fw-bold mb-1 text-dark">Alumni Directory</h2>
+          <p class="text-secondary mb-0">Discover and connect with our alumni network</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="input-group shadow-sm border rounded-4 overflow-hidden bg-white px-2 py-1">
+        <span class="input-group-text bg-transparent border-0 text-muted">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control border-0 shadow-none"
+          placeholder="Search by name, batch, occupation..."
+          [(ngModel)]="searchText">
+        <button *ngIf="searchText" class="btn btn-link text-muted border-0 p-0 pe-2" (click)="searchText = ''">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Section -->
+  <div class="row g-4 mb-4">
+    <!-- Total Alumni -->
+    <div class="col-md-4">
+      <div class="card border shadow-sm rounded-4 transition-card">
+        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-uppercase text-secondary fw-semibold tracking-wider">Total Alumni</small>
+            <h2 class="fw-bold text-dark mb-0 mt-1">{{ totalAlumni }}</h2>
+          </div>
+          <div class="p-3 bg-primary-subtle text-primary rounded-4 fs-4">
+            <i class="bi bi-people-fill"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Male Alumni -->
+    <div class="col-md-4">
+      <div class="card border shadow-sm rounded-4 transition-card">
+        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-uppercase text-secondary fw-semibold tracking-wider">Male Alumni</small>
+            <h2 class="fw-bold text-success mb-0 mt-1">{{ maleCount }}</h2>
+          </div>
+          <div class="p-3 bg-success-subtle text-success rounded-4 fs-4">
+            <i class="bi bi-gender-male"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Female Alumni -->
+    <div class="col-md-4">
+      <div class="card border shadow-sm rounded-4 transition-card">
+        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+          <div>
+            <small class="text-uppercase text-secondary fw-semibold tracking-wider">Female Alumni</small>
+            <h2 class="fw-bold text-danger mb-0 mt-1">{{ femaleCount }}</h2>
+          </div>
+          <div class="p-3 bg-danger-subtle text-danger rounded-4 fs-4">
+            <i class="bi bi-gender-female"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alumni Cards Grid -->
+  <div class="row g-4">
+    <div
+      class="col-xl-4 col-md-6"
+      *ngFor="let alumni of filteredAlumni">
+      <div class="card border shadow-sm rounded-4 h-100 alumni-card overflow-hidden">
+        <!-- Accent Card Header banner -->
+        <div class="bg-primary-subtle" style="height: 80px;"></div>
+        
+        <div class="card-body pt-0 px-4 pb-4">
+          <!-- Profile Photo -->
+          <div class="text-center" style="margin-top: -45px;">
+            <img [src]="alumni.photo" class="rounded-circle border border-4 border-white shadow-sm bg-white" style="width: 90px; height: 90px; object-fit: cover;" alt="{{ alumni.name }}">
+            <h4 class="fw-bold text-dark mt-3 mb-1">{{ alumni.name }}</h4>
+            <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 mt-1">
+              <i class="bi bi-calendar-event me-1"></i> Batch {{ alumni.batch }}
+            </span>
+          </div>
+
+          <hr class="my-4 text-muted opacity-25">
+
+          <!-- Info Details List -->
+          <div class="d-flex flex-column gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 bg-success-subtle text-success rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                <i class="bi bi-telephone-fill"></i>
+              </div>
+              <div>
+                <small class="text-muted d-block lh-1 mb-1">Phone</small>
+                <span class="fw-semibold text-dark">{{ alumni.phone }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                <i class="bi bi-mortarboard-fill"></i>
+              </div>
+              <div>
+                <small class="text-muted d-block lh-1 mb-1">Classes</small>
+                <span class="fw-semibold text-dark">{{ alumni.classStudied }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 bg-danger-subtle text-danger rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                <i class="bi bi-envelope-fill"></i>
+              </div>
+              <div class="overflow-hidden">
+                <small class="text-muted d-block lh-1 mb-1">Mail</small>
+                <span class="fw-semibold text-dark text-truncate d-block">{{ alumni.email }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 bg-warning-subtle text-warning rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                <i class="bi bi-briefcase-fill"></i>
+              </div>
+              <div>
+                <small class="text-muted d-block lh-1 mb-1">Occupation</small>
+                <span class="fw-semibold text-dark">{{ alumni.occupation }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 bg-info-subtle text-info rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <div>
+                <small class="text-muted d-block lh-1 mb-1">Address</small>
+                <span class="fw-semibold text-dark">{{ alumni.address }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty Search Results State -->
+    <div class="col-12 text-center py-5" *ngIf="filteredAlumni.length === 0">
+      <div class="p-5 bg-light rounded-4 border shadow-sm">
+        <i class="bi bi-search text-muted display-4 mb-3 d-block"></i>
+        <h4 class="fw-bold">No Alumni Found</h4>
+        <p class="text-muted">We couldn't find any match for "{{ searchText }}".</p>
+        <button class="btn btn-outline-primary rounded-pill px-4 mt-2" (click)="searchText = ''">
+          Reset Filter
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+/* Micro-interaction transition */
+.transition-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.transition-btn:hover {
+  transform: translateX(4px);
+}
+
+/* Custom interactive colors for inactive buttons */
+.transition-btn:not(.active):hover {
+  background-color: rgba(25, 135, 84, 0.08) !important;
+  color: #198754 !important;
+}
+
+/* Dark theme adaptation for fixed background */
+[data-bs-theme="dark"] .position-fixed {
+  background-color: #212529 !important;
+  border-color: #2b3035 !important;
+}

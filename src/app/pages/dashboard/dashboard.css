@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+/* Force container to utilize full width and align left */
+.container-fluid {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Smooth hover micro-animations */
+.transition-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.transition-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Typography Enhancements */
+.fw-extrabold {
+  font-weight: 800;
+}
+
+/* Dark mode theme configurations */
+[data-bs-theme="dark"] .bg-success-subtle { background-color: rgba(25, 135, 84, 0.15) !important; }
+[data-bs-theme="dark"] .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.15) !important; }
+[data-bs-theme="dark"] .bg-info-subtle { background-color: rgba(13, 202, 240, 0.15) !important; }
+[data-bs-theme="dark"] .text-dark { color: #f8f9fa !important; }
