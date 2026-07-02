@@ -16,3 +16,102 @@
 .container-fluid {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
+
+/* Pink Gradient styling for female cards & stats */
+.bg-pink-gradient {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+}
+
+/* Circular Profile Frame Hover Styles */
+.profile-frame {
+  width: 90px;
+  height: 90px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.overlay-hover {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.profile-frame:hover {
+  transform: scale(1.05);
+}
+
+.profile-frame:hover .profile-img {
+  transform: scale(1.1);
+}
+
+.profile-frame:hover .overlay-hover {
+  opacity: 1;
+}
+
+/* Fullscreen Overlay Lightbox styles */
+.lightbox-overlay {
+  background-color: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(8px);
+  z-index: 2050;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.lightbox-img-wrapper {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-main-img {
+  max-height: 80vh;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lightbox-main-img.grabbing {
+  cursor: grabbing !important;
+  transition: none !important;
+}
+
+/* Glassmorphism Control Buttons */
+.btn-dark-glass {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  width: 44px;
+  height: 44px;
+  transition: all 0.2s ease;
+}
+
+.btn-dark-glass:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  transform: scale(1.05);
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .btn-dark-glass:not(:first-child) {
+    display: none !important; /* Hide arrow controls on touch screens */
+  }
+}

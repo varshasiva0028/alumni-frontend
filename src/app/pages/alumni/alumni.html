@@ -1,45 +1,46 @@
-                                                                       <div class="container-fluid py-4">
-  <!-- Header Section -->
-  <div class="row align-items-center mb-4">
+<div class="container-fluid">
+  <!-- Sticky Header Section & Pill Search Bar -->
+  <div class="row align-items-center mb-4 sticky-top py-2 bg-body z-3 border-bottom shadow-sm">
     <div class="col-lg-7 mb-3 mb-lg-0">
       <div class="d-flex align-items-center gap-3">
-        <div class="p-3 bg-primary-subtle text-primary rounded-4 fs-4 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+        <div class="p-3 bg-primary bg-gradient text-white rounded-4 fs-4 shadow-sm d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
           <i class="bi bi-mortarboard-fill"></i>
         </div>
         <div>
-          <h2 class="fw-bold mb-1 text-dark">Alumni Directory</h2>
-          <p class="text-secondary mb-0">Discover and connect with our alumni network</p>
+          <h2 class="fw-bold fs-3 mb-0 text-dark">Alumni Directory</h2>
+          <p class="text-secondary small mb-0">Discover and connect with our alumni network</p>
         </div>
       </div>
     </div>
     <div class="col-lg-5">
-      <div class="input-group shadow-sm border rounded-4 overflow-hidden bg-white px-2 py-1">
+      <div class="input-group shadow-sm border rounded-pill overflow-hidden bg-white px-3 py-1.5">
         <span class="input-group-text bg-transparent border-0 text-muted">
           <i class="bi bi-search"></i>
         </span>
-        <input
-          type="text"
-          class="form-control border-0 shadow-none"
-          placeholder="Search by name, batch, occupation..."
-          [(ngModel)]="searchText">
-        <button *ngIf="searchText" class="btn btn-link text-muted border-0 p-0 pe-2" (click)="searchText = ''">
+        <input 
+          type="text" 
+          class="form-control border-0 shadow-none bg-transparent"
+          placeholder="Search by name, batch, occupation..." 
+          [(ngModel)]="searchText"
+          aria-label="Search alumni">
+        <button *ngIf="searchText" class="btn btn-link text-muted border-0 p-0 pe-2" (click)="searchText = ''" aria-label="Clear search">
           <i class="bi bi-x-circle-fill"></i>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Statistics Section -->
+  <!-- Statistics Section (Modern Gradients) -->
   <div class="row g-4 mb-4">
     <!-- Total Alumni -->
     <div class="col-md-4">
-      <div class="card border shadow-sm rounded-4 transition-card">
+      <div class="card border-0 shadow-sm rounded-4 transition-card text-white bg-primary bg-gradient">
         <div class="card-body p-4 d-flex justify-content-between align-items-center">
           <div>
-            <small class="text-uppercase text-secondary fw-semibold tracking-wider">Total Alumni</small>
-            <h2 class="fw-bold text-dark mb-0 mt-1">{{ totalAlumni }}</h2>
+            <small class="text-uppercase fw-semibold tracking-wider opacity-75">Total Alumni</small>
+            <h2 class="fw-bold mb-0 mt-1">{{ totalAlumni }}</h2>
           </div>
-          <div class="p-3 bg-primary-subtle text-primary rounded-4 fs-4">
+          <div class="p-3 bg-white bg-opacity-25 rounded-4 fs-3">
             <i class="bi bi-people-fill"></i>
           </div>
         </div>
@@ -48,13 +49,13 @@
 
     <!-- Male Alumni -->
     <div class="col-md-4">
-      <div class="card border shadow-sm rounded-4 transition-card">
+      <div class="card border-0 shadow-sm rounded-4 transition-card text-white bg-info bg-gradient">
         <div class="card-body p-4 d-flex justify-content-between align-items-center">
           <div>
-            <small class="text-uppercase text-secondary fw-semibold tracking-wider">Male Alumni</small>
-            <h2 class="fw-bold text-success mb-0 mt-1">{{ maleCount }}</h2>
+            <small class="text-uppercase fw-semibold tracking-wider opacity-75">Male Alumni</small>
+            <h2 class="fw-bold mb-0 mt-1">{{ maleCount }}</h2>
           </div>
-          <div class="p-3 bg-success-subtle text-success rounded-4 fs-4">
+          <div class="p-3 bg-white bg-opacity-25 rounded-4 fs-3">
             <i class="bi bi-gender-male"></i>
           </div>
         </div>
@@ -63,13 +64,13 @@
 
     <!-- Female Alumni -->
     <div class="col-md-4">
-      <div class="card border shadow-sm rounded-4 transition-card">
+      <div class="card border-0 shadow-sm rounded-4 transition-card text-white bg-pink-gradient">
         <div class="card-body p-4 d-flex justify-content-between align-items-center">
           <div>
-            <small class="text-uppercase text-secondary fw-semibold tracking-wider">Female Alumni</small>
-            <h2 class="fw-bold text-danger mb-0 mt-1">{{ femaleCount }}</h2>
+            <small class="text-uppercase fw-semibold tracking-wider opacity-75">Female Alumni</small>
+            <h2 class="fw-bold mb-0 mt-1">{{ femaleCount }}</h2>
           </div>
-          <div class="p-3 bg-danger-subtle text-danger rounded-4 fs-4">
+          <div class="p-3 bg-white bg-opacity-25 rounded-4 fs-3">
             <i class="bi bi-gender-female"></i>
           </div>
         </div>
@@ -77,20 +78,23 @@
     </div>
   </div>
 
-  <!-- Alumni Cards Grid -->
+  <!-- Responsive Cards Grid: Desktop 3, Tablet 2, Mobile 1 -->
   <div class="row g-4">
-    <div
-      class="col-xl-4 col-md-6"
-      *ngFor="let alumni of filteredAlumni">
+    <div class="col-xl-4 col-md-6 col-12" *ngFor="let alumni of filteredAlumni; let i = index">
       <div class="card border shadow-sm rounded-4 h-100 alumni-card overflow-hidden">
-        <!-- Accent Card Header banner -->
-        <div class="bg-primary-subtle" style="height: 80px;"></div>
-        
+        <!-- Gender Gradient Banner (Blue for male, Pink for female) -->
+        <div class="banner-header" [ngClass]="alumni.gender === 'male' ? 'bg-primary bg-gradient' : 'bg-pink-gradient'" style="height: 80px;"></div>
+
         <div class="card-body pt-0 px-4 pb-4">
-          <!-- Profile Photo -->
+          <!-- Overlapping Profile Photo -->
           <div class="text-center" style="margin-top: -45px;">
-            <img [src]="alumni.photo" class="rounded-circle border border-4 border-white shadow-sm bg-white" style="width: 90px; height: 90px; object-fit: cover;" alt="{{ alumni.name }}">
-            <h4 class="fw-bold text-dark mt-3 mb-1">{{ alumni.name }}</h4>
+            <div class="profile-frame position-relative d-inline-block cursor-pointer shadow-sm rounded-circle border border-4 border-white bg-white overflow-hidden" (click)="openLightbox(i, $event)">
+              <img [src]="alumni.photo" class="profile-img" alt="{{ alumni.name }}">
+              <div class="overlay-hover rounded-circle d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100 text-white bg-dark bg-opacity-50">
+                <i class="bi bi-zoom-in fs-4"></i>
+              </div>
+            </div>
+            <h4 class="fw-bold text-dark mt-3 mb-1 text-truncate" [attr.title]="alumni.name">{{ alumni.name }}</h4>
             <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 mt-1">
               <i class="bi bi-calendar-event me-1"></i> Batch {{ alumni.batch }}
             </span>
@@ -98,55 +102,58 @@
 
           <hr class="my-4 text-muted opacity-25">
 
-          <!-- Info Details List -->
+          <!-- Info Details Layout -->
           <div class="d-flex flex-column gap-3">
-            <div class="d-flex align-items-center gap-3">
-              <div class="p-2 bg-success-subtle text-success rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                <i class="bi bi-telephone-fill"></i>
+            <!-- Row 1: Phone and Classes (50% each) -->
+            <div class="row g-2">
+              <div class="col-6 border-end">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-telephone-fill text-success"></i>
+                  <small class="text-muted text-uppercase tracking-wider" style="font-size: 10px;">Phone</small>
+                </div>
+                <span class="fw-semibold text-dark text-truncate d-block" [attr.title]="alumni.phone">{{ alumni.phone }}</span>
               </div>
-              <div>
-                <small class="text-muted d-block lh-1 mb-1">Phone</small>
-                <span class="fw-semibold text-dark">{{ alumni.phone }}</span>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-center gap-3">
-              <div class="p-2 bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                <i class="bi bi-mortarboard-fill"></i>
-              </div>
-              <div>
-                <small class="text-muted d-block lh-1 mb-1">Classes</small>
-                <span class="fw-semibold text-dark">{{ alumni.classStudied }}</span>
+              <div class="col-6 ps-3">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-mortarboard-fill text-primary"></i>
+                  <small class="text-muted text-uppercase tracking-wider" style="font-size: 10px;">Classes</small>
+                </div>
+                <span class="fw-semibold text-dark text-truncate d-block" [attr.title]="alumni.classStudied">{{ alumni.classStudied }}</span>
               </div>
             </div>
 
-            <div class="d-flex align-items-center gap-3">
-              <div class="p-2 bg-danger-subtle text-danger rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                <i class="bi bi-envelope-fill"></i>
-              </div>
-              <div class="overflow-hidden">
-                <small class="text-muted d-block lh-1 mb-1">Mail</small>
-                <span class="fw-semibold text-dark text-truncate d-block">{{ alumni.email }}</span>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-center gap-3">
-              <div class="p-2 bg-warning-subtle text-warning rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                <i class="bi bi-briefcase-fill"></i>
-              </div>
-              <div>
-                <small class="text-muted d-block lh-1 mb-1">Occupation</small>
-                <span class="fw-semibold text-dark">{{ alumni.occupation }}</span>
+            <!-- Row 2: Mail (Full Width) -->
+            <div class="row g-2">
+              <div class="col-12">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-envelope-fill text-danger"></i>
+                  <small class="text-muted text-uppercase tracking-wider" style="font-size: 10px;">Mail</small>
+                </div>
+                <span class="fw-semibold text-dark text-truncate d-block" [attr.title]="alumni.email">{{ alumni.email }}</span>
               </div>
             </div>
 
-            <div class="d-flex align-items-center gap-3">
-              <div class="p-2 bg-info-subtle text-info rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                <i class="bi bi-geo-alt-fill"></i>
+            <!-- Row 3: Occupation (Full Width, stacked below Mail) -->
+            <div class="row g-2">
+              <div class="col-12">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-briefcase-fill text-warning"></i>
+                  <small class="text-muted text-uppercase tracking-wider" style="font-size: 10px;">Occupation</small>
+                </div>
+                <span class="fw-semibold text-dark text-truncate d-block" [attr.title]="alumni.occupation">{{ alumni.occupation }}</span>
               </div>
-              <div>
-                <small class="text-muted d-block lh-1 mb-1">Address</small>
-                <span class="fw-semibold text-dark">{{ alumni.address }}</span>
+            </div>
+
+            <!-- Row 4: Address (Full Width, stacked below Occupation) -->
+            <div class="row g-2">
+              <div class="col-12">
+                <div class="p-2.5 bg-light rounded-3">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <i class="bi bi-geo-alt-fill text-info"></i>
+                    <small class="text-muted text-uppercase tracking-wider" style="font-size: 10px;">Address</small>
+                  </div>
+                  <span class="fw-semibold text-dark text-truncate d-block" [attr.title]="alumni.address">{{ alumni.address }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -166,4 +173,97 @@
       </div>
     </div>
   </div>
+
+  <!-- Custom Angular-Only Fullscreen Lightbox -->
+  <div 
+    class="lightbox-overlay position-fixed top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+    *ngIf="isLightboxOpen"
+    (click)="onOutsideClick($event)"
+    (touchstart)="onTouchStart($event)"
+    (touchend)="onTouchEnd($event)"
+    role="dialog"
+    aria-label="Image Viewer"
+    aria-modal="true">
+    
+    <!-- Top Glassmorphism Control Panel -->
+    <div class="lightbox-header d-flex justify-content-between align-items-center w-100 px-4 py-3 position-absolute top-0 start-0 z-3">
+      <div class="text-white bg-dark bg-opacity-20 px-3 py-1.5 rounded-pill fs-7 fw-semibold backdrop-blur">
+        {{ activeImgIndex + 1 }} / {{ filteredAlumni.length }}
+      </div>
+      <div class="d-flex gap-2">
+        <button 
+          class="btn btn-dark-glass rounded-circle text-white d-flex align-items-center justify-content-center" 
+          title="Download Photo"
+          aria-label="Download Photo">
+          <i class="bi bi-download"></i>
+        </button>
+        <button 
+          class="btn btn-dark-glass rounded-circle text-white d-flex align-items-center justify-content-center" 
+          (click)="closeLightbox()"
+          title="Close (Esc)"
+          aria-label="Close image viewer">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Center Viewer Stage -->
+    <div class="position-relative d-flex align-items-center justify-content-center flex-grow-1 w-100" style="max-height: 80vh;">
+      
+      <!-- Previous navigation arrow (Left Corner) -->
+      <button 
+        class="btn btn-dark-glass rounded-circle text-white d-flex align-items-center justify-content-center position-absolute translate-middle-y z-3"
+        style="left: 24px; top: 50%;"
+        (click)="navigateLightbox(-1, $event)"
+        title="Previous Image (←)"
+        aria-label="Previous image">
+        <i class="bi bi-chevron-left fs-4"></i>
+      </button>
+
+      <!-- Pan & Zoom Wrapper -->
+      <div 
+        class="lightbox-img-wrapper position-relative overflow-hidden" 
+        (wheel)="onWheelZoom($event)"
+        (mousedown)="startPan($event)"
+        (mousemove)="pan($event)"
+        (mouseup)="endPan()"
+        (mouseleave)="endPan()"
+        (dblclick)="toggleDoubleClickZoom($event)">
+        
+        <!-- Loading Spinner -->
+        <div class="position-absolute top-50 start-50 translate-middle text-white z-1" *ngIf="isImageLoading">
+          <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <img 
+          [src]="currentLightboxAlumni.photo" 
+          class="img-fluid lightbox-main-img" 
+          [ngClass]="{'grabbing': isPanning}"
+          [style.transform]="'translate(' + panX + 'px, ' + panY + 'px) scale(' + zoomScale + ')'"
+          (load)="onImageLoaded()"
+          alt="{{ currentLightboxAlumni.name }}">
+      </div>
+
+      <!-- Next navigation arrow (Right Corner) -->
+      <button 
+        class="btn btn-dark-glass rounded-circle text-white d-flex align-items-center justify-content-center position-absolute translate-middle-y z-3"
+        style="right: 24px; top: 50%;"
+        (click)="navigateLightbox(1, $event)"
+        title="Next Image (→)"
+        aria-label="Next image">
+        <i class="bi bi-chevron-right fs-4"></i>
+      </button>
+
+    </div>
+
+    <!-- Bottom Metadata Panel -->
+    <div class="lightbox-footer w-100 text-center py-4 position-absolute bottom-0 start-0 z-3">
+      <h5 class="text-white fw-bold mb-0 text-shadow">{{ currentLightboxAlumni.name }}</h5>
+      <span class="badge bg-white bg-opacity-25 text-white mt-1.5 px-3 py-1.5">Batch {{ currentLightboxAlumni.batch }}</span>
+    </div>
+
+  </div>
 </div>
+```
