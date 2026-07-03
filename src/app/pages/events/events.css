@@ -1,3 +1,8 @@
+/* Dashed borders */
+.border-dashed {
+  border-style: dashed !important;
+}
+
 /* Card Hover Micro-Animations */
 .hover-card-lift {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -5,60 +10,12 @@
 
 .hover-card-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
 }
 
 /* Custom interactive triggers */
 .cursor-pointer {
   cursor: pointer;
-}
-
-.hover-underline:hover {
-  text-decoration: underline;
-}
-
-/* Gallery image zoom transition */
-.transition-img {
-  transition: transform 0.25s ease;
-}
-
-.group-hover-parent:hover .transition-img {
-  transform: scale(1.05);
-}
-
-/* Gallery Hover Delete controls (Positioned on top-right, compact circular button) */
-.gallery-trash-btn-container {
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 10;
-  position: absolute !important;
-  top: 0 !important;
-  right: 0 !important;
-  left: auto !important;
-  bottom: auto !important;
-  width: auto !important;
-  height: auto !important;
-}
-
-.group-hover-parent:hover .gallery-trash-btn-container {
-  opacity: 1;
-}
-
-.gallery-trash-btn {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  padding: 0 !important;
-  border-radius: 50% !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-  background-color: #dc3545 !important;
-  border: none !important;
-}
-
-.gallery-trash-btn:hover {
-  background-color: #bb2d3b !important;
 }
 
 /* Avatar camera hover overlay toggles */
@@ -69,4 +26,24 @@
 
 .avatar-wrapper:hover .avatar-overlay {
   opacity: 1;
+}
+
+/* Gallery Hover Delete controls */
+.group-hover-parent .opacity-hidden-button {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.group-hover-parent:hover .opacity-hidden-button {
+  opacity: 1;
+}
+
+/* Entry Animation */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

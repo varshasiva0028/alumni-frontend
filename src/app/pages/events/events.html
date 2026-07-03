@@ -3,8 +3,8 @@
   <div class="row mb-4">
     <div class="col-12">
       <div class="d-flex align-items-center gap-3">
-        <div class="p-3 bg-primary bg-gradient text-white rounded-4 fs-4 shadow-sm d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
-          <i class="bi bi-calendar-event-fill"></i>
+        <div class="p-3 bg-primary bg-gradient text-white rounded-4 shadow-sm d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
+          <i class="bi bi-calendar-event-fill fs-4"></i>
         </div>
         <div>
           <h2 class="fw-bold mb-0 text-dark tracking-tight">Event Management</h2>
@@ -16,36 +16,42 @@
 
   <!-- Event Title Selection Card -->
   <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
-    <div class="card-body p-4">
+    <div class="card-body p-4 border-top border-4 border-primary rounded-top-4">
       <div class="row g-3">
         <div class="col-lg-6 col-12">
           <label for="eventTitleSelect" class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-2" style="font-size: 11px;">Event Title</label>
-          <select 
-            id="eventTitleSelect"
-            class="form-select border shadow-none py-2.5 rounded-3 fw-medium text-dark" 
-            [(ngModel)]="selectedEventTitle"
-            (change)="onEventTitleChange()">
-            <option value="" disabled selected>Select Event Title</option>
-            <option *ngFor="let title of predefinedTitles" [value]="title">{{ title }}</option>
-          </select>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0 text-secondary"><i class="bi bi-bookmark-fill"></i></span>
+            <select 
+              id="eventTitleSelect"
+              class="form-select border-0 bg-light shadow-none py-2.5 rounded-end-3 fw-semibold text-dark" 
+              [(ngModel)]="selectedEventTitle"
+              (change)="onEventTitleChange()">
+              <option value="" disabled selected>Select active event...</option>
+              <option *ngFor="let title of predefinedTitles" [value]="title">{{ title }}</option>
+            </select>
+          </div>
         </div>
         
         <!-- Custom Title Input (Shows only when "Other Events" is chosen) -->
         <div class="col-lg-6 col-12" *ngIf="selectedEventTitle === 'Other Events'">
           <label for="customTitleInput" class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-2" style="font-size: 11px;">Specify Event Name</label>
-          <input 
-            type="text" 
-            id="customTitleInput"
-            class="form-control border shadow-none py-2.5 rounded-3 fw-semibold" 
-            placeholder="e.g., Alumni Meet 2026" 
-            [(ngModel)]="customEventTitle">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0 text-secondary"><i class="bi bi-pencil-square"></i></span>
+            <input 
+              type="text" 
+              id="customTitleInput"
+              class="form-control border-0 bg-light shadow-none py-2.5 rounded-end-3 fw-semibold text-dark" 
+              placeholder="e.g., Alumni Meet 2026" 
+              [(ngModel)]="customEventTitle">
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Error & Info Alerts -->
-  <div class="alert alert-danger border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-4" *ngIf="errorMessage">
+  <!-- Error Alerts Container -->
+  <div class="alert alert-danger border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-4 animate-fade-in" *ngIf="errorMessage">
     <i class="bi bi-exclamation-triangle-fill fs-5"></i>
     <div class="fw-semibold small">{{ errorMessage }}</div>
     <button type="button" class="btn-close ms-auto shadow-none" (click)="errorMessage = ''" aria-label="Close"></button>
@@ -59,20 +65,25 @@
       <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
         <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold text-dark mb-0">Chief Guest Profiles</h5>
-            <button class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold d-flex align-items-center gap-2" (click)="addChiefGuest()" [disabled]="chiefGuests.length >= maxGuests">
-              <i class="bi bi-plus-lg"></i> Add Guest
+            <div>
+              <h5 class="fw-bold text-dark mb-1">Chief Guest Profiles</h5>
+              <p class="text-secondary small mb-0">Configure profile cards for speakers and guests</p>
+            </div>
+            <button class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-semibold shadow-sm d-flex align-items-center gap-2" (click)="addChiefGuest()" [disabled]="chiefGuests.length >= maxGuests">
+              <i class="bi bi-person-plus-fill"></i> Add Guest
             </button>
           </div>
 
           <!-- Dynamic Guest Profile Cards List -->
           <div class="row g-3">
-            <div class="col-xl-4 col-md-6 col-12" *ngFor="let guest of chiefGuests; let i = index">
-              <div class="card border shadow-sm rounded-4 h-100 overflow-hidden bg-white hover-card-lift">
+            <div class="col-xl-4 col-md-6 col-12 animate-fade-in" *ngFor="let guest of chiefGuests; let i = index">
+              <div class="card border shadow-sm rounded-4 h-100 overflow-hidden bg-white hover-card-lift"
+                   [ngClass]="guest.roleType === 'Chief Guest' ? 'border-top border-4 border-primary' : 'border-top border-4 border-warning'">
+                
                 <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pt-3 pb-0">
-                  <span class="fw-bold text-dark" style="font-size: 14px;">Chief Guest #{{ i + 1 }}</span>
-                  <button type="button" class="btn btn-outline-danger btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;" (click)="removeChiefGuest(i)" aria-label="Remove Guest">
-                    <i class="bi bi-trash-fill" style="font-size: 12px;"></i>
+                  <span class="fw-bold text-dark" style="font-size: 13px;">{{ guest.roleType }} #{{ i + 1 }}</span>
+                  <button type="button" class="btn btn-outline-danger btn-sm rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 28px; height: 28px;" (click)="removeChiefGuest(i)" aria-label="Remove Guest">
+                    <i class="bi bi-trash-fill" style="font-size: 11px;"></i>
                   </button>
                 </div>
 
@@ -98,27 +109,27 @@
                   <div class="d-flex flex-column gap-3">
                     <div>
                       <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Guest Name</label>
-                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Guest Name" [(ngModel)]="guest.name">
+                      <input type="text" class="form-control border-0 bg-light shadow-none py-2 px-3 rounded-3 fw-semibold text-dark" placeholder="Guest Name" [(ngModel)]="guest.name">
                     </div>
 
                     <div>
                       <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Detail 1</label>
-                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Detail 1" [(ngModel)]="guest.detail1">
+                      <input type="text" class="form-control border-0 bg-light shadow-none py-2 px-3 rounded-3 fw-semibold text-dark" placeholder="Detail 1" [(ngModel)]="guest.detail1">
                     </div>
 
                     <div>
                       <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Detail 2</label>
-                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Detail 2" [(ngModel)]="guest.detail2">
+                      <input type="text" class="form-control border-0 bg-light shadow-none py-2 px-3 rounded-3 fw-semibold text-dark" placeholder="Detail 2" [(ngModel)]="guest.detail2">
                     </div>
 
                     <div>
                       <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Detail 3</label>
-                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Detail 3" [(ngModel)]="guest.detail3">
+                      <input type="text" class="form-control border-0 bg-light shadow-none py-2 px-3 rounded-3 fw-semibold text-dark" placeholder="Detail 3" [(ngModel)]="guest.detail3">
                     </div>
 
                     <div>
                       <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Chief Guest / Special Guest</label>
-                      <select class="form-select border shadow-none rounded-3 py-2 fw-semibold text-dark" [(ngModel)]="guest.roleType">
+                      <select class="form-select border-0 bg-light shadow-none py-2 px-3 rounded-3 fw-semibold text-dark" [(ngModel)]="guest.roleType">
                         <option value="Chief Guest">Chief Guest</option>
                         <option value="Special Guest">Special Guest</option>
                       </select>
@@ -128,12 +139,12 @@
               </div>
             </div>
 
-            <!-- "+ Add Chief Guest" Dashed Card Button -->
+            <!-- "+ Add Chief Guest" Action Card Button -->
             <div class="col-xl-4 col-md-6 col-12" *ngIf="chiefGuests.length < maxGuests">
               <div 
-                class="card border border-2 border-secondary border-opacity-25 rounded-4 d-flex align-items-center justify-content-center text-center p-5 cursor-pointer hover-card-lift h-100" 
+                class="card border border-2 border-secondary border-opacity-25 rounded-4 d-flex align-items-center justify-content-center text-center p-5 cursor-pointer hover-card-lift h-100 border-dashed bg-light" 
                 (click)="addChiefGuest()"
-                style="min-height: 480px; border-style: dashed !important; background-color: #fafbfc;">
+                style="min-height: 480px;">
                 <div class="text-muted">
                   <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
                     <i class="bi bi-plus-lg fs-3"></i>
@@ -197,17 +208,16 @@
           <div class="row g-2 mt-4" *ngIf="otherPhotos.length > 0">
             <div class="col-xl-2 col-lg-3 col-md-4 col-6" *ngFor="let photo of otherPhotos; let j = index">
               <div class="ratio ratio-1x1 border rounded-3 overflow-hidden position-relative group-hover-parent shadow-sm bg-light">
-                <img [src]="photo" class="w-100 h-100 object-fit-cover transition-img" alt="Gallery Preview">
-                <!-- Compact Trash Button aligned to the top-right corner -->
-                <div class="gallery-trash-btn-container position-absolute top-0 end-0 p-2">
-                  <button 
-                    type="button" 
-                    class="btn btn-danger gallery-trash-btn d-flex align-items-center justify-content-center shadow-sm" 
-                    (click)="removeOtherPhoto(j)"
-                    aria-label="Delete image">
-                    <i class="bi bi-trash-fill"></i>
-                  </button>
-                </div>
+                <img [src]="photo" class="w-100 h-100 object-fit-cover" alt="Gallery Preview">
+                <!-- Compact Trash Button aligned to the top-right corner using Bootstrap classes + style overrides -->
+                <button 
+                  type="button" 
+                  class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm opacity-hidden-button" 
+                  (click)="removeOtherPhoto(j)"
+                  style="width: 28px; height: 28px; font-size: 12px; z-index: 10;"
+                  aria-label="Delete image">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -219,6 +229,6 @@
   <!-- Form Actions (Reset & Save - always visible) -->
   <div class="d-flex justify-content-end gap-3 mt-4">
     <button class="btn btn-outline-secondary px-4 py-2.5 rounded-pill fw-semibold shadow-sm" (click)="resetForm()">Reset</button>
-    <button class="btn btn-primary px-5 py-2.5 rounded-pill fw-semibold shadow-sm animate-btn" (click)="submitEvent()">Save Event</button>
+    <button class="btn btn-primary px-5 py-2.5 rounded-pill fw-semibold shadow-sm" (click)="submitEvent()">Save Event</button>
   </div>
 </div>
