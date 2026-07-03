@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -48,6 +48,8 @@ export class EventsComponent {
   uploadProgress: number = 0;
   isUploading: boolean = false;
 
+  constructor(private cdr: ChangeDetectorRef, private zone: NgZone) {}
+
   // Compute other photos limit dynamically
   get isAnnualDay(): boolean {
     const title = this.selectedEventTitle === 'Other Events' ? this.customEventTitle : this.selectedEventTitle;
@@ -69,13 +71,58 @@ export class EventsComponent {
     // Automatically truncate lists if switching to lower bounds
     if (this.chiefGuests.length > this.maxGuests) {
       this.chiefGuests = this.chiefGuests.slice(0, this.maxGuests);
-      this.errorMessage = `Chief Guest list was truncated to fit the limit of ${this.maxGuests} for this category.`;
     }
 
     if (this.otherPhotos.length > this.maxOtherPhotos) {
       this.otherPhotos = this.otherPhotos.slice(0, this.maxOtherPhotos);
-      this.errorMessage = `Gallery photos list was truncated to fit the limit of ${this.maxOtherPhotos} for this category.`;
     }
+    this.cdr.detectChanges();
+  }
+
+  // Add empty guest profile card dynamically
+  addChiefGuest(): void {
+    if (this.chiefGuests.length >= this.maxGuests) {
+      this.errorMessage = `You can only add up to ${this.maxGuests} guest profiles for this event type.`;
+      this.cdr.detectChanges();
+      return;
+    }
+    this.errorMessage = '';
+    this.chiefGuests.push({
+      photoUrl: '',
+      name: '',
+      detail1: '',
+      detail2: '',
+      detail3: '',
+      roleType: 'Chief Guest'
+    });
+    this.chiefGuests = [...this.chiefGuests];
+    this.cdr.detectChanges();
+  }
+
+  // Chief Guest Profile circular avatar photo upload trigger
+  onGuestPhotoSelected(event: Event, index: number): void {
+    this.errorMessage = '';
+    const element = event.target as HTMLInputElement;
+    const file = element.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      this.errorMessage = `Image exceeds the 5 MB size limit.`;
+      element.value = '';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.zone.run(() => {
+        this.chiefGuests[index].photoUrl = e.target.result;
+        this.chiefGuests = [...this.chiefGuests];
+        this.cdr.detectChanges();
+      });
+    };
+    reader.readAsDataURL(file);
+    element.value = '';
   }
 
   // Chief Guests Uploader (Automatically generates cards on upload)
@@ -92,7 +139,6 @@ export class EventsComponent {
 
     const filesToUpload = Array.from(files).slice(0, remainingSlots);
     for (const file of filesToUpload) {
-      // Validate file size limit (5 MB) and format
       if (file.size > 5 * 1024 * 1024) {
         this.errorMessage = `Image "${file.name}" exceeds the 5 MB limit.`;
         continue;
@@ -100,13 +146,17 @@ export class EventsComponent {
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.chiefGuests.push({
-          photoUrl: e.target.result,
-          name: '',
-          detail1: '',
-          detail2: '',
-          detail3: '',
-          roleType: 'Chief Guest'
+        this.zone.run(() => {
+          this.chiefGuests.push({
+            photoUrl: e.target.result,
+            name: '',
+            detail1: '',
+            detail2: '',
+            detail3: '',
+            roleType: 'Chief Guest'
+          });
+          this.chiefGuests = [...this.chiefGuests];
+          this.cdr.detectChanges();
         });
       };
       reader.readAsDataURL(file);
@@ -116,6 +166,8 @@ export class EventsComponent {
 
   removeChiefGuest(index: number): void {
     this.chiefGuests.splice(index, 1);
+    this.chiefGuests = [...this.chiefGuests];
+    this.cdr.detectChanges();
     this.errorMessage = '';
   }
 
@@ -150,20 +202,31 @@ export class EventsComponent {
     // Progress bar simulation
     this.isUploading = true;
     this.uploadProgress = 0;
+    this.cdr.detectChanges();
+
     const interval = setInterval(() => {
-      this.uploadProgress += 10;
-      if (this.uploadProgress >= 100) {
-        clearInterval(interval);
-        this.isUploading = false;
+      this.zone.run(() => {
+        this.uploadProgress += 10;
+        this.cdr.detectChanges();
         
-        for (const file of validFiles) {
-          const reader = new FileReader();
-          reader.onload = (e: any) => {
-            this.otherPhotos.push(e.target.result);
-          };
-          reader.readAsDataURL(file);
+        if (this.uploadProgress >= 100) {
+          clearInterval(interval);
+          this.isUploading = false;
+          
+          for (const file of validFiles) {
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+              this.zone.run(() => {
+                this.otherPhotos.push(e.target.result);
+                this.otherPhotos = [...this.otherPhotos];
+                this.cdr.detectChanges();
+              });
+            };
+            reader.readAsDataURL(file);
+          }
+          this.cdr.detectChanges();
         }
-      }
+      });
     }, 120);
 
     element.value = '';
@@ -171,6 +234,8 @@ export class EventsComponent {
 
   removeOtherPhoto(index: number): void {
     this.otherPhotos.splice(index, 1);
+    this.otherPhotos = [...this.otherPhotos];
+    this.cdr.detectChanges();
   }
 
   resetForm(): void {
@@ -179,6 +244,7 @@ export class EventsComponent {
     this.chiefGuests = [];
     this.otherPhotos = [];
     this.errorMessage = '';
+    this.cdr.detectChanges();
   }
 
   submitEvent(): void {
@@ -187,6 +253,7 @@ export class EventsComponent {
 
     if (!finalTitle) {
       this.errorMessage = 'Please select or specify a category event title.';
+      this.cdr.detectChanges();
       return;
     }
 
