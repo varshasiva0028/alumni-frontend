@@ -23,20 +23,38 @@ interface ChiefGuest {
 })
 export class EventsComponent {
   predefinedTitles: string[] = [
-    'Founders Day',
-    'Annual Day',
-    'Republic Day',
-    'Sports Day',
-    'Science Exhibition',
-    'Deepavali',
-    'Independence Day',
-    'Graduation Day',
-    'Special Event',
-    'Special Occasion',
-    'Smart Classroom',
-    'Other Events'
+    "Founder's Day",
+    "Annual Day",
+    "Republic Day",
+    "Sports Day",
+    "Science Exhibition",
+    "Deepavali",
+    "Independence Day",
+    "Graduation Day",
+    "Special Events",
+    "Special Occasion",
+    "Smart Class Room",
+    "Other Events"
   ];
 
+  eventQuotes: any = {
+    "Founder's Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
+    "Founders Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
+    "Annual Day": { hasCount: true, count: 36, prefix: "Crossing ", suffix: "th Educational Excellency" },
+    "Deepavali": { hasCount: false, prefix: "Celebrated Deepavali with Souco Group", suffix: "" },
+    "Republic Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Republic Day" },
+    "Independence Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Independence Day" },
+    "Special Events": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
+    "Special Event": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
+    "Graduation Day": { hasCount: false, prefix: "Our Little Graduates", suffix: "" },
+    "Smart Class Room": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
+    "Smart Classroom": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
+    "Special Occasion": { hasCount: false, prefix: "Celebrating Moments, Creating Memories", suffix: "" },
+    "Sports Day": { hasCount: true, count: 36, prefix: "Celebrated ", suffix: "th Sports Day" },
+    "Science Exhibition": { hasCount: false, prefix: "Showcasing Innovation and Creativity", suffix: "" }
+  };
+
+  customEventQuote: string = '';
   selectedEventTitle: string = '';
   customEventTitle: string = '';
   errorMessage: string = '';
@@ -47,6 +65,9 @@ export class EventsComponent {
   // Simulated upload progress state
   uploadProgress: number = 0;
   isUploading: boolean = false;
+
+  // Drag and Drop Sorting State
+  draggedIndex: number | null = null;
 
   constructor(private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
@@ -64,8 +85,79 @@ export class EventsComponent {
     return this.isAnnualDay ? 80 : 40;
   }
 
+  get currentEventQuote(): string {
+    if (this.selectedEventTitle === 'Other Events') {
+      return this.customEventQuote || '';
+    }
+    const config = this.eventQuotes[this.selectedEventTitle];
+    if (!config) return '';
+    if (config.hasCount) {
+      return `${config.prefix}${config.count || 0}${config.suffix}`;
+    }
+    return config.prefix;
+  }
+
+  get activeEventCount(): number {
+    const config = this.eventQuotes[this.selectedEventTitle];
+    return config && config.hasCount ? config.count : 0;
+  }
+
+  set activeEventCount(val: number) {
+    const config = this.eventQuotes[this.selectedEventTitle];
+    if (config && config.hasCount) {
+      config.count = val;
+    }
+  }
+
+  incrementCount(): void {
+    const config = this.eventQuotes[this.selectedEventTitle];
+    if (config && config.hasCount) {
+      config.count = (config.count || 0) + 1;
+      this.cdr.detectChanges();
+    }
+  }
+
+  decrementCount(): void {
+    const config = this.eventQuotes[this.selectedEventTitle];
+    if (config && config.hasCount && config.count > 1) {
+      config.count = (config.count || 0) - 1;
+      this.cdr.detectChanges();
+    }
+  }
+
+  onCountChange(): void {
+    const config = this.eventQuotes[this.selectedEventTitle];
+    if (config && config.hasCount) {
+      if (config.count < 1) {
+        config.count = 1;
+      }
+      this.cdr.detectChanges();
+    }
+  }
+
+  resetQuotes(): void {
+    this.customEventQuote = '';
+    this.eventQuotes = {
+      "Founder's Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
+      "Founders Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
+      "Annual Day": { hasCount: true, count: 36, prefix: "Crossing ", suffix: "th Educational Excellency" },
+      "Deepavali": { hasCount: false, prefix: "Celebrated Deepavali with Souco Group", suffix: "" },
+      "Republic Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Republic Day" },
+      "Independence Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Independence Day" },
+      "Special Events": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
+      "Special Event": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
+      "Graduation Day": { hasCount: false, prefix: "Our Little Graduates", suffix: "" },
+      "Smart Class Room": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
+      "Smart Classroom": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
+      "Special Occasion": { hasCount: false, prefix: "Celebrating Moments, Creating Memories", suffix: "" },
+      "Sports Day": { hasCount: true, count: 36, prefix: "Celebrated ", suffix: "th Sports Day" },
+      "Science Exhibition": { hasCount: false, prefix: "Showcasing Innovation and Creativity", suffix: "" }
+    };
+  }
+
   onEventTitleChange(): void {
     this.customEventTitle = '';
+    this.customEventQuote = '';
     this.errorMessage = '';
     
     // Automatically truncate lists if switching to lower bounds
@@ -238,12 +330,35 @@ export class EventsComponent {
     this.cdr.detectChanges();
   }
 
+  // HTML5 Native Drag & Drop event bindings
+  onDragStart(index: number): void {
+    this.draggedIndex = index;
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDrop(targetIndex: number): void {
+    if (this.draggedIndex !== null && this.draggedIndex !== targetIndex) {
+      this.zone.run(() => {
+        const item = this.otherPhotos[this.draggedIndex!];
+        this.otherPhotos.splice(this.draggedIndex!, 1);
+        this.otherPhotos.splice(targetIndex, 0, item);
+        this.otherPhotos = [...this.otherPhotos];
+        this.cdr.detectChanges();
+      });
+    }
+    this.draggedIndex = null;
+  }
+
   resetForm(): void {
     this.selectedEventTitle = '';
     this.customEventTitle = '';
     this.chiefGuests = [];
     this.otherPhotos = [];
     this.errorMessage = '';
+    this.resetQuotes();
     this.cdr.detectChanges();
   }
 
@@ -259,6 +374,7 @@ export class EventsComponent {
 
     const payload = {
       title: finalTitle,
+      quote: this.currentEventQuote,
       chiefGuests: this.chiefGuests,
       gallery: this.otherPhotos
     };

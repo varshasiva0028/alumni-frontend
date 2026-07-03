@@ -27,6 +27,7 @@ interface AlumniModel {
 })
 export class Alumni {
   searchText: string = '';
+  viewType: 'grid' | 'list' = 'grid'; // Grid view by default
 
   alumniList: AlumniModel[] = [
     {
@@ -43,7 +44,7 @@ export class Alumni {
     },
     {
       id: 2,
-      name: 'Vignesh',
+      name: 'Vicky',
       gender: 'male',
       batch: 2021,
       phone: '9876543211',
@@ -150,7 +151,6 @@ export class Alumni {
     );
   }
   
-
   // Open Lightbox
   openLightbox(index: number, event: MouseEvent): void {
     event.stopPropagation();
@@ -185,7 +185,6 @@ export class Alumni {
     this.isImageLoading = true;
     this.resetZoom();
   }
-
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvents(event: KeyboardEvent): void {
