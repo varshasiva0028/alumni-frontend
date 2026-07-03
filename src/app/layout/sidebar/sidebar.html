@@ -1,9 +1,12 @@
 <!-- Fixed sidebar wrapper with 240px width limit -->
-<div class="position-fixed top-0 start-0 vh-100 bg-white border-end shadow d-flex flex-column p-3" style="width: 240px; z-index: 1030;">
-  
+<div class="position-fixed top-0 start-0 vh-100 bg-white border-end shadow d-flex flex-column p-3"
+  style="width: 240px; z-index: 1030;">
+
   <!-- Logo Section -->
   <div class="text-center my-3">
-    <div class="mx-auto mb-2 d-flex align-items-center justify-content-center bg-success bg-gradient text-white rounded-3 shadow-sm" style="width: 48px; height: 48px; font-size: 20px;">
+    <div
+      class="mx-auto mb-2 d-flex align-items-center justify-content-center bg-success bg-gradient text-white rounded-3 shadow-sm"
+      style="width: 48px; height: 48px; font-size: 20px;">
       <i class="bi bi-shield-lock-fill"></i>
     </div>
     <span class="fw-bold tracking-wider text-success small">ADMIN PORTAL</span>
@@ -11,54 +14,62 @@
 
   <hr class="text-muted opacity-25 my-2">
 
-  <!-- Menu Links utilizing Bootstrap Button Classes instead of custom CSS -->
-  <nav class="nav flex-column gap-2 flex-grow-1">
-    <a
-      routerLink="/dashboard"
-      routerLinkActive="btn-success text-white active"
-      [routerLinkActiveOptions]="{exact: true}"
-      class="nav-link btn btn-light text-start text-secondary border-0 d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold transition-btn">
-      <i class="bi bi-grid-fill fs-5"></i>
-      <span>Dashboard</span>
-    </a>
+ <!-- Navigation -->
+<nav class="nav flex-column gap-2 flex-grow-1">
 
-    <a
-      routerLink="/admission"
-      routerLinkActive="btn-success text-white active"
-      class="nav-link btn btn-light text-start text-secondary border-0 d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold transition-btn">
-      <i class="bi bi-person-plus-fill fs-5"></i>
-      <span>Admission</span>
-    </a>
+  <!-- Dashboard -->
+  <a
+    routerLink="/dashboard"
+    routerLinkActive="bg-success text-white"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-link text-start d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold text-secondary">
+    <i class="bi bi-grid-fill fs-5"></i>
+    <span>Dashboard</span>
+  </a>
 
-    <a
-      routerLink="/events"
-      routerLinkActive="btn-success text-white active"
-      class="nav-link btn btn-light text-start text-secondary border-0 d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold transition-btn">
-      <i class="bi bi-calendar-event-fill fs-5"></i>
-      <span>Events</span>
-    </a>
+  <!-- Admission -->
+  <a
+    routerLink="/admission"
+    routerLinkActive="bg-success text-white"
+    class="nav-link text-start d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold text-secondary">
+    <i class="bi bi-person-plus-fill fs-5"></i>
+    <span>Admission</span>
+  </a>
 
-    <a
-      routerLink="/alumni"
-      routerLinkActive="btn-success text-white active"
-      class="nav-link btn btn-light text-start text-secondary border-0 d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold transition-btn">
-      <i class="bi bi-mortarboard-fill fs-5"></i>
-      <span>Alumni</span>
-    </a>
+  <!-- Events -->
+  <a
+    routerLink="/events"
+    routerLinkActive="bg-success text-white"
+    class="nav-link text-start d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold text-secondary">
+    <i class="bi bi-calendar-event-fill fs-5"></i>
+    <span>Events</span>
+  </a>
 
-    <a
-      routerLink="/results"
-      routerLinkActive="btn-success text-white active"
-      class="nav-link btn btn-light text-start text-secondary border-0 d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold transition-btn">
-      <i class="bi bi-file-earmark-bar-graph-fill fs-5"></i>
-      <span>Results</span>
-    </a>
-  </nav>
+  <!-- Alumni -->
+  <a
+    routerLink="/alumni"
+    routerLinkActive="bg-success text-white"
+    class="nav-link text-start d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold text-secondary">
+    <i class="bi bi-mortarboard-fill fs-5"></i>
+    <span>Alumni</span>
+  </a>
+
+  <!-- Results -->
+  <a
+    routerLink="/results"
+    routerLinkActive="bg-success text-white"
+    class="nav-link text-start d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold text-secondary">
+    <i class="bi bi-file-earmark-bar-graph-fill fs-5"></i>
+    <span>Results</span>
+  </a>
+
+</nav>
 
   <!-- Logout Action using Bootstrap Button Utilities -->
   <div class="mt-auto">
     <hr class="text-muted opacity-25 my-3">
-    <button class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2 rounded-3 fw-semibold">
+    <button
+      class="btn btn-outline-danger text-start border-0 d-flex align-items-center gap-3 px-3 py-2 rounded-3 fw-semibold w-100">
       <i class="bi bi-box-arrow-right fs-5"></i>
       <span>Logout</span>
     </button>
