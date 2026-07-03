@@ -14,155 +14,122 @@
     </div>
   </div>
 
-  <!-- Main Grid Layout -->
-  <div class="row g-4">
-    
-    <!-- Left Column: Settings & Upload Zones -->
-    <div class="col-lg-6 col-12">
-      <div class="d-flex flex-column gap-4">
+  <!-- Event Title Selection Card -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+    <div class="card-body p-4">
+      <div class="row g-3">
+        <div class="col-lg-6 col-12">
+          <label for="eventTitleSelect" class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-2" style="font-size: 11px;">Event Title</label>
+          <select 
+            id="eventTitleSelect"
+            class="form-select border shadow-none py-2.5 rounded-3 fw-medium text-dark" 
+            [(ngModel)]="selectedEventTitle"
+            (change)="onEventTitleChange()">
+            <option value="" disabled selected>Select Event Title</option>
+            <option *ngFor="let title of predefinedTitles" [value]="title">{{ title }}</option>
+          </select>
+        </div>
         
-        <!-- Event Title Card -->
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
-          <div class="card-body p-4">
-            <h5 class="fw-bold text-dark mb-3">Event Details</h5>
-            <div class="row g-3">
-              <div class="col-12">
-                <label for="eventTitleSelect" class="form-label fw-semibold text-secondary small-label mb-2">Event Title</label>
-                <select 
-                  id="eventTitleSelect"
-                  class="form-select border shadow-none py-2.5 rounded-3 fw-medium text-dark" 
-                  [(ngModel)]="selectedEventTitle"
-                  (change)="onEventTitleChange()">
-                  <option value="" disabled selected>Select Event Title</option>
-                  <option *ngFor="let title of predefinedTitles" [value]="title">{{ title }}</option>
-                </select>
-              </div>
-              
-              <!-- Custom Title Input (Shows only when "Other Events" is chosen) -->
-              <div class="col-12" *ngIf="selectedEventTitle === 'Other Events'">
-                <label for="customTitleInput" class="form-label fw-semibold text-secondary small-label mb-2">Specify Event Name</label>
-                <input 
-                  type="text" 
-                  id="customTitleInput"
-                  class="form-control border shadow-none py-2.5 rounded-3 fw-semibold" 
-                  placeholder="e.g., Alumni Meet 2026" 
-                  [(ngModel)]="customEventTitle">
-              </div>
-            </div>
-          </div>
+        <!-- Custom Title Input (Shows only when "Other Events" is chosen) -->
+        <div class="col-lg-6 col-12" *ngIf="selectedEventTitle === 'Other Events'">
+          <label for="customTitleInput" class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-2" style="font-size: 11px;">Specify Event Name</label>
+          <input 
+            type="text" 
+            id="customTitleInput"
+            class="form-control border shadow-none py-2.5 rounded-3 fw-semibold" 
+            placeholder="e.g., Alumni Meet 2026" 
+            [(ngModel)]="customEventTitle">
         </div>
-
-        <!-- Chief Guest Photo Upload Zone -->
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="fw-bold text-dark mb-0">Chief Guest Photo</h5>
-              <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-semibold" style="font-size: 11px;">
-                {{ chiefGuests.length }} / 5 Uploaded
-              </span>
-            </div>
-
-            <!-- Upload Box -->
-            <div class="upload-dropzone position-relative rounded-4 p-4 text-center border-dashed d-flex flex-column align-items-center justify-content-center">
-              <input 
-                type="file" 
-                class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" 
-                accept="image/*"
-                (change)="onChiefGuestFileChange($event)"
-                multiple
-                aria-label="Upload Chief Guest Photo"
-                [disabled]="!selectedEventTitle">
-              
-              <div class="icon-circle-bg bg-primary bg-opacity-10 text-primary mb-3">
-                <i class="bi bi-person-fill fs-3"></i>
-              </div>
-              <h6 class="fw-bold text-dark mb-1">Click to upload image</h6>
-              <p class="text-secondary small mb-0">JPG • PNG • Max 5 MB</p>
-              <span class="text-primary fw-semibold mt-2 d-inline-block hover-underline">[ Choose Photo ]</span>
-            </div>
-            
-            <small class="text-secondary d-block mt-3 lh-sm">* Uploading images allows you to configure names and guest designations.</small>
-          </div>
-        </div>
-
-        <!-- Other Event Photos Upload Zone -->
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="fw-bold text-dark mb-0">Event Photos</h5>
-              <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1.5 fw-semibold" style="font-size: 11px;">
-                {{ otherPhotos.length }} / {{ maxOtherPhotos }} Uploaded
-              </span>
-            </div>
-
-            <!-- Upload Box -->
-            <div class="upload-dropzone position-relative rounded-4 p-4 text-center border-dashed d-flex flex-column align-items-center justify-content-center">
-              <input 
-                type="file" 
-                class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" 
-                accept="image/*"
-                multiple
-                (change)="onOtherPhotosFileChange($event)"
-                aria-label="Upload Event Gallery Photos"
-                [disabled]="!selectedEventTitle">
-              
-              <div class="icon-circle-bg bg-info bg-opacity-10 text-info mb-3">
-                <i class="bi bi-images fs-3"></i>
-              </div>
-              <h6 class="fw-bold text-dark mb-1">Click to upload image</h6>
-              <p class="text-secondary small mb-0">Select Images</p>
-              <span class="text-info fw-semibold mt-2 d-inline-block hover-underline">JPG • PNG • Multiple Upload</span>
-            </div>
-
-            <small class="text-secondary d-block mt-3 lh-sm">* Supports up to {{ maxOtherPhotos }} gallery photos (Annual Day allows up to 80).</small>
-          </div>
-        </div>
-
       </div>
     </div>
+  </div>
 
-    <!-- Right Column: Live Form Preview & Gallery -->
-    <div class="col-lg-6 col-12">
-      <!-- Error Alerts Container -->
-      <div class="alert alert-danger border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-4" *ngIf="errorMessage">
-        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-        <div class="fw-semibold small">{{ errorMessage }}</div>
-        <button type="button" class="btn-close ms-auto shadow-none" (click)="errorMessage = ''" aria-label="Close"></button>
-      </div>
+  <!-- Error & Info Alerts -->
+  <div class="alert alert-danger border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-4" *ngIf="errorMessage">
+    <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+    <div class="fw-semibold small">{{ errorMessage }}</div>
+    <button type="button" class="btn-close ms-auto shadow-none" (click)="errorMessage = ''" aria-label="Close"></button>
+  </div>
 
-      <div class="d-flex flex-column gap-4 h-100">
+  <!-- Dynamic Content Workspace (Visible immediately) -->
+  <div class="row g-4">
+    
+    <!-- Chief Guests Section -->
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">Chief Guest Profiles</h5>
+            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1.5 fw-semibold" style="font-size: 11px;">
+              {{ chiefGuests.length }} / {{ maxGuests }} Guests
+            </span>
+          </div>
 
-        <!-- Chief Guests Detail Forms -->
-        <div class="card border-0 shadow-sm rounded-4 bg-white" *ngIf="chiefGuests.length > 0">
-          <div class="card-body p-4">
-            <h5 class="fw-bold text-dark mb-3">Chief Guest Detail Forms</h5>
-            <div class="d-flex flex-column gap-3">
-              <div class="card border rounded-3 overflow-hidden" *ngFor="let guest of chiefGuests; let i = index">
-                <div class="row g-0">
-                  <div class="col-4 bg-light d-flex align-items-center justify-content-center border-end" style="height: 140px;">
-                    <img [src]="guest.photoUrl" class="w-100 h-100 object-fit-cover" alt="Guest Preview">
+          <!-- Upload Photo to Add Card automatically -->
+          <div class="upload-dropzone position-relative rounded-4 p-4 text-center border-dashed d-flex flex-column align-items-center justify-content-center mb-4" *ngIf="chiefGuests.length < maxGuests">
+            <input 
+              type="file" 
+              class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" 
+              accept="image/*"
+              (change)="onChiefGuestFileChange($event)"
+              multiple
+              aria-label="Upload Chief Guest Photo">
+            
+            <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+              <i class="bi bi-person-fill fs-3"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-1">Click to upload chief guest image</h6>
+            <p class="text-secondary small mb-0">Drag & drop or Click to choose (JPG • PNG • Max 5 MB)</p>
+            <span class="text-primary fw-semibold mt-2 d-inline-block hover-underline">[ Choose Photo ]</span>
+          </div>
+
+          <!-- Dynamic Guest Profile Cards List -->
+          <div class="row g-3">
+            <div class="col-xl-4 col-md-6 col-12" *ngFor="let guest of chiefGuests; let i = index">
+              <div class="card border shadow-sm rounded-4 h-100 overflow-hidden bg-white hover-card-lift">
+                <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pt-3 pb-0">
+                  <span class="fw-bold text-dark" style="font-size: 14px;">Chief Guest #{{ i + 1 }}</span>
+                  <button type="button" class="btn btn-outline-danger btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;" (click)="removeChiefGuest(i)" aria-label="Remove Guest">
+                    <i class="bi bi-trash-fill" style="font-size: 12px;"></i>
+                  </button>
+                </div>
+
+                <div class="card-body px-4 pb-4 pt-3">
+                  <!-- Guest Avatar -->
+                  <div class="text-center mb-3">
+                    <div class="position-relative mx-auto rounded-circle overflow-hidden shadow-sm border border-3 border-light bg-light d-flex align-items-center justify-content-center" style="width: 90px; height: 90px;">
+                      <img [src]="guest.photoUrl" class="w-100 h-100 object-fit-cover" alt="Profile Preview">
+                    </div>
                   </div>
-                  <div class="col-8 p-3 d-flex flex-column justify-content-between position-relative">
-                    <button type="button" class="btn-close btn-close-custom shadow-none position-absolute top-2 end-2 text-danger" (click)="removeChiefGuest(i)" aria-label="Remove Guest"></button>
-                    <div class="d-flex flex-column gap-2 mt-2">
-                      <input 
-                        type="text" 
-                        class="form-control form-control-sm border shadow-none" 
-                        placeholder="Guest Name" 
-                        [(ngModel)]="guest.name"
-                        aria-label="Guest Name">
-                      <input 
-                        type="text" 
-                        class="form-control form-control-sm border shadow-none" 
-                        placeholder="Detail 1 (Designation)" 
-                        [(ngModel)]="guest.detail1"
-                        aria-label="Detail 1">
-                      <input 
-                        type="text" 
-                        class="form-control form-control-sm border shadow-none" 
-                        placeholder="Detail 2 (Institution)" 
-                        [(ngModel)]="guest.detail2"
-                        aria-label="Detail 2">
+
+                  <!-- Details Inputs -->
+                  <div class="d-flex flex-column gap-3">
+                    <div>
+                      <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Guest Name</label>
+                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Guest Name" [(ngModel)]="guest.name">
+                    </div>
+
+                    <div>
+                      <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Detail 1</label>
+                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Detail 1" [(ngModel)]="guest.detail1">
+                    </div>
+
+                    <div>
+                      <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Detail 2</label>
+                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Detail 2" [(ngModel)]="guest.detail2">
+                    </div>
+
+                    <div>
+                      <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Detail 3</label>
+                      <input type="text" class="form-control border shadow-none rounded-3 py-2" placeholder="Detail 3" [(ngModel)]="guest.detail3">
+                    </div>
+
+                    <div>
+                      <label class="form-label fw-bold text-uppercase text-secondary tracking-wider mb-1" style="font-size: 10px;">Chief Guest / Special Guest</label>
+                      <select class="form-select border shadow-none rounded-3 py-2 fw-semibold text-dark" [(ngModel)]="guest.roleType">
+                        <option value="Chief Guest">Chief Guest</option>
+                        <option value="Special Guest">Special Guest</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -170,38 +137,75 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Live Gallery Previews -->
-        <div class="card border-0 shadow-sm rounded-4 bg-white" *ngIf="otherPhotos.length > 0">
-          <div class="card-body p-4">
-            <h5 class="fw-bold text-dark mb-3">Event Gallery Previews</h5>
-            <div class="row g-2">
-              <div class="col-4 col-sm-3 col-md-2" *ngFor="let photo of otherPhotos; let j = index">
-                <div class="ratio ratio-1x1 border rounded-3 overflow-hidden position-relative group-hover-parent shadow-sm bg-light">
-                  <img [src]="photo" class="w-100 h-100 object-fit-cover" alt="Gallery Preview">
-                  <div class="position-absolute top-0 end-0 p-1 opacity-hidden-button">
-                    <button 
-                      type="button" 
-                      class="btn btn-danger btn-sm rounded-circle d-flex align-items-center justify-content-center p-1 shadow" 
-                      (click)="removeOtherPhoto(j)"
-                      aria-label="Delete image">
-                      <i class="bi bi-trash-fill" style="font-size: 10px;"></i>
-                    </button>
-                  </div>
+    <!-- Event Gallery Section -->
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4 bg-white">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">Event Gallery</h5>
+            <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3 py-1.5 fw-semibold" style="font-size: 11px;">
+              {{ otherPhotos.length }} / {{ maxOtherPhotos }} Photos
+            </span>
+          </div>
+
+          <!-- Drag and Drop Upload Area -->
+          <div class="upload-dropzone position-relative rounded-4 p-5 text-center border-dashed d-flex flex-column align-items-center justify-content-center">
+            <input 
+              type="file" 
+              class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" 
+              accept="image/*"
+              multiple
+              (change)="onOtherPhotosFileChange($event)"
+              aria-label="Upload Event Gallery Photos">
+            
+            <div class="p-3 bg-info bg-opacity-10 text-info rounded-circle mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+              <i class="bi bi-images fs-3"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-1">Drag & drop photos here or browse</h6>
+            <p class="text-secondary small mb-0">Supports multiple upload (JPG • PNG • Max 5 MB each)</p>
+            <span class="text-info fw-semibold mt-2 d-inline-block hover-underline">[ Browse Files ]</span>
+          </div>
+
+          <!-- Upload Progress Bar -->
+          <div class="mt-3" *ngIf="isUploading">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <small class="text-secondary fw-semibold">Uploading...</small>
+              <small class="text-info fw-bold">{{ uploadProgress }}%</small>
+            </div>
+            <div class="progress" style="height: 6px;">
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" [style.width.%]="uploadProgress" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+
+          <!-- Gallery Preview Grid -->
+          <div class="row g-2 mt-4" *ngIf="otherPhotos.length > 0">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-6" *ngFor="let photo of otherPhotos; let j = index">
+              <div class="ratio ratio-1x1 border rounded-3 overflow-hidden position-relative group-hover-parent shadow-sm bg-light">
+                <img [src]="photo" class="w-100 h-100 object-fit-cover transition-img" alt="Gallery Preview">
+                <div class="position-absolute top-0 end-0 p-1 opacity-hidden-button d-flex gap-1">
+                  <!-- Delete button -->
+                  <button 
+                    type="button" 
+                    class="btn btn-danger btn-sm rounded-circle d-flex align-items-center justify-content-center p-1.5 shadow" 
+                    (click)="removeOtherPhoto(j)"
+                    aria-label="Delete image">
+                    <i class="bi bi-trash-fill" style="font-size: 10px;"></i>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- Save/Submit Action Panel -->
-        <div class="d-flex justify-content-end gap-3 mt-auto" *ngIf="selectedEventTitle">
-          <button class="btn btn-outline-secondary px-4 py-2.5 rounded-pill fw-semibold" (click)="resetForm()">Cancel</button>
-          <button class="btn btn-primary px-5 py-2.5 rounded-pill fw-semibold shadow-sm" (click)="submitEvent()">Save Event</button>
-        </div>
-
       </div>
     </div>
+  </div>
 
+  <!-- Form Actions (Reset & Save - always visible) -->
+  <div class="d-flex justify-content-end gap-3 mt-4">
+    <button class="btn btn-outline-secondary px-4 py-2.5 rounded-pill fw-semibold shadow-sm" (click)="resetForm()">Reset</button>
+    <button class="btn btn-primary px-5 py-2.5 rounded-pill fw-semibold shadow-sm animate-btn" (click)="submitEvent()">Save Event</button>
   </div>
 </div>

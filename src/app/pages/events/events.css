@@ -30,6 +30,16 @@
   transform: scale(1.08);
 }
 
+/* Guest Cards Hover Effect */
+.hover-card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06) !important;
+}
+
 /* Custom interactive triggers */
 .cursor-pointer {
   cursor: pointer;
@@ -39,11 +49,13 @@
   text-decoration: underline;
 }
 
-.small-label {
-  font-size: 0.725rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+/* Gallery image zoom transition */
+.transition-img {
+  transition: transform 0.25s ease;
+}
+
+.group-hover-parent:hover .transition-img {
+  transform: scale(1.05);
 }
 
 /* Gallery Hover Delete controls */

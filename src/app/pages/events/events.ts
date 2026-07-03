@@ -7,6 +7,8 @@ interface ChiefGuest {
   name: string;
   detail1: string;
   detail2: string;
+  detail3: string;
+  roleType: 'Chief Guest' | 'Special Guest';
 }
 
 @Component({
@@ -42,37 +44,55 @@ export class EventsComponent {
   chiefGuests: ChiefGuest[] = [];
   otherPhotos: string[] = [];
 
-  // Dynamic limits calculation
+  // Simulated upload progress state
+  uploadProgress: number = 0;
+  isUploading: boolean = false;
+
+  // Compute other photos limit dynamically
+  get isAnnualDay(): boolean {
+    const title = this.selectedEventTitle === 'Other Events' ? this.customEventTitle : this.selectedEventTitle;
+    return title.toLowerCase().includes('annual day');
+  }
+
+  get maxGuests(): number {
+    return this.isAnnualDay ? 5 : 3;
+  }
+
   get maxOtherPhotos(): number {
-    return this.selectedEventTitle === 'Annual Day' ? 80 : 40;
+    return this.isAnnualDay ? 80 : 40;
   }
 
   onEventTitleChange(): void {
     this.customEventTitle = '';
     this.errorMessage = '';
     
-    // Automatically truncate photos list if switching to an event category with lower limit bounds
+    // Automatically truncate lists if switching to lower bounds
+    if (this.chiefGuests.length > this.maxGuests) {
+      this.chiefGuests = this.chiefGuests.slice(0, this.maxGuests);
+      this.errorMessage = `Chief Guest list was truncated to fit the limit of ${this.maxGuests} for this category.`;
+    }
+
     if (this.otherPhotos.length > this.maxOtherPhotos) {
       this.otherPhotos = this.otherPhotos.slice(0, this.maxOtherPhotos);
-      this.errorMessage = `Event photos list was truncated to fit the limit of ${this.maxOtherPhotos} images for this category.`;
+      this.errorMessage = `Gallery photos list was truncated to fit the limit of ${this.maxOtherPhotos} for this category.`;
     }
   }
 
-  // Chief Guests Photo Uploader Handler
+  // Chief Guests Uploader (Automatically generates cards on upload)
   onChiefGuestFileChange(event: Event): void {
     this.errorMessage = '';
     const element = event.target as HTMLInputElement;
     const files = element.files;
     if (!files) return;
 
-    const remainingSlots = 5 - this.chiefGuests.length;
+    const remainingSlots = this.maxGuests - this.chiefGuests.length;
     if (files.length > remainingSlots) {
-      this.errorMessage = `You can only upload up to 5 Chief Guest images. There are only ${remainingSlots} slots remaining.`;
+      this.errorMessage = `Only the first ${remainingSlots} images were uploaded to fit the maximum limit of ${this.maxGuests} guests.`;
     }
 
     const filesToUpload = Array.from(files).slice(0, remainingSlots);
     for (const file of filesToUpload) {
-      // Validate file size limit (5 MB)
+      // Validate file size limit (5 MB) and format
       if (file.size > 5 * 1024 * 1024) {
         this.errorMessage = `Image "${file.name}" exceeds the 5 MB limit.`;
         continue;
@@ -84,19 +104,22 @@ export class EventsComponent {
           photoUrl: e.target.result,
           name: '',
           detail1: '',
-          detail2: ''
+          detail2: '',
+          detail3: '',
+          roleType: 'Chief Guest'
         });
       };
       reader.readAsDataURL(file);
     }
-    element.value = ''; // Reset uploader input element
+    element.value = ''; 
   }
 
   removeChiefGuest(index: number): void {
     this.chiefGuests.splice(index, 1);
+    this.errorMessage = '';
   }
 
-  // Gallery Photos Uploader Handler
+  // Gallery Photos Multi-Uploader with limit validation & progress simulation
   onOtherPhotosFileChange(event: Event): void {
     this.errorMessage = '';
     const element = event.target as HTMLInputElement;
@@ -107,18 +130,43 @@ export class EventsComponent {
     const remainingSlots = limit - this.otherPhotos.length;
 
     if (files.length > remainingSlots) {
-      this.errorMessage = `You can only upload up to ${limit} event gallery photos. You have ${remainingSlots} slots remaining.`;
+      this.errorMessage = `Limit exceeded. Only the first ${remainingSlots} images were accepted to fit the maximum limit of ${limit} photos.`;
     }
 
-    const filesToUpload = Array.from(files).slice(0, remainingSlots);
-    for (const file of filesToUpload) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.otherPhotos.push(e.target.result);
-      };
-      reader.readAsDataURL(file);
+    const validFiles: File[] = [];
+    for (const file of Array.from(files).slice(0, remainingSlots)) {
+      if (file.size > 5 * 1024 * 1024) {
+        this.errorMessage = `Some files were skipped as they exceeded the 5 MB limit.`;
+        continue;
+      }
+      validFiles.push(file);
     }
-    element.value = ''; // Reset uploader input element
+
+    if (validFiles.length === 0) {
+      element.value = '';
+      return;
+    }
+
+    // Progress bar simulation
+    this.isUploading = true;
+    this.uploadProgress = 0;
+    const interval = setInterval(() => {
+      this.uploadProgress += 10;
+      if (this.uploadProgress >= 100) {
+        clearInterval(interval);
+        this.isUploading = false;
+        
+        for (const file of validFiles) {
+          const reader = new FileReader();
+          reader.onload = (e: any) => {
+            this.otherPhotos.push(e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    }, 120);
+
+    element.value = '';
   }
 
   removeOtherPhoto(index: number): void {
