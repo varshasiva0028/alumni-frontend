@@ -149,6 +149,7 @@ export class Alumni {
       alumni.batch.toString().includes(search)
     );
   }
+  
 
   // Open Lightbox
   openLightbox(index: number, event: MouseEvent): void {
@@ -184,6 +185,7 @@ export class Alumni {
     this.isImageLoading = true;
     this.resetZoom();
   }
+
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvents(event: KeyboardEvent): void {
