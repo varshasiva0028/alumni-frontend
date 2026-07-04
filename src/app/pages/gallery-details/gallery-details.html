@@ -1,0 +1,303 @@
+<div class="container-fluid py-4">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <!-- Left Section -->
+
+            <div class="d-flex align-items-center gap-3">
+
+                <!-- Back Button -->
+
+                <div class="position-fixed d-flex align-items-center" style="top:120px; left:260px; z-index:1050;">
+
+                    <button
+                        class="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                        style="width:48px;height:48px;" (click)="back()">
+
+                        <i class="bi bi-arrow-left fs-5"></i>
+
+                    </button>
+
+                </div>
+
+                <!-- Title -->
+
+                <div>
+
+                    <h2 class="fw-bold mb-1">
+
+                        {{ selectedEvent.title }}
+
+                    </h2>
+
+                    <p class="text-secondary mb-0">
+
+                        "{{ selectedEvent.quote }}"
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Right Section -->
+
+            <button class="btn btn-success rounded-circle shadow" style="width:55px;height:55px">
+
+                <i class="bi bi-plus-lg fs-3"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ================= STATISTICS ================= -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-images text-primary fs-2"></i>
+
+                    <h3 class="fw-bold mt-2">
+
+                        {{selectedEvent.totalPhotos}}
+
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+
+                        Total Photos
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-badge text-warning fs-2"></i>
+
+                    <h3 class="fw-bold mt-2">
+
+                        {{selectedEvent.chiefGuests.length}}
+
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+
+                        Chief Guests
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-calendar-event text-success fs-2"></i>
+
+                    <h3 class="fw-bold mt-2">
+
+                        {{selectedEvent.title}}
+
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+
+                        Event
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= GALLERY ================= -->
+
+    <div class="row g-4">
+
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6" *ngFor="let item of galleryItems; let i = index">
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden gallery-card h-100" (click)="openPreview(i)">
+
+                <!-- Image -->
+
+                <div class="position-relative">
+
+                    <img [src]="item.image" class="card-img-top" style="height:230px;object-fit:cover;">
+
+                    <!-- Photo Number -->
+
+                    <span class="badge bg-dark position-absolute top-0 end-0 m-2">
+
+                        {{ i + 1 }}
+
+                    </span>
+
+                    <!-- Chief Guest Badge -->
+
+                    <span *ngIf="item.type == 'guest'"
+                        class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">
+
+                        <i class="bi bi-star-fill me-1"></i>
+
+                        Chief Guest
+
+                    </span>
+
+                </div>
+
+                <!-- Footer -->
+
+                <div class="card-body text-center">
+
+                    <button class="btn btn-outline-primary rounded-pill btn-sm w-100">
+
+                        <i class="bi bi-eye me-2"></i>
+
+                        Preview
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= EMPTY STATE ================= -->
+
+    <div *ngIf="galleryItems.length === 0" class="text-center py-5">
+
+        <i class="bi bi-images display-2 text-secondary"></i>
+
+        <h3 class="fw-bold mt-3">
+
+            No Gallery Images
+
+        </h3>
+
+        <p class="text-secondary">
+
+            Upload gallery images to display them here.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- ================= LIGHTBOX ================= -->
+
+<div *ngIf="isLightboxOpen"
+    class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style="background:rgba(0,0,0,.92);z-index:9999;">
+
+    <!-- Close -->
+
+    <button class="btn btn-light rounded-circle position-absolute top-0 end-0 m-4" (click)="closePreview()">
+
+        <i class="bi bi-x-lg"></i>
+
+    </button>
+
+    <!-- Previous -->
+
+    <button class="btn btn-dark rounded-circle position-absolute start-0 ms-4" (click)="previousImage()">
+
+        <i class="bi bi-chevron-left fs-2"></i>
+
+    </button>
+
+    <!-- Image -->
+
+    <img [src]="activeImage" class="img-fluid rounded shadow" [style.transform]="'scale(' + zoomLevel + ')'"
+        style="max-width:85%;max-height:85%;object-fit:contain;transition:.2s;">
+
+    <!-- Next -->
+
+    <button class="btn btn-dark rounded-circle position-absolute end-0 me-4" (click)="nextImage()">
+
+        <i class="bi bi-chevron-right fs-2"></i>
+
+    </button>
+
+    <!-- Bottom Toolbar -->
+
+    <div class="position-absolute bottom-0 mb-4 d-flex gap-3">
+
+        <button class="btn btn-light" (click)="zoomOut()">
+
+            <i class="bi bi-zoom-out"></i>
+
+        </button>
+
+        <button class="btn btn-light" (click)="resetZoom()">
+
+            100%
+
+        </button>
+
+        <button class="btn btn-light" (click)="zoomIn()">
+
+            <i class="bi bi-zoom-in"></i>
+
+        </button>
+
+        <button class="btn btn-success" (click)="downloadImage()">
+
+            <i class="bi bi-download"></i>
+
+        </button>
+
+        <button class="btn btn-danger" (click)="closePreview()">
+
+            <i class="bi bi-x-lg"></i>
+
+        </button>
+
+    </div>
+
+    <!-- Counter -->
+
+    <div class="position-absolute top-0 start-50 translate-middle-x mt-4">
+
+        <span class="badge bg-light text-dark px-3 py-2 fs-6">
+
+            {{ currentIndex + 1 }} / {{ galleryItems.length }}
+
+        </span>
+
+    </div>
+
+</div>

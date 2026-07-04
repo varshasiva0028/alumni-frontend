@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface ChiefGuest {
   photoUrl: string;
@@ -69,8 +70,11 @@ export class EventsComponent {
   // Drag and Drop Sorting State
   draggedIndex: number | null = null;
 
-  constructor(private cdr: ChangeDetectorRef, private zone: NgZone) {}
-
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone,
+    private router: Router
+  ) { }
   // Compute other photos limit dynamically
   get isAnnualDay(): boolean {
     const title = this.selectedEventTitle === 'Other Events' ? this.customEventTitle : this.selectedEventTitle;
@@ -110,7 +114,7 @@ export class EventsComponent {
     this.customEventTitle = '';
     this.customEventQuote = '';
     this.errorMessage = '';
-    
+
     // Automatically truncate lists if switching to lower bounds
     if (this.chiefGuests.length > this.maxGuests) {
       this.chiefGuests = this.chiefGuests.slice(0, this.maxGuests);
@@ -204,7 +208,7 @@ export class EventsComponent {
       };
       reader.readAsDataURL(file);
     }
-    element.value = ''; 
+    element.value = '';
   }
 
   removeChiefGuest(index: number): void {
@@ -251,11 +255,11 @@ export class EventsComponent {
       this.zone.run(() => {
         this.uploadProgress += 10;
         this.cdr.detectChanges();
-        
+
         if (this.uploadProgress >= 100) {
           clearInterval(interval);
           this.isUploading = false;
-          
+
           for (const file of validFiles) {
             const reader = new FileReader();
             reader.onload = (e: any) => {
@@ -353,8 +357,12 @@ export class EventsComponent {
       };
 
       console.log('Saved Event Details:', payload);
+
       alert('Event details saved successfully!');
+
       this.resetForm();
+
+      this.router.navigate(['/gallery']);
     } catch (err) {
       console.error('Error processing images:', err);
       this.errorMessage = 'An error occurred while resizing event images.';
@@ -367,7 +375,6 @@ export class EventsComponent {
       if (!base64Str || !base64Str.startsWith('data:')) {
         return resolve(base64Str);
       }
-
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
@@ -375,13 +382,10 @@ export class EventsComponent {
         if (!ctx) {
           return reject(new Error('Could not get canvas 2D context'));
         }
-
         const w = img.width;
         const h = img.height;
-
         let targetWidth = 0;
         let targetHeight = 0;
-
         if (w >= h) {
           targetWidth = 798;
           targetHeight = 532;
@@ -389,21 +393,23 @@ export class EventsComponent {
           targetWidth = 532;
           targetHeight = 798;
         }
-
         canvas.width = targetWidth;
         canvas.height = targetHeight;
-
         // Draw image stretched to output size
         ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-
         // Detect mimeType to preserve JPEG/PNG formats
         let mimeType = 'image/jpeg';
         const match = base64Str.match(/data:([^;]+);/);
         if (match && match[1]) {
           mimeType = match[1];
         }
-
         const resizedDataUrl = canvas.toDataURL(mimeType);
+
+        // Testing only
+        window.open(resizedDataUrl, '_blank');
+
+        console.log(`Resized Image: ${canvas.width} x ${canvas.height}`);
+
         resolve(resizedDataUrl);
       };
 
@@ -413,5 +419,6 @@ export class EventsComponent {
 
       img.src = base64Str;
     });
+
   }
 }

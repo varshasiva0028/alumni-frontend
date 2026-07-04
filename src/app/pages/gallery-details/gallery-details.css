@@ -1,0 +1,143 @@
+/* ===============================
+   Gallery Cards
+================================= */
+
+.gallery-card {
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.gallery-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .12) !important;
+}
+
+/* ===============================
+   Image
+================================= */
+
+.gallery-card img {
+    transition: transform .35s ease;
+}
+
+.gallery-card:hover img {
+    transform: scale(1.06);
+}
+
+/* ===============================
+   Badges
+================================= */
+
+.badge {
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+
+/* ===============================
+   Preview Button
+================================= */
+
+.gallery-card .btn {
+    transition: all .25s ease;
+}
+
+.gallery-card:hover .btn {
+    background: var(--bs-primary);
+    color: white;
+}
+
+/* ===============================
+   Statistics Cards
+================================= */
+
+.card {
+    transition: all .25s ease;
+}
+
+.card:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+/* ===============================
+   Header
+================================= */
+
+h2 {
+    letter-spacing: -.5px;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+/* ===============================
+   Empty State
+================================= */
+
+.display-2 {
+    opacity: .3;
+}
+
+/* ===============================
+   Mobile
+================================= */
+
+@media (max-width:768px){
+
+    .card-img-top{
+        height:180px !important;
+    }
+
+}
+/* ===============================
+   Lightbox
+================================= */
+
+.position-fixed img{
+
+    animation:zoomIn .25s ease;
+
+}
+
+@keyframes zoomIn{
+
+    from{
+
+        transform:scale(.85);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+.position-fixed .btn{
+
+    width:48px;
+
+    height:48px;
+
+}
+.btn-dark,
+.btn-light{
+
+    width:55px;
+
+    height:55px;
+
+}
+
+.position-fixed img{
+
+    user-select:none;
+
+}
