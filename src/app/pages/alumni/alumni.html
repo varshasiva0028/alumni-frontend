@@ -34,7 +34,7 @@
       ? 'btn-primary text-white'
       : 'btn-light text-secondary'" (click)="viewType='grid'">
 
-         <i class="bi bi-grid-3x3-gap-fill fs-6 lh-1"></i>
+          <i class="bi bi-grid-3x3-gap-fill fs-6 lh-1"></i>
         </button>
 
         <button type="button" class="btn d-flex align-items-center justify-content-center px-3"
@@ -42,7 +42,7 @@
       ? 'btn-primary text-white'
       : 'btn-light text-secondary'" (click)="viewType='list'">
 
-         <i class="bi bi-list-ul fs-5 lh-1"></i>
+          <i class="bi bi-list-ul fs-5 lh-1"></i>
         </button>
 
       </div>
@@ -68,7 +68,7 @@
 
     <!-- Male Alumni -->
     <div class="col-md-4">
-      <div class="card border-0 shadow-sm rounded-4 transition-card text-white bg-primary bg-opacity-75">
+      <div class="card border-0 shadow-sm rounded-4 transition-card text-white bg-primary bg-primary-gradient">
         <div class="card-body p-4 d-flex justify-content-between align-items-center">
           <div>
             <small class="text-uppercase fw-semibold tracking-wider opacity-75">Male Alumni</small>
@@ -103,7 +103,8 @@
       <div class="card border shadow-sm rounded-4 h-100 alumni-card overflow-hidden">
         <!-- Gender Gradient Banner (Blue for male, Pink for female) -->
         <div class="banner-header"
-          [ngClass]="alumni.gender === 'male' ? 'bg-primary bg-opacity-75' : 'bg-pink-gradient'" style="height: 80px;">
+          [ngClass]="alumni.gender === 'male' ? 'bg-primary bg-primary-gradient' : 'bg-pink-gradient'"
+          style="height: 80px;">
         </div>
 
         <div class="card-body pt-0 px-4 pb-4">
