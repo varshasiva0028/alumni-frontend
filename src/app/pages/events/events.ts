@@ -313,7 +313,7 @@ export class EventsComponent {
     this.cdr.detectChanges();
   }
 
-  submitEvent(): void {
+  async submitEvent(): Promise<void> {
     this.errorMessage = '';
     const finalTitle = this.selectedEventTitle === 'Other Events' ? this.customEventTitle.trim() : this.selectedEventTitle;
 
@@ -323,15 +323,95 @@ export class EventsComponent {
       return;
     }
 
-    const payload = {
-      title: finalTitle,
-      quote: this.currentEventQuote,
-      chiefGuests: this.chiefGuests,
-      gallery: this.otherPhotos
-    };
+    try {
+      // Resize Chief Guest photos asynchronously
+      const resizedGuests = await Promise.all(
+        this.chiefGuests.map(async (guest) => {
+          let resizedPhoto = guest.photoUrl;
+          if (guest.photoUrl) {
+            resizedPhoto = await this.resizeImage(guest.photoUrl);
+          }
+          return {
+            ...guest,
+            photoUrl: resizedPhoto
+          };
+        })
+      );
 
-    console.log('Saved Event Details:', payload);
-    alert('Event details saved successfully!');
-    this.resetForm();
+      // Resize Gallery photos asynchronously
+      const resizedGallery = await Promise.all(
+        this.otherPhotos.map(async (photo) => {
+          return await this.resizeImage(photo);
+        })
+      );
+
+      const payload = {
+        title: finalTitle,
+        quote: this.currentEventQuote,
+        chiefGuests: resizedGuests,
+        gallery: resizedGallery
+      };
+
+      console.log('Saved Event Details:', payload);
+      alert('Event details saved successfully!');
+      this.resetForm();
+    } catch (err) {
+      console.error('Error processing images:', err);
+      this.errorMessage = 'An error occurred while resizing event images.';
+      this.cdr.detectChanges();
+    }
+  }
+
+  resizeImage(base64Str: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (!base64Str || !base64Str.startsWith('data:')) {
+        return resolve(base64Str);
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          return reject(new Error('Could not get canvas 2D context'));
+        }
+
+        const w = img.width;
+        const h = img.height;
+
+        let targetWidth = 0;
+        let targetHeight = 0;
+
+        if (w >= h) {
+          targetWidth = 798;
+          targetHeight = 532;
+        } else {
+          targetWidth = 532;
+          targetHeight = 798;
+        }
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        // Draw image stretched to output size
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+        // Detect mimeType to preserve JPEG/PNG formats
+        let mimeType = 'image/jpeg';
+        const match = base64Str.match(/data:([^;]+);/);
+        if (match && match[1]) {
+          mimeType = match[1];
+        }
+
+        const resizedDataUrl = canvas.toDataURL(mimeType);
+        resolve(resizedDataUrl);
+      };
+
+      img.onerror = (err) => {
+        reject(err);
+      };
+
+      img.src = base64Str;
+    });
   }
 }
