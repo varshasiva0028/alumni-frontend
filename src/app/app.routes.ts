@@ -6,6 +6,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { Admission } from './pages/admission/admission';
 import { Alumni } from './pages/alumni/alumni';
 import { EventsComponent } from './pages/events/events';
+import { Results } from './pages/results/results';
 export const routes: Routes = [
   {
     path: '',
@@ -31,6 +32,10 @@ export const routes: Routes = [
       {
         path: 'alumni',
         component: Alumni
+      },
+      {
+        path: 'results' , 
+        component:Results
       }
     ]
   }

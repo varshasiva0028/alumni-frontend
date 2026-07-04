@@ -38,20 +38,20 @@ export class EventsComponent {
   ];
 
   eventQuotes: any = {
-    "Founder's Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
-    "Founders Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
-    "Annual Day": { hasCount: true, count: 36, prefix: "Crossing ", suffix: "th Educational Excellency" },
-    "Deepavali": { hasCount: false, prefix: "Celebrated Deepavali with Souco Group", suffix: "" },
-    "Republic Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Republic Day" },
-    "Independence Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Independence Day" },
-    "Special Events": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
-    "Special Event": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
-    "Graduation Day": { hasCount: false, prefix: "Our Little Graduates", suffix: "" },
-    "Smart Class Room": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
-    "Smart Classroom": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
-    "Special Occasion": { hasCount: false, prefix: "Celebrating Moments, Creating Memories", suffix: "" },
-    "Sports Day": { hasCount: true, count: 36, prefix: "Celebrated ", suffix: "th Sports Day" },
-    "Science Exhibition": { hasCount: false, prefix: "Showcasing Innovation and Creativity", suffix: "" }
+    "Founder's Day": { hasDynamicCount: false, prefix: "Our Founder's 100th Birthday" },
+    "Founders Day": { hasDynamicCount: false, prefix: "Our Founder's 100th Birthday" },
+    "Annual Day": { hasDynamicCount: true, startYear: 1990, prefix: "Crossing ", suffix: "th Educational Excellency" },
+    "Deepavali": { hasDynamicCount: false, prefix: "Celebrated Deepavali with Souco Group" },
+    "Republic Day": { hasDynamicCount: true, startYear: 1950, prefix: "Celebrated ", suffix: "th Republic Day" },
+    "Independence Day": { hasDynamicCount: true, startYear: 1947, prefix: "Celebrated ", suffix: "th Independence Day" },
+    "Special Events": { hasDynamicCount: false, prefix: "Adding 5 more Classes with the help of our Contributors" },
+    "Special Event": { hasDynamicCount: false, prefix: "Adding 5 more Classes with the help of our Contributors" },
+    "Graduation Day": { hasDynamicCount: false, prefix: "Our Little Graduates" },
+    "Smart Class Room": { hasDynamicCount: false, prefix: "We added New Smart Class Room" },
+    "Smart Classroom": { hasDynamicCount: false, prefix: "We added New Smart Class Room" },
+    "Special Occasion": { hasDynamicCount: false, prefix: "Celebrating Moments, Creating Memories" },
+    "Sports Day": { hasDynamicCount: true, startYear: 1990, prefix: "Celebrated ", suffix: "th Sports Day" },
+    "Science Exhibition": { hasDynamicCount: false, prefix: "Showcasing Innovation and Creativity" }
   };
 
   customEventQuote: string = '';
@@ -85,74 +85,25 @@ export class EventsComponent {
     return this.isAnnualDay ? 80 : 40;
   }
 
+  get currentYear(): number {
+    return new Date().getFullYear();
+  }
+
   get currentEventQuote(): string {
     if (this.selectedEventTitle === 'Other Events') {
       return this.customEventQuote || '';
     }
     const config = this.eventQuotes[this.selectedEventTitle];
     if (!config) return '';
-    if (config.hasCount) {
-      return `${config.prefix}${config.count || 0}${config.suffix}`;
+    if (config.hasDynamicCount) {
+      const count = this.currentYear - config.startYear;
+      return `${config.prefix}${count}${config.suffix}`;
     }
     return config.prefix;
   }
 
-  get activeEventCount(): number {
-    const config = this.eventQuotes[this.selectedEventTitle];
-    return config && config.hasCount ? config.count : 0;
-  }
-
-  set activeEventCount(val: number) {
-    const config = this.eventQuotes[this.selectedEventTitle];
-    if (config && config.hasCount) {
-      config.count = val;
-    }
-  }
-
-  incrementCount(): void {
-    const config = this.eventQuotes[this.selectedEventTitle];
-    if (config && config.hasCount) {
-      config.count = (config.count || 0) + 1;
-      this.cdr.detectChanges();
-    }
-  }
-
-  decrementCount(): void {
-    const config = this.eventQuotes[this.selectedEventTitle];
-    if (config && config.hasCount && config.count > 1) {
-      config.count = (config.count || 0) - 1;
-      this.cdr.detectChanges();
-    }
-  }
-
-  onCountChange(): void {
-    const config = this.eventQuotes[this.selectedEventTitle];
-    if (config && config.hasCount) {
-      if (config.count < 1) {
-        config.count = 1;
-      }
-      this.cdr.detectChanges();
-    }
-  }
-
   resetQuotes(): void {
     this.customEventQuote = '';
-    this.eventQuotes = {
-      "Founder's Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
-      "Founders Day": { hasCount: true, count: 100, prefix: "Our Founder's ", suffix: "th Birthday" },
-      "Annual Day": { hasCount: true, count: 36, prefix: "Crossing ", suffix: "th Educational Excellency" },
-      "Deepavali": { hasCount: false, prefix: "Celebrated Deepavali with Souco Group", suffix: "" },
-      "Republic Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Republic Day" },
-      "Independence Day": { hasCount: true, count: 77, prefix: "Celebrated ", suffix: "th Independence Day" },
-      "Special Events": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
-      "Special Event": { hasCount: true, count: 5, prefix: "Adding ", suffix: " more Classes with the help of our Contributors" },
-      "Graduation Day": { hasCount: false, prefix: "Our Little Graduates", suffix: "" },
-      "Smart Class Room": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
-      "Smart Classroom": { hasCount: false, prefix: "We added New Smart Class Room", suffix: "" },
-      "Special Occasion": { hasCount: false, prefix: "Celebrating Moments, Creating Memories", suffix: "" },
-      "Sports Day": { hasCount: true, count: 36, prefix: "Celebrated ", suffix: "th Sports Day" },
-      "Science Exhibition": { hasCount: false, prefix: "Showcasing Innovation and Creativity", suffix: "" }
-    };
   }
 
   onEventTitleChange(): void {
