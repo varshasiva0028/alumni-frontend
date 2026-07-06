@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GalleryService } from '../../services/gallery.service';
 import { Event } from '../../models/event.model';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-gallery',
   standalone: true,
@@ -18,28 +19,30 @@ export class GalleryComponent {
   ) { }
   ngOnInit(): void {
 
-    this.galleryEvents = this.galleryService.getEvents();
+    this.galleryEvents$ = this.galleryService.getEvents();
 
   }
   // ============================
   // DUMMY EVENTS
   // ============================
-  galleryEvents: Event[] = [];
-  // ============================
+  galleryEvents$!: Observable<Event[]>;  // ============================
   // OPEN GALLERY
   // ============================
-  openGallery(event: Event) {
+  openGallery(event: Event): void {
 
-    this.router.navigate(
-      ['/gallery', event.id],
-      {
-        state: {
-          event: event
-        }
-      }
-    );
+    this.router.navigate(['/gallery', event.id]);
 
   }
+  toggleVisibility(event: Event): void {
+
+  const updatedEvent = {
+    ...event,
+    visible: !event.visible
+  };
+
+  this.galleryService.updateEvent(updatedEvent);
+
+}
 
   // ============================
   // ADD NEW EVENT
@@ -57,14 +60,7 @@ export class GalleryComponent {
 
   editEvent(event: Event): void {
 
-    this.router.navigate(
-      ['/update-event', event.id],
-      {
-        state: {
-          event: event
-        }
-      }
-    );
+    this.router.navigate(['/update-event', event.id]);
 
   }
 

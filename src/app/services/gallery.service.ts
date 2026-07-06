@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Event, ChiefGuest, GalleryImage } from '../models/event.model';
 
 @Injectable({
@@ -171,6 +172,11 @@ export class GalleryService {
     )
 
   ];
+  private eventsSubject = new BehaviorSubject<Event[]>(
+    structuredClone(this.galleryEvents)
+  );
+
+  events$ = this.eventsSubject.asObservable();
 
   // =====================================================
   // EVENT FACTORY
@@ -215,22 +221,38 @@ export class GalleryService {
   // =====================================================
   // CRUD METHODS
   // =====================================================
+  toggleEventVisibility(id: number): void {
 
-  getEvents(): Event[] {
+    const index = this.galleryEvents.findIndex(e => e.id === id);
 
-    return this.galleryEvents;
+    if (index === -1) return;
+
+    this.galleryEvents[index].visible = !this.galleryEvents[index].visible;
+
+    this.eventsSubject.next(
+      structuredClone(this.galleryEvents)
+    );
 
   }
+  getEvents(): Observable<Event[]> {
 
+    return this.events$;
+
+  }
   getEventById(id: number): Event | undefined {
 
-    return this.galleryEvents.find(e => e.id === id);
+    const event = this.galleryEvents.find(e => e.id === id);
+
+    return event ? structuredClone(event) : undefined;
 
   }
-
   addEvent(event: Event): void {
 
     this.galleryEvents.push(event);
+
+    this.eventsSubject.next(
+      structuredClone(this.galleryEvents)
+    );
 
   }
 
@@ -244,15 +266,29 @@ export class GalleryService {
 
       this.galleryEvents[index] = updatedEvent;
 
+      this.eventsSubject.next(
+        structuredClone(this.galleryEvents)
+      );
+
     }
 
   }
-
   deleteEvent(id: number): void {
 
-    this.galleryEvents = this.galleryEvents.filter(
-      e => e.id !== id
+    this.galleryEvents =
+      this.galleryEvents.filter(e => e.id !== id);
+
+    this.eventsSubject.next(
+      structuredClone(this.galleryEvents)
     );
+
+  }
+  getNextEventId(): number {
+
+    return Math.max(
+      ...this.galleryEvents.map(e => e.id),
+      0
+    ) + 1;
 
   }
 

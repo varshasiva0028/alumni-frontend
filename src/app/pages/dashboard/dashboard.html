@@ -1,31 +1,24 @@
-<div class="container-fluid px-2 px-lg-3 bg-body text-body">
+<div class="container-fluid px-2 px-lg-3 bg-body text-body" *ngIf="stats$ | async as stats">
   
   <!-- Header Section -->
-
-<div class="sticky-top bg-body border-bottom shadow-sm  mb-4 z-3">
-
-  <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
-
-    <div>
-      <h2 class="display-6 fw-bold text-body mb-1 fs-2">
-        Dashboard
-      </h2>
-
-      <p class="text-secondary mb-0">
-        Welcome back, Administrator 👋
-      </p>
+  <div class="sticky-top bg-body border-bottom shadow-sm mb-4 z-3">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-4 py-3">
+      <div>
+        <h2 class="display-6 fw-bold text-body mb-1 fs-2">
+          Dashboard
+        </h2>
+        <p class="text-secondary mb-0">
+          Welcome back, Administrator 👋
+        </p>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle fs-6 px-4 py-2 shadow-sm">
+          <i class="bi bi-calendar3 me-2"></i>
+          {{ today | date:'dd MMM yyyy' }}
+        </span>
+      </div>
     </div>
-
-    <div>
-      <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle fs-6 px-4 py-2 shadow-sm">
-        <i class="bi bi-calendar3 me-2"></i>
-        {{ today | date:'dd MMM yyyy' }}
-      </span>
-    </div>
-
   </div>
-
-</div>
 
   <!-- Institution Card (Wider padding, bigger text columns) -->
   <div class="card border-0 border-top border-success border-5 shadow-sm rounded-4 bg-success-subtle mb-5 transition-card">
@@ -42,7 +35,7 @@
               <div class="d-flex align-items-center gap-3 mb-2">
                 <h3 class="fw-bold mb-0 text-dark">Events</h3>
                 <span class="badge bg-success rounded-pill px-3 py-1.5 small">
-                  {{ dashboardStats.institution.status }}
+                  {{ stats.institution.status }}
                 </span>
               </div>
               <p class="text-secondary fs-6 mb-0">Manage campus activities and institution events in real-time.</p>
@@ -50,8 +43,8 @@
           </div>
         </div>
         <div class="col-lg-4 text-center text-lg-end">
-          <h1 class="display-3 fw-bold text-success mb-0">
-            {{ dashboardStats.institution.totalEvents }}
+          <h1 class="display-3 fw-bold text-success mb-0 cursor-pointer" (click)="incrementEvents()" title="Click to increment total events">
+            {{ stats.institution.totalEvents }}
           </h1>
           <span class="text-secondary fw-semibold text-uppercase small tracking-wider">Total Events</span>
         </div>
@@ -78,7 +71,7 @@
 
             <div class="text-center py-4 mb-3">
               <h1 class="display-4 fw-bold text-primary mb-0">
-                {{ totalAlumni }}
+                {{ totalAlumni$ | async }}
               </h1>
               <span class="text-secondary fw-semibold text-uppercase small tracking-wider">Total Registered</span>
             </div>
@@ -89,15 +82,15 @@
 
             <!-- Gender Split Section -->
             <div class="row text-center g-3">
-              <div class="col-6 border-end border-secondary-subtle">
+              <div class="col-6 border-end border-secondary-subtle cursor-pointer" (click)="incrementAlumni('male')" title="Click to increment male alumni">
                 <i class="bi bi-gender-male fs-2 text-primary"></i>
                 <div class="small text-secondary fw-semibold mt-2">Male</div>
-                <h4 class="fw-bold text-dark mt-1 mb-0">{{ dashboardStats.alumni.male }}</h4>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.alumni.male }}</h4>
               </div>
-              <div class="col-6">
+              <div class="col-6 cursor-pointer" (click)="incrementAlumni('female')" title="Click to increment female alumni">
                 <i class="bi bi-gender-female fs-2 text-danger"></i>
                 <div class="small text-secondary fw-semibold mt-2">Female</div>
-                <h4 class="fw-bold text-dark mt-1 mb-0">{{ dashboardStats.alumni.female }}</h4>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.alumni.female }}</h4>
               </div>
             </div>
           </div>
@@ -122,7 +115,7 @@
 
             <div class="text-center py-4 mb-3">
               <h1 class="display-4 fw-bold text-danger mb-0">
-                {{ totalStudents }}
+                {{ totalStudents$ | async }}
               </h1>
               <span class="text-secondary fw-semibold text-uppercase small tracking-wider">Total Students</span>
             </div>
@@ -133,15 +126,15 @@
 
             <!-- Gender Split Section -->
             <div class="row text-center g-3">
-              <div class="col-6 border-end border-secondary-subtle">
+              <div class="col-6 border-end border-secondary-subtle cursor-pointer" (click)="incrementStudents('male')" title="Click to increment male students">
                 <i class="bi bi-gender-male fs-2 text-primary"></i>
                 <div class="small text-secondary fw-semibold mt-2">Male</div>
-                <h4 class="fw-bold text-dark mt-1 mb-0">{{ dashboardStats.students.male }}</h4>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.students.male }}</h4>
               </div>
-              <div class="col-6">
+              <div class="col-6 cursor-pointer" (click)="incrementStudents('female')" title="Click to increment female students">
                 <i class="bi bi-gender-female fs-2 text-danger"></i>
                 <div class="small text-secondary fw-semibold mt-2">Female</div>
-                <h4 class="fw-bold text-dark mt-1 mb-0">{{ dashboardStats.students.female }}</h4>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.students.female }}</h4>
               </div>
             </div>
           </div>

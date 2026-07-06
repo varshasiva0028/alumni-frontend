@@ -1,7 +1,14 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { GalleryService } from '../../services/gallery.service';
+import { Event } from '../../models/event.model';
+import {
+  Component,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 
 @Component({
   selector: 'app-update-event',
@@ -12,63 +19,41 @@ import { Router } from '@angular/router';
 })
 export class UpdateEventComponent {
 
-  // ===========================================
-  // ADVANCED EDITOR
-  // ===========================================
-
   showAdvancedEditor = false;
+  @ViewChild('thumbnailInput')
+  thumbnailInput!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('guestInput')
+  guestInput!: ElementRef<HTMLInputElement>;
+
+  @ViewChild('galleryInput')
+  galleryInput!: ElementRef<HTMLInputElement>;
 
   // ===========================================
   // EVENT
   // ===========================================
 
-  event: any;
+  event!: Event;
+  selectedGuest: any = null;
+  selectedGalleryImage: any = null;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private galleryService: GalleryService
+  ) { }
+  ngOnInit(): void {
 
-    const stateEvent = history.state.event;
+    const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.event = {
+    const event = this.galleryService.getEventById(id);
 
-      id: stateEvent?.id ?? 0,
+    if (event) {
 
-      title: stateEvent?.title ?? '',
+      // Create a copy so editing doesn't immediately change the service data
+      this.event = structuredClone(event);
 
-      quote: stateEvent?.quote ?? '',
-
-      thumbnail: stateEvent?.thumbnail ?? '',
-
-      visible: stateEvent?.visible ?? true,
-
-      chiefGuests: (stateEvent?.chiefGuests || []).map(
-        (guest: any, index: number) => ({
-
-          name: guest.name || `Chief Guest ${index + 1}`,
-
-          image: guest.image,
-
-          visible: guest.visible ?? true
-
-        })
-      ),
-
-      galleryImages:
-
-        stateEvent?.galleryImages ??
-
-        (stateEvent?.images || []).map(
-          (img: string, index: number) => ({
-
-            id: index + 1,
-
-            image: img,
-
-            visible: true
-
-          })
-        )
-
-    };
+    }
 
   }
 
@@ -134,7 +119,7 @@ export class UpdateEventComponent {
 
   changeThumbnail(): void {
 
-    alert('Replace Thumbnail');
+    this.thumbnailInput.nativeElement.click();
 
   }
 
@@ -150,10 +135,11 @@ export class UpdateEventComponent {
 
   replaceChiefGuest(guest: any): void {
 
-    alert('Replace ' + guest.name);
+    this.selectedGuest = guest;
+
+    this.guestInput.nativeElement.click();
 
   }
-
   deleteChiefGuest(index: number): void {
 
     this.event.chiefGuests.splice(index, 1);
@@ -168,7 +154,11 @@ export class UpdateEventComponent {
 
       image: 'https://i.pravatar.cc/500',
 
-      visible: true
+      visible: true,
+
+      designation: '',
+
+      organization: ''
 
     });
 
@@ -186,7 +176,9 @@ export class UpdateEventComponent {
 
   replaceGalleryImage(image: any): void {
 
-    alert('Replace Gallery Image');
+    this.selectedGalleryImage = image;
+
+    this.galleryInput.nativeElement.click();
 
   }
 
@@ -198,15 +190,90 @@ export class UpdateEventComponent {
 
   addGalleryImage(): void {
 
-    this.event.galleryImages.push({
+    this.selectedGalleryImage = null;
 
-      id: this.event.galleryImages.length + 1,
+    this.galleryInput.nativeElement.click();
 
-      image: `https://picsum.photos/600/400?random=${this.event.galleryImages.length + 100}`,
+  }
 
-      visible: true
+  onThumbnailSelected(event: any): void {
 
-    });
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      this.event.thumbnail = reader.result as string;
+
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+
+  }
+
+
+  onGuestSelected(event: any): void {
+
+    const file = event.target.files[0];
+
+    if (!file || !this.selectedGuest) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      this.selectedGuest.image = reader.result as string;
+
+    };
+
+    reader.readAsDataURL(file);
+
+    event.target.value = '';
+  }
+  onGallerySelected(event: any): void {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      if (this.selectedGalleryImage) {
+
+        this.selectedGalleryImage.image = reader.result as string;
+
+      } else {
+
+        this.event.galleryImages.push({
+
+          id: this.event.galleryImages.length + 1,
+
+          image: reader.result as string,
+
+          visible: true
+
+        });
+
+      }
+
+    };
+    reader.readAsDataURL(file);
+
+    event.target.value = '';
+  }
+  // ===========================================
+  // Thumb Edit
+  // ===========================================
+  openThumbnailEditor(): void {
+
+    this.showAdvancedEditor = true;
+
+    this.changeThumbnail();
 
   }
 
@@ -216,12 +283,13 @@ export class UpdateEventComponent {
 
   saveChanges(): void {
 
-    console.log(this.event);
+    this.event.totalPhotos = this.event.galleryImages.length;
+
+    this.galleryService.updateEvent(this.event);
 
     alert('Changes Saved Successfully');
 
     this.router.navigate(['/gallery']);
 
   }
-
 }

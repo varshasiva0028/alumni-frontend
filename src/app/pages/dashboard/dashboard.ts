@@ -1,42 +1,59 @@
-import { Component } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DashboardService } from '../../services/dashboard.service';
+import { DashboardStats } from '../../models/dashboard.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DatePipe],
+  imports: [CommonModule, DatePipe],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   today: Date = new Date();
 
-  dashboardStats = {
-    institution: {
-      totalEvents: 18,
-      status: 'Active'
-    },
-    alumni: {
-      male: 251,
-      female: 231
-    },
-    students: {
-      male: 134,
-      female: 100
-    }
-  };
+  // Observable states consumed by async pipe in HTML template
+  stats$!: Observable<DashboardStats>;
+  totalAlumni$!: Observable<number>;
+  totalStudents$!: Observable<number>;
 
-  get totalAlumni(): number {
-    return (
-      this.dashboardStats.alumni.male +
-      this.dashboardStats.alumni.female
+  constructor(private dashboardService: DashboardService) { }
+
+  ngOnInit(): void {
+    // Single source of truth from service
+    this.stats$ = this.dashboardService.getDashboardStats();
+
+    // Derived stats using RxJS map operator
+    this.totalAlumni$ = this.stats$.pipe(
+      map(stats => stats.alumni.male + stats.alumni.female)
+    );
+
+    this.totalStudents$ = this.stats$.pipe(
+      map(stats => stats.students.male + stats.students.female)
     );
   }
 
-  get totalStudents(): number {
-    return (
-      this.dashboardStats.students.male +
-      this.dashboardStats.students.female
-    );
+  // Delegate actions to the service keeping component lean
+  incrementEvents(): void {
+    this.dashboardService.incrementEvents();
+  }
+
+  incrementAlumni(gender: 'male' | 'female'): void {
+    this.dashboardService.incrementAlumni(gender);
+  }
+
+  incrementStudents(gender: 'male' | 'female'): void {
+    this.dashboardService.incrementStudents(gender);
+  }
+
+  refresh(): void {
+    this.dashboardService.refreshDashboard();
+  }
+
+  reset(): void {
+    this.dashboardService.resetDashboardStats();
   }
 }

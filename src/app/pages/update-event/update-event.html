@@ -91,7 +91,7 @@
                         <!-- Edit Thumbnail -->
 
                         <button class="btn btn-light rounded-circle shadow position-absolute top-0 end-0 m-3"
-                            (click)="openAdvancedEditor()">
+                            (click)="openThumbnailEditor()">
 
                             <i class="bi bi-pencil-fill"></i>
 
@@ -119,7 +119,7 @@
 
                         </label>
 
-                        <input type="text" class="form-control form-control-lg" [(ngModel)]="event.title">
+                        <input type="text" class="form-control form-control-md" [(ngModel)]="event.title">
 
                     </div>
 
@@ -131,29 +131,43 @@
 
                         </label>
 
-                        <textarea rows="5" class="form-control" [(ngModel)]="event.quote">
-
-                        </textarea>
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="event.quote"
+                            placeholder="Enter event quote">
 
                     </div>
 
-                    <div class="row">
+                    <div class="row g-3 mt-2">
+
+                        <!-- Total Images -->
 
                         <div class="col-md-6">
 
-                            <div class="card bg-primary-subtle border-0">
+                            <div class="card border-0 shadow-sm rounded-4 bg-primary-subtle h-100">
 
-                                <div class="card-body text-center">
+                                <div class="card-body d-flex align-items-center">
 
-                                    <i class="bi bi-images fs-2 text-primary"></i>
+                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center flex-shrink-0"
+                                        style="width:50px;height:50px;">
 
-                                    <h4 class="fw-bold mt-2">
+                                        <i class="bi bi-images fs-5"></i>
 
-                                        {{event.galleryImages.length}}
+                                    </div>
 
-                                    </h4>
+                                    <div class="ms-3">
 
-                                    <small>Total Images</small>
+                                        <h3 class="fw-bold mb-0">
+
+                                            {{event.galleryImages.length}}
+
+                                        </h3>
+
+                                        <small class="text-secondary fw-semibold">
+
+                                            Total Images
+
+                                        </small>
+
+                                    </div>
 
                                 </div>
 
@@ -161,21 +175,36 @@
 
                         </div>
 
+                        <!-- Chief Guests -->
+
                         <div class="col-md-6">
 
-                            <div class="card bg-warning-subtle border-0">
+                            <div class="card border-0 shadow-sm rounded-4 bg-warning-subtle h-100">
 
-                                <div class="card-body text-center">
+                                <div class="card-body d-flex align-items-center">
 
-                                    <i class="bi bi-person-badge fs-2 text-warning"></i>
+                                    <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center flex-shrink-0"
+                                        style="width:50px;height:50px;">
 
-                                    <h4 class="fw-bold mt-2">
+                                        <i class="bi bi-person-badge fs-5"></i>
 
-                                        {{event.chiefGuests.length}}
+                                    </div>
 
-                                    </h4>
+                                    <div class="ms-3">
 
-                                    <small>Chief Guests</small>
+                                        <h3 class="fw-bold mb-0">
+
+                                            {{event.chiefGuests.length}}
+
+                                        </h3>
+
+                                        <small class="text-secondary fw-semibold">
+
+                                            Chief Guests
+
+                                        </small>
+
+                                    </div>
 
                                 </div>
 
@@ -473,3 +502,12 @@
     </div>
 
 </div>
+<!-- ========================================= -->
+<!-- HIDDEN FILE INPUTS -->
+<!-- ========================================= -->
+
+<input #thumbnailInput type="file" accept="image/*" hidden (change)="onThumbnailSelected($event)">
+
+<input #guestInput type="file" accept="image/*" hidden (change)="onGuestSelected($event)">
+
+<input #galleryInput type="file" accept="image/*" hidden (change)="onGallerySelected($event)">

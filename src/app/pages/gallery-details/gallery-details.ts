@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { HostListener } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
+import { GalleryService } from '../../services/gallery.service';
 import { Event } from '../../models/event.model';
-
 interface GalleryItem {
 
   type: 'photo' | 'guest';
@@ -36,13 +36,20 @@ export class GalleryDetails {
   selectedEvent!: Event;
   galleryItems: GalleryItem[] = [];
 
-  constructor(private location: Location) {
+  constructor(
+    private location: Location,
+    private route: ActivatedRoute,
+    private galleryService: GalleryService
+  ) { }
+  ngOnInit(): void {
 
-    const navigation = history.state;
+    const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (navigation.event) {
+    const event = this.galleryService.getEventById(id);
 
-      this.selectedEvent = navigation.event;
+    if (event) {
+
+      this.selectedEvent = event;
 
       this.prepareGallery();
 

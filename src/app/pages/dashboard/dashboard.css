@@ -24,6 +24,11 @@
   font-weight: 800;
 }
 
+/* Cursor triggers */
+.cursor-pointer {
+  cursor: pointer;
+}
+
 /* Dark mode theme configurations */
 [data-bs-theme="dark"] .bg-success-subtle { background-color: rgba(25, 135, 84, 0.15) !important; }
 [data-bs-theme="dark"] .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.15) !important; }
