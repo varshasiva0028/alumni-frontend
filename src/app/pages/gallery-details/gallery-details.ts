@@ -2,19 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { HostListener } from '@angular/core';
 
-interface GalleryEvent {
-  id: number;
-  title: string;
-  quote: string;
-  thumbnail: string;
-  totalPhotos: number;
-  chiefGuests: string[];
-  images: string[];
-}
+import { Event } from '../../models/event.model';
 
 interface GalleryItem {
+
   type: 'photo' | 'guest';
+
   image: string;
+
 }
 
 @Component({
@@ -38,8 +33,7 @@ export class GalleryDetails {
 
   currentIndex = 0;
 
-  selectedEvent!: GalleryEvent;
-
+  selectedEvent!: Event;
   galleryItems: GalleryItem[] = [];
 
   constructor(private location: Location) {
@@ -152,7 +146,7 @@ export class GalleryDetails {
 
         this.galleryItems.push({
           type: 'guest',
-          image: this.selectedEvent.chiefGuests[guestIndex++]
+          image: this.selectedEvent.chiefGuests[guestIndex++].image
         });
 
       }
@@ -161,14 +155,14 @@ export class GalleryDetails {
 
         this.galleryItems.push({
           type: 'guest',
-          image: this.selectedEvent.chiefGuests[guestIndex++]
+          image: this.selectedEvent.chiefGuests[guestIndex++].image
         });
 
       }
 
       this.galleryItems.push({
         type: 'photo',
-        image: this.selectedEvent.images[i - 1]
+        image: this.selectedEvent.galleryImages[i - 1].image
       });
 
     }
