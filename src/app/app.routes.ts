@@ -9,6 +9,7 @@ import { EventsComponent } from './pages/events/events';
 import { Results } from './pages/results/results';
 import { GalleryComponent } from './pages/gallery/gallery';
 import { GalleryDetails } from './pages/gallery-details/gallery-details';
+import { UpdateEventComponent } from './pages/update-event/update-event';
 export const routes: Routes = [
   {
     path: '',
@@ -48,7 +49,10 @@ export const routes: Routes = [
         path: 'gallery/:id',
         component: GalleryDetails
       },
-      
+      {
+        path: 'update-event/:id',
+        component: UpdateEventComponent
+      }
     ]
   }
 ];
