@@ -1,6 +1,6 @@
-import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 interface ChiefGuest {
@@ -22,7 +22,7 @@ interface ChiefGuest {
   templateUrl: './events.html',
   styleUrl: './events.css'
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit {
   predefinedTitles: string[] = [
     "Founder's Day",
     "Annual Day",
@@ -63,6 +63,9 @@ export class EventsComponent {
   chiefGuests: ChiefGuest[] = [];
   otherPhotos: string[] = [];
 
+  // Required Event Thumbnail field (prefilled with transparent 1x1 base64 png placeholder)
+  thumbnailUrl: string = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
   // Simulated upload progress state
   uploadProgress: number = 0;
   isUploading: boolean = false;
@@ -70,11 +73,44 @@ export class EventsComponent {
   // Drag and Drop Sorting State
   draggedIndex: number | null = null;
 
+  // Programmatic FormControls utilizing Angular Validators
+  titleControl = new FormControl('', [
+    Validators.required,
+  ]);
+
+  quoteControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(10),
+    Validators.maxLength(250)
+  ]);
+
+  guestNameControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(60),
+    Validators.pattern(/^[A-Za-z\s.]+$/)
+  ]);
+
+  detail1Control = new FormControl('', [
+    Validators.maxLength(80)
+  ]);
+
+  detail2Control = new FormControl('', [
+    Validators.maxLength(120)
+  ]);
+
+  thumbnailControl = new FormControl('', [
+    Validators.required
+  ]);
+
   constructor(
     private cdr: ChangeDetectorRef,
     private zone: NgZone,
     private router: Router
-  ) { }
+  ) {}
+
+  ngOnInit(): void {}
+
   // Compute other photos limit dynamically
   get isAnnualDay(): boolean {
     const title = this.selectedEventTitle === 'Other Events' ? this.customEventTitle : this.selectedEventTitle;
@@ -153,8 +189,8 @@ export class EventsComponent {
     const file = element.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      this.errorMessage = `Image exceeds the 5 MB size limit.`;
+    if (!this.validateImage(file)) {
+      this.errorMessage = `Guest photo file "${file.name}" is invalid or exceeds 5 MB. Allowed formats: JPG, JPEG, PNG, WEBP.`;
       element.value = '';
       this.cdr.detectChanges();
       return;
@@ -186,8 +222,8 @@ export class EventsComponent {
 
     const filesToUpload = Array.from(files).slice(0, remainingSlots);
     for (const file of filesToUpload) {
-      if (file.size > 5 * 1024 * 1024) {
-        this.errorMessage = `Image "${file.name}" exceeds the 5 MB limit.`;
+      if (!this.validateImage(file)) {
+        this.errorMessage = `Guest photo "${file.name}" is invalid or exceeds 5 MB. Allowed formats: JPG, JPEG, PNG, WEBP.`;
         continue;
       }
 
@@ -234,8 +270,8 @@ export class EventsComponent {
 
     const validFiles: File[] = [];
     for (const file of Array.from(files).slice(0, remainingSlots)) {
-      if (file.size > 5 * 1024 * 1024) {
-        this.errorMessage = `Some files were skipped as they exceeded the 5 MB limit.`;
+      if (!this.validateImage(file)) {
+        this.errorMessage = `Some files were skipped as they exceeded the 5 MB limit or had invalid formats.`;
         continue;
       }
       validFiles.push(file);
@@ -246,35 +282,38 @@ export class EventsComponent {
       return;
     }
 
-    // Progress bar simulation
+    // Start upload progress
     this.isUploading = true;
     this.uploadProgress = 0;
     this.cdr.detectChanges();
 
-    const interval = setInterval(() => {
-      this.zone.run(() => {
-        this.uploadProgress += 10;
-        this.cdr.detectChanges();
+    let loadedCount = 0;
+    const totalFiles = validFiles.length;
 
-        if (this.uploadProgress >= 100) {
-          clearInterval(interval);
-          this.isUploading = false;
+    for (const file of validFiles) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.zone.run(() => {
+          this.otherPhotos.push(e.target.result);
+          this.otherPhotos = [...this.otherPhotos];
+          
+          loadedCount++;
+          this.uploadProgress = Math.round((loadedCount / totalFiles) * 100);
+          this.cdr.detectChanges();
 
-          for (const file of validFiles) {
-            const reader = new FileReader();
-            reader.onload = (e: any) => {
+          if (loadedCount === totalFiles) {
+            setTimeout(() => {
               this.zone.run(() => {
-                this.otherPhotos.push(e.target.result);
-                this.otherPhotos = [...this.otherPhotos];
+                this.isUploading = false;
+                this.uploadProgress = 0;
                 this.cdr.detectChanges();
               });
-            };
-            reader.readAsDataURL(file);
+            }, 300);
           }
-          this.cdr.detectChanges();
-        }
-      });
-    }, 120);
+        });
+      };
+      reader.readAsDataURL(file);
+    }
 
     element.value = '';
   }
@@ -317,15 +356,187 @@ export class EventsComponent {
     this.cdr.detectChanges();
   }
 
+  // --- Programmatic Validators implementation using Angular Validators ---
+
+  validateTitle(): boolean {
+    const finalTitle = this.selectedEventTitle === 'Other Events' ? this.customEventTitle : this.selectedEventTitle;
+    this.titleControl.setValue(finalTitle || '');
+
+    if (this.titleControl.invalid) {
+      if (this.titleControl.hasError('required')) {
+        this.errorMessage = 'Event Title is required.';
+      } else if (this.titleControl.hasError('minlength')) {
+        this.errorMessage = 'Event Title must be at least 5 characters long.';
+      } else if (this.titleControl.hasError('maxlength')) {
+        this.errorMessage = 'Event Title cannot exceed 100 characters.';
+      } else if (this.titleControl.hasError('pattern')) {
+        this.errorMessage = 'Event Title can only contain letters, numbers, spaces, apostrophe, hyphen, and dot. Leading/trailing spaces are not allowed.';
+      }
+      this.cdr.detectChanges();
+      return false;
+    }
+
+    if (finalTitle && finalTitle.trim().length === 0) {
+      this.errorMessage = 'Event Title cannot contain only spaces.';
+      this.cdr.detectChanges();
+      return false;
+    }
+
+    return true;
+  }
+
+  validateQuote(): boolean {
+    const quote = this.currentEventQuote;
+    this.quoteControl.setValue(quote || '');
+
+    if (this.quoteControl.invalid) {
+      if (this.quoteControl.hasError('required')) {
+        this.errorMessage = 'Event Quote is required.';
+      } else if (this.quoteControl.hasError('minlength')) {
+        this.errorMessage = 'Event Quote must be at least 10 characters long.';
+      } else if (this.quoteControl.hasError('maxlength')) {
+        this.errorMessage = 'Event Quote cannot exceed 250 characters.';
+      }
+      this.cdr.detectChanges();
+      return false;
+    }
+    return true;
+  }
+
+  validateChiefGuests(): boolean {
+    for (let i = 0; i < this.chiefGuests.length; i++) {
+      const guest = this.chiefGuests[i];
+
+      // Name Validation
+      this.guestNameControl.setValue(guest.name || '');
+      if (this.guestNameControl.invalid) {
+        if (this.guestNameControl.hasError('required')) {
+          this.errorMessage = `Chief Guest #${i + 1} Name is required.`;
+        } else if (this.guestNameControl.hasError('minlength')) {
+          this.errorMessage = `Chief Guest #${i + 1} Name must be at least 3 characters long.`;
+        } else if (this.guestNameControl.hasError('maxlength')) {
+          this.errorMessage = `Chief Guest #${i + 1} Name cannot exceed 60 characters.`;
+        } else if (this.guestNameControl.hasError('pattern')) {
+          this.errorMessage = `Chief Guest #${i + 1} Name can only contain alphabets, spaces, and dots.`;
+        }
+        this.cdr.detectChanges();
+        return false;
+      }
+
+      // Guest Photo validation (Only validated if photo is uploaded)
+      if (guest.photoUrl && !this.validateImage(guest.photoUrl)) {
+        this.errorMessage = `Chief Guest #${i + 1} Photo format is invalid or exceeds 5 MB limit.`;
+        this.cdr.detectChanges();
+        return false;
+      }
+
+      // validation (detail1)
+      this.detail1Control.setValue(guest.detail1 || '');
+      if (this.detail1Control.invalid) {
+        if (this.detail1Control.hasError('maxlength')) {
+          this.errorMessage = `Chief Guest #${i + 1} Designation cannot exceed 80 characters.`;
+        }
+        this.cdr.detectChanges();
+        return false;
+      }
+
+      // validation (detail2)
+      this.detail2Control.setValue(guest.detail2 || '');
+      if (this.detail2Control.invalid) {
+        if (this.detail2Control.hasError('maxlength')) {
+          this.errorMessage = `Chief Guest #${i + 1} Organization cannot exceed 120 characters.`;
+        }
+        this.cdr.detectChanges();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  validateGallery(): boolean {
+    if (this.otherPhotos.length === 0) {
+      this.errorMessage = 'At least one gallery image is required before saving.';
+      this.cdr.detectChanges();
+      return false;
+    }
+
+    for (let i = 0; i < this.otherPhotos.length; i++) {
+      if (!this.validateImage(this.otherPhotos[i])) {
+        this.errorMessage = `Gallery image #${i + 1} is invalid or exceeds 5 MB.`;
+        this.cdr.detectChanges();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  validateThumbnail(): boolean {
+    this.thumbnailControl.setValue(this.thumbnailUrl || '');
+    if (this.thumbnailControl.invalid) {
+      this.errorMessage = 'Thumbnail is required.';
+      this.cdr.detectChanges();
+      return false;
+    }
+
+    if (!this.validateImage(this.thumbnailUrl)) {
+      this.errorMessage = 'Thumbnail image has invalid format or exceeds 5 MB limit.';
+      this.cdr.detectChanges();
+      return false;
+    }
+    return true;
+  }
+
+  validateImage(base64OrFile: any): boolean {
+    if (!base64OrFile) return false;
+
+    // Check if it is a File object (from input change selection)
+    if (base64OrFile instanceof File) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+      if (!allowedTypes.includes(base64OrFile.type)) return false;
+      if (base64OrFile.size > 5 * 1024 * 1024) return false;
+      return true;
+    }
+
+    // Check if it is a Base64 string
+    if (typeof base64OrFile === 'string' && base64OrFile.startsWith('data:')) {
+      const parts = base64OrFile.split(',');
+      if (parts.length < 2) return false;
+
+      const mimeMatch = base64OrFile.match(/data:([^;]+);/);
+      const mimeType = mimeMatch ? mimeMatch[1] : '';
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+      if (!allowedTypes.includes(mimeType)) return false;
+
+      const base64Content = parts[1];
+      const approxSizeBytes = Math.round((base64Content.length * 3) / 4);
+      if (approxSizeBytes > 5 * 1024 * 1024) return false;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  canSubmit(): boolean {
+    return (
+      this.validateTitle() &&
+      this.validateQuote() &&
+      this.validateThumbnail() &&
+      this.validateChiefGuests() &&
+      this.validateGallery()
+    );
+  }
+
   async submitEvent(): Promise<void> {
     this.errorMessage = '';
-    const finalTitle = this.selectedEventTitle === 'Other Events' ? this.customEventTitle.trim() : this.selectedEventTitle;
 
-    if (!finalTitle) {
-      this.errorMessage = 'Please select or specify a category event title.';
+    // Validate all controls via canSubmit before saving
+    if (!this.canSubmit()) {
       this.cdr.detectChanges();
       return;
     }
+
+    const finalTitle = this.selectedEventTitle === 'Other Events' ? this.customEventTitle.trim() : this.selectedEventTitle;
 
     try {
       // Resize Chief Guest photos asynchronously
@@ -357,11 +568,8 @@ export class EventsComponent {
       };
 
       console.log('Saved Event Details:', payload);
-
       alert('Event details saved successfully!');
-
       this.resetForm();
-
       this.router.navigate(['/gallery']);
     } catch (err) {
       console.error('Error processing images:', err);
@@ -375,6 +583,7 @@ export class EventsComponent {
       if (!base64Str || !base64Str.startsWith('data:')) {
         return resolve(base64Str);
       }
+
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
@@ -382,10 +591,13 @@ export class EventsComponent {
         if (!ctx) {
           return reject(new Error('Could not get canvas 2D context'));
         }
+
         const w = img.width;
         const h = img.height;
+
         let targetWidth = 0;
         let targetHeight = 0;
+
         if (w >= h) {
           targetWidth = 798;
           targetHeight = 532;
@@ -393,23 +605,21 @@ export class EventsComponent {
           targetWidth = 532;
           targetHeight = 798;
         }
+
         canvas.width = targetWidth;
         canvas.height = targetHeight;
+
         // Draw image stretched to output size
         ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
         // Detect mimeType to preserve JPEG/PNG formats
         let mimeType = 'image/jpeg';
         const match = base64Str.match(/data:([^;]+);/);
         if (match && match[1]) {
           mimeType = match[1];
         }
+
         const resizedDataUrl = canvas.toDataURL(mimeType);
-
-        // Testing only
-        window.open(resizedDataUrl, '_blank');
-
-        console.log(`Resized Image: ${canvas.width} x ${canvas.height}`);
-
         resolve(resizedDataUrl);
       };
 
@@ -419,6 +629,5 @@ export class EventsComponent {
 
       img.src = base64Str;
     });
-
   }
 }

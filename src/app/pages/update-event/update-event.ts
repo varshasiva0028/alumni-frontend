@@ -112,16 +112,6 @@ export class UpdateEventComponent {
   }
 
   // ===========================================
-  // EVENT VISIBILITY
-  // ===========================================
-
-  toggleVisibility(): void {
-
-    this.event.visible = !this.event.visible;
-
-  }
-
-  // ===========================================
   // THUMBNAIL
   // ===========================================
 

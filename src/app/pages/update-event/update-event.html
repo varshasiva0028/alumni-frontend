@@ -1,9 +1,7 @@
 <div class="container-fluid py-4">
-
     <!-- ========================================= -->
     <!-- PAGE HEADER -->
     <!-- ========================================= -->
-
     <div class="d-flex justify-content-between align-items-center mb-4">
         <!-- Left -->
         <div class="d-flex align-items-center gap-3">
@@ -17,13 +15,11 @@
                 <p class="text-secondary mb-0">Manage your institution gallery event.</p>
             </div>
         </div>
-
         <!-- Right -->
         <button class="btn btn-success px-4 rounded-pill" (click)="saveChanges()">
             <i class="bi bi-check-circle me-2"></i> Save Changes
         </button>
     </div>
-
     <!-- ========================================= -->
     <!-- EVENT INFORMATION -->
     <!-- ========================================= -->
@@ -34,18 +30,10 @@
                     <h4 class="fw-bold mb-1">Event Information</h4>
                     <small class="text-secondary">Update the event thumbnail, title and quote.</small>
                 </div>
-
-                <!-- Visibility -->
-                <button class="btn" [ngClass]="event.visible ? 'btn-success' : 'btn-outline-secondary'"
-                    (click)="toggleVisibility()">
-                    <i class="bi" [ngClass]="event.visible ? 'bi-check-circle-fill' : 'bi-eye-slash-fill'"></i>
-                    {{event.visible ? 'Visible' : 'Hidden'}}
-                </button>
             </div>
         </div>
-
         <div class="card-body p-4">
-            <div class="row g-4 align-items-center">
+            <div class="row g-4 ">
                 <!-- ================= Thumbnail ================= -->
                 <div class="col-lg-5">
                     <div class="position-relative border rounded-4 overflow-hidden shadow-sm">
@@ -90,8 +78,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Chief Guests -->
+                        <!---- Chief Guests ---->
                         <div class="col-md-6">
                             <div class="card border-0 shadow-sm rounded-4 bg-warning-subtle h-100">
                                 <div class="card-body d-flex align-items-center">
@@ -117,7 +104,7 @@
     <!-- Hidden until Thumbnail Pencil is clicked -->
     <!-- ========================================= -->
     <div class="mt-4" [class.d-none]="!showAdvancedEditor">
-        
+
         <!-- ========================================= -->
         <!-- CHIEF GUESTS -->
         <!-- ========================================= -->
@@ -127,17 +114,21 @@
                     <h4 class="fw-bold mb-0">Chief Guests</h4>
                     <small class="text-secondary">Manage chief guest profiles.</small>
                 </div>
-                <button class="btn btn-warning btn-sm rounded-pill px-3 py-2 fw-semibold shadow-sm text-dark d-flex align-items-center gap-1"
+                <button
+                    class="btn btn-warning btn-sm rounded-pill px-3 py-2 fw-semibold shadow-sm text-dark d-flex align-items-center gap-1"
                     (click)="addChiefGuest()">
                     <i class="bi bi-person-plus-fill"></i> Add Guest
                 </button>
             </div>
             <div class="card-body">
-                <div class="row g-4" cdkDropList [cdkDropListData]="event.chiefGuests" (cdkDropListDropped)="dropGuests($event)">
-                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let guest of event.chiefGuests; let i=index" cdkDrag>
+                <div class="row g-4" cdkDropList [cdkDropListData]="event.chiefGuests"
+                    (cdkDropListDropped)="dropGuests($event)">
+                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let guest of event.chiefGuests; let i=index"
+                        cdkDrag>
                         <div class="card border rounded-4 overflow-hidden h-100 bg-white">
                             <div class="position-relative">
-                                <img [src]="guest.image || 'https://via.placeholder.com/300'" class="card-img-top w-100" style="height:240px;object-fit:cover;" alt="Chief Guest">
+                                <img [src]="guest.image || 'https://via.placeholder.com/300'" class="card-img-top w-100"
+                                    style="height:240px;object-fit:cover;" alt="Chief Guest">
                                 <button class="btn btn-danger btn-sm rounded-circle position-absolute top-0 start-0 m-2"
                                     (click)="deleteChiefGuest(i)">
                                     <i class="bi bi-trash-fill"></i>
@@ -149,8 +140,10 @@
                             </div>
                             <div class="card-body">
                                 <input class="form-control mb-2" [(ngModel)]="guest.name" placeholder="Guest Name">
-                                <input class="form-control mb-2 text-secondary small" [(ngModel)]="guest.designation" placeholder="Designation">
-                                <input class="form-control text-secondary small" [(ngModel)]="guest.organization" placeholder="Organization">
+                                <input class="form-control mb-2 text-secondary small" [(ngModel)]="guest.designation"
+                                    placeholder="Designation">
+                                <input class="form-control text-secondary small" [(ngModel)]="guest.organization"
+                                    placeholder="Organization">
                             </div>
                         </div>
                     </div>
@@ -172,12 +165,15 @@
             </div>
 
             <div class="card-body">
-                <div class="row g-4" cdkDropList [cdkDropListData]="event.galleryImages" (cdkDropListDropped)="dropGallery($event)">
+                <div class="row g-4" cdkDropList [cdkDropListData]="event.galleryImages"
+                    (cdkDropListDropped)="dropGallery($event)">
                     <!-- Existing Images -->
-                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let image of event.galleryImages; let i=index" cdkDrag>
+                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let image of event.galleryImages; let i=index"
+                        cdkDrag>
                         <div class="card border rounded-4 overflow-hidden shadow-sm h-100 bg-white">
                             <div class="position-relative">
-                                <img [src]="image.image" class="card-img-top w-100" style="height:220px;object-fit:cover;">
+                                <img [src]="image.image" class="card-img-top w-100"
+                                    style="height:220px;object-fit:cover;">
                                 <!-- Delete -->
                                 <button class="btn btn-danger btn-sm rounded-circle position-absolute top-0 start-0 m-2"
                                     (click)="deleteGalleryImage(i)">
@@ -195,7 +191,8 @@
                     <!-- ADD IMAGE CARD -->
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <div class="card h-100 border-2 border-primary border-opacity-25 rounded-4 shadow-sm"
-                            role="button" (click)="addGalleryImage()" style="border-style: dashed !important; cursor: pointer;">
+                            role="button" (click)="addGalleryImage()"
+                            style="border-style: dashed !important; cursor: pointer;">
                             <div class="card-body d-flex flex-column justify-content-center align-items-center text-center"
                                 style="min-height:220px;">
                                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-3"
