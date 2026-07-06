@@ -20,31 +20,30 @@
           <i class="bi bi-search"></i>
         </span>
         <input type="text" class="form-control border-0 shadow-none bg-transparent"
-          placeholder="Search by name, batch, occupation..." [(ngModel)]="searchText" aria-label="Search alumni">
-        <button *ngIf="searchText" class="btn btn-link text-muted border-0 p-0 pe-2" (click)="searchText = ''"
+          placeholder="Search by name, batch, occupation..." 
+          [ngModel]="searchText$ | async"
+          (ngModelChange)="onSearchChange($event)"
+          aria-label="Search alumni">
+        <button *ngIf="searchText$ | async" class="btn btn-link text-muted border-0 p-0 pe-2" (click)="onSearchChange('')"
           aria-label="Clear search">
           <i class="bi bi-x-circle-fill"></i>
         </button>
       </div>
       <!-- Toggle Layout Switcher -->
       <div class="btn-group rounded-pill overflow-hidden shadow-sm border bg-white ms-2" role="group">
-
         <button type="button" class="btn d-flex align-items-center justify-content-center px-3"
-          style="width: 48px; height: 40px;" [ngClass]="viewType === 'grid'
-      ? 'btn-primary text-white'
-      : 'btn-light text-secondary'" (click)="viewType='grid'">
-
+          style="width: 48px; height: 40px;" [ngClass]="(viewType$ | async) === 'grid'
+          ? 'btn-primary text-white'
+          : 'btn-light text-secondary'" (click)="onViewTypeChange('grid')">
           <i class="bi bi-grid-3x3-gap-fill fs-6 lh-1"></i>
         </button>
 
         <button type="button" class="btn d-flex align-items-center justify-content-center px-3"
-          style="width: 48px; height: 40px;" [ngClass]="viewType === 'list'
-      ? 'btn-primary text-white'
-      : 'btn-light text-secondary'" (click)="viewType='list'">
-
+          style="width: 48px; height: 40px;" [ngClass]="(viewType$ | async) === 'list'
+          ? 'btn-primary text-white'
+          : 'btn-light text-secondary'" (click)="onViewTypeChange('list')">
           <i class="bi bi-list-ul fs-5 lh-1"></i>
         </button>
-
       </div>
     </div>
   </div>
@@ -57,7 +56,7 @@
         <div class="card-body p-4 d-flex justify-content-between align-items-center">
           <div>
             <small class="text-uppercase fw-semibold tracking-wider opacity-75">Total Alumni</small>
-            <h2 class="fw-bold mb-0 mt-1">{{ totalAlumni }}</h2>
+            <h2 class="fw-bold mb-0 mt-1">{{ totalAlumni$ | async }}</h2>
           </div>
           <div class="p-3 bg-white bg-opacity-25 rounded-4 fs-3">
             <i class="bi bi-people-fill"></i>
@@ -72,7 +71,7 @@
         <div class="card-body p-4 d-flex justify-content-between align-items-center">
           <div>
             <small class="text-uppercase fw-semibold tracking-wider opacity-75">Male Alumni</small>
-            <h2 class="fw-bold mb-0 mt-1">{{ maleCount }}</h2>
+            <h2 class="fw-bold mb-0 mt-1">{{ maleCount$ | async }}</h2>
           </div>
           <div class="p-3 bg-white bg-opacity-25 rounded-4 fs-3">
             <i class="bi bi-gender-male"></i>
@@ -87,7 +86,7 @@
         <div class="card-body p-4 d-flex justify-content-between align-items-center">
           <div>
             <small class="text-uppercase fw-semibold tracking-wider opacity-75">Female Alumni</small>
-            <h2 class="fw-bold mb-0 mt-1">{{ femaleCount }}</h2>
+            <h2 class="fw-bold mb-0 mt-1">{{ femaleCount$ | async }}</h2>
           </div>
           <div class="p-3 bg-white bg-opacity-25 rounded-4 fs-3">
             <i class="bi bi-gender-female"></i>
@@ -98,8 +97,8 @@
   </div>
 
   <!-- Grid View Card Layout -->
-  <div class="row g-4" *ngIf="viewType === 'grid'">
-    <div class="col-xl-4 col-md-6 col-12" *ngFor="let alumni of filteredAlumni; let i = index">
+  <div class="row g-4" *ngIf="(viewType$ | async) === 'grid'">
+    <div class="col-xl-4 col-md-6 col-12" *ngFor="let alumni of filteredAlumni$ | async; let i = index">
       <div class="card border shadow-sm rounded-4 h-100 alumni-card overflow-hidden">
         <!-- Gender Gradient Banner (Blue for male, Pink for female) -->
         <div class="banner-header"
@@ -175,8 +174,8 @@
   </div>
 
   <!-- Modern List View Layout -->
-  <div class="row g-3" *ngIf="viewType === 'list'">
-    <div class="col-12 animate-fade-in" *ngFor="let alumni of filteredAlumni; let i = index">
+  <div class="row g-3" *ngIf="(viewType$ | async) === 'list'">
+    <div class="col-12 animate-fade-in" *ngFor="let alumni of filteredAlumni$ | async; let i = index">
       <div class="card border shadow-sm rounded-4 overflow-hidden bg-white alumni-card-list position-relative">
         <!-- Accent line based on gender -->
         <div class="position-absolute start-0 top-0 h-100" style="width: 5px;"
@@ -216,13 +215,13 @@
   </div>
 
   <!-- Empty Search Results State -->
-  <div class="row" *ngIf="filteredAlumni.length === 0">
+  <div class="row" *ngIf="(filteredAlumni$ | async)?.length === 0">
     <div class="col-12 text-center py-5">
       <div class="p-5 bg-light rounded-4 border shadow-sm">
         <i class="bi bi-search text-muted display-4 mb-3 d-block"></i>
         <h4 class="fw-bold">No Alumni Found</h4>
-        <p class="text-muted">We couldn't find any match for "{{ searchText }}".</p>
-        <button class="btn btn-outline-primary rounded-pill px-4 mt-2" (click)="searchText = ''">
+        <p class="text-muted">We couldn't find any match for "{{ searchText$ | async }}".</p>
+        <button class="btn btn-outline-primary rounded-pill px-4 mt-2" (click)="onSearchChange('')">
           Reset Filter
         </button>
       </div>
@@ -239,7 +238,7 @@
     <div
       class="lightbox-header d-flex justify-content-between align-items-center w-100 px-4 py-3 position-absolute top-0 start-0 z-3">
       <div class="text-white bg-dark bg-opacity-20 px-3 py-1.5 rounded-pill fs-7 fw-semibold backdrop-blur">
-        {{ activeImgIndex + 1 }} / {{ filteredAlumni.length }}
+        {{ activeImgIndex + 1 }} / {{ (filteredAlumni$ | async)?.length }}
       </div>
       <div class="d-flex gap-2">
         <button class="btn btn-dark-glass rounded-circle text-white d-flex align-items-center justify-content-center"
@@ -277,9 +276,9 @@
           </div>
         </div>
 
-        <img [src]="currentLightboxAlumni.photo" class="img-fluid lightbox-main-img" [ngClass]="{'grabbing': isPanning}"
+        <img [src]="currentLightboxAlumni?.photo" class="img-fluid lightbox-main-img" [ngClass]="{'grabbing': isPanning}"
           [style.transform]="'translate(' + panX + 'px, ' + panY + 'px) scale(' + zoomScale + ')'"
-          (load)="onImageLoaded()" alt="{{ currentLightboxAlumni.name }}">
+          (load)="onImageLoaded()" alt="{{ currentLightboxAlumni?.name }}">
       </div>
 
       <!-- Next navigation arrow (Right Corner) -->
@@ -293,10 +292,9 @@
     </div>
 
     <!-- Bottom Metadata Panel -->
-    <div class="lightbox-footer w-100 text-center py-4 position-absolute bottom-0 start-0 z-3">
+    <div class="lightbox-footer w-100 text-center py-4 position-absolute bottom-0 start-0 z-3" *ngIf="currentLightboxAlumni">
       <h5 class="text-white fw-bold mb-0 text-shadow">{{ currentLightboxAlumni.name }}</h5>
-      <span class="badge bg-white bg-opacity-25 text-white mt-1.5 px-3 py-1.5">Batch {{ currentLightboxAlumni.batch
-        }}</span>
+      <span class="badge bg-white bg-opacity-25 text-white mt-1.5 px-3 py-1.5">Batch {{ currentLightboxAlumni.batch }}</span>
     </div>
 
   </div>

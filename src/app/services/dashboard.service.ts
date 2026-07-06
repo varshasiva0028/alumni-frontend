@@ -56,16 +56,6 @@ export class DashboardService {
     this.stats$.next(updated);
   }
 
-  /**
-   * Resets the dashboard statistics to their initial mock/default values
-   */
-  resetDashboardStats(): void {
-    this.stats$.next({
-      institution: { ...this.initialStats.institution },
-      alumni: { ...this.initialStats.alumni },
-      students: { ...this.initialStats.students }
-    });
-  }
 
   /**
    * Business Logic: Increments the total events count
@@ -104,16 +94,5 @@ export class DashboardService {
         [gender]: current.students[gender] + 1
       }
     });
-  }
-
-  /**
-   * Refreshes the dashboard stats. 
-   * Prepares the architecture to replace with an HTTP call (Spring Boot API) later.
-   */
-  refreshDashboard(): void {
-    console.log('Dashboard stats refreshed from local state.');
-    // Under REST integration:
-    // this.http.get<DashboardStats>('/api/dashboard/stats').subscribe(data => this.setDashboardStats(data));
-    this.stats$.next({ ...this.stats$.value });
   }
 }

@@ -5,509 +5,236 @@
     <!-- ========================================= -->
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-
         <!-- Left -->
-
         <div class="d-flex align-items-center gap-3">
-
             <div class="position-fixed" style="bottom:30px;left:250px;z-index:1055;">
-
                 <button class="btn btn-light rounded-circle shadow-lg" (click)="back()" style="width:58px;height:58px;">
-
                     <i class="bi bi-arrow-left fs-4"></i>
-
                 </button>
-
             </div>
             <div>
-                <h2 class="fw-bold mb-1">
-                    Update Event
-                </h2>
-                <p class="text-secondary mb-0">
-                    Manage your institution gallery event.
-                </p>
-
+                <h2 class="fw-bold mb-1">Update Event</h2>
+                <p class="text-secondary mb-0">Manage your institution gallery event.</p>
             </div>
-
         </div>
 
         <!-- Right -->
-
         <button class="btn btn-success px-4 rounded-pill" (click)="saveChanges()">
-
-            <i class="bi bi-check-circle me-2"></i>
-
-            Save Changes
-
+            <i class="bi bi-check-circle me-2"></i> Save Changes
         </button>
-
     </div>
 
     <!-- ========================================= -->
     <!-- EVENT INFORMATION -->
     <!-- ========================================= -->
-
     <div class="card border-0 shadow rounded-4">
         <div class="card-header bg-white border-0 py-4 px-4">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h4 class="fw-bold mb-1">
-                        Event Information
-                    </h4>
-                    <small class="text-secondary">
-                        Update the event thumbnail, title and quote.
-                    </small>
-
+                    <h4 class="fw-bold mb-1">Event Information</h4>
+                    <small class="text-secondary">Update the event thumbnail, title and quote.</small>
                 </div>
 
                 <!-- Visibility -->
-
                 <button class="btn" [ngClass]="event.visible ? 'btn-success' : 'btn-outline-secondary'"
                     (click)="toggleVisibility()">
-
-                    <i class="bi" [ngClass]="event.visible ? 'bi-check-circle-fill' : 'bi-eye-slash-fill'">
-                    </i>
-
+                    <i class="bi" [ngClass]="event.visible ? 'bi-check-circle-fill' : 'bi-eye-slash-fill'"></i>
                     {{event.visible ? 'Visible' : 'Hidden'}}
-
                 </button>
-
             </div>
-
         </div>
 
         <div class="card-body p-4">
-
             <div class="row g-4 align-items-center">
-
                 <!-- ================= Thumbnail ================= -->
-
                 <div class="col-lg-5">
-
                     <div class="position-relative border rounded-4 overflow-hidden shadow-sm">
-
                         <img [src]="event.thumbnail" class="img-fluid w-100" style="height:320px;object-fit:cover;">
-
                         <!-- Edit Thumbnail -->
-
                         <button class="btn btn-light rounded-circle shadow position-absolute top-0 end-0 m-3"
                             (click)="openThumbnailEditor()">
-
                             <i class="bi bi-pencil-fill"></i>
-
                         </button>
-
                     </div>
-
                     <small class="text-secondary d-block mt-2 text-center">
-
                         Click the pencil icon to manage Chief Guests and Gallery Images.
-
                     </small>
-
                 </div>
 
                 <!-- ================= Event Details ================= -->
-
                 <div class="col-lg-7">
-
                     <div class="mb-4">
-
-                        <label class="form-label fw-semibold">
-
-                            Event Title
-
-                        </label>
-
+                        <label class="form-label fw-semibold">Event Title</label>
                         <input type="text" class="form-control form-control-md" [(ngModel)]="event.title">
-
                     </div>
 
                     <div class="mb-4">
-
-                        <label class="form-label fw-semibold">
-
-                            Event Quote
-
-                        </label>
-
+                        <label class="form-label fw-semibold">Event Quote</label>
                         <input type="text" class="form-control form-control-sm" [(ngModel)]="event.quote"
                             placeholder="Enter event quote">
-
                     </div>
 
                     <div class="row g-3 mt-2">
-
                         <!-- Total Images -->
-
                         <div class="col-md-6">
-
                             <div class="card border-0 shadow-sm rounded-4 bg-primary-subtle h-100">
-
                                 <div class="card-body d-flex align-items-center">
-
                                     <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center flex-shrink-0"
                                         style="width:50px;height:50px;">
-
                                         <i class="bi bi-images fs-5"></i>
-
                                     </div>
-
                                     <div class="ms-3">
-
-                                        <h3 class="fw-bold mb-0">
-
-                                            {{event.galleryImages.length}}
-
-                                        </h3>
-
-                                        <small class="text-secondary fw-semibold">
-
-                                            Total Images
-
-                                        </small>
-
+                                        <h3 class="fw-bold mb-0">{{event.galleryImages.length}}</h3>
+                                        <small class="text-secondary fw-semibold">Total Images</small>
                                     </div>
-
                                 </div>
-
                             </div>
-
                         </div>
 
                         <!-- Chief Guests -->
-
                         <div class="col-md-6">
-
                             <div class="card border-0 shadow-sm rounded-4 bg-warning-subtle h-100">
-
                                 <div class="card-body d-flex align-items-center">
-
                                     <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center flex-shrink-0"
                                         style="width:50px;height:50px;">
-
                                         <i class="bi bi-person-badge fs-5"></i>
-
                                     </div>
-
                                     <div class="ms-3">
-
-                                        <h3 class="fw-bold mb-0">
-
-                                            {{event.chiefGuests.length}}
-
-                                        </h3>
-
-                                        <small class="text-secondary fw-semibold">
-
-                                            Chief Guests
-
-                                        </small>
-
+                                        <h3 class="fw-bold mb-0">{{event.chiefGuests.length}}</h3>
+                                        <small class="text-secondary fw-semibold">Chief Guests</small>
                                     </div>
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-    </div>
+    </div> <!-- EVENT INFORMATION CARD -->
 
     <!-- ========================================= -->
     <!-- ADVANCED EDITOR -->
     <!-- Hidden until Thumbnail Pencil is clicked -->
     <!-- ========================================= -->
-
     <div class="mt-4" [class.d-none]="!showAdvancedEditor">
+        
         <!-- ========================================= -->
         <!-- CHIEF GUESTS -->
         <!-- ========================================= -->
-
         <div class="card border-0 shadow rounded-4 mt-4">
-
-            <div class="card-header bg-white border-0 py-3 px-4">
-
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <div>
-
-                        <h4 class="fw-bold mb-0">
-
-                            Chief Guests
-
-                        </h4>
-
-                        <small class="text-secondary">
-
-                            Manage chief guest information.
-
-                        </small>
-
-                    </div>
-
-
+            <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="fw-bold mb-0">Chief Guests</h4>
+                    <small class="text-secondary">Manage chief guest profiles.</small>
                 </div>
-
+                <button class="btn btn-warning btn-sm rounded-pill px-3 py-2 fw-semibold shadow-sm text-dark d-flex align-items-center gap-1"
+                    (click)="addChiefGuest()">
+                    <i class="bi bi-person-plus-fill"></i> Add Guest
+                </button>
             </div>
-
             <div class="card-body">
-
-                <div class="row g-4">
-
-                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let guest of event.chiefGuests; let i=index">
-
-                        <div class="card border rounded-4 overflow-hidden">
-
+                <div class="row g-4" cdkDropList [cdkDropListData]="event.chiefGuests" (cdkDropListDropped)="dropGuests($event)">
+                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let guest of event.chiefGuests; let i=index" cdkDrag>
+                        <div class="card border rounded-4 overflow-hidden h-100 bg-white">
                             <div class="position-relative">
-
-                                <img [src]="guest.image" class="card-img-top" style="height:240px;object-fit:cover;">
-
-                                <!-- Delete -->
-
+                                <img [src]="guest.image || 'https://via.placeholder.com/300'" class="card-img-top w-100" style="height:240px;object-fit:cover;" alt="Chief Guest">
                                 <button class="btn btn-danger btn-sm rounded-circle position-absolute top-0 start-0 m-2"
                                     (click)="deleteChiefGuest(i)">
-
                                     <i class="bi bi-trash-fill"></i>
-
                                 </button>
-
-                                <!-- Replace -->
-
                                 <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2"
-                                    (click)="replaceGalleryImage(guest)">
-
+                                    (click)="replaceChiefGuest(guest)">
                                     <i class="bi bi-arrow-repeat"></i>
-
                                 </button>
-
                             </div>
-
                             <div class="card-body">
-
                                 <input class="form-control mb-2" [(ngModel)]="guest.name" placeholder="Guest Name">
-
-                                <input class="form-control mb-2" placeholder="Designation">
-
-                                <input class="form-control" placeholder="Organization">
-
+                                <input class="form-control mb-2 text-secondary small" [(ngModel)]="guest.designation" placeholder="Designation">
+                                <input class="form-control text-secondary small" [(ngModel)]="guest.organization" placeholder="Organization">
                             </div>
-
                         </div>
-
-                    </div>
-
-                    <!-- Upload Guest Card -->
-
-                    <div class="col-xl-3 col-lg-4 col-md-6">
-
-                        <div class="card border border-2 border-success border-opacity-25 rounded-4 shadow-sm h-100"
-                            role="button" (click)="addChiefGuest()">
-
-                            <div class="card-body d-flex flex-column justify-content-center align-items-center text-center"
-                                style="min-height:330px;">
-
-                                <div class="rounded-circle bg-success text-white d-flex justify-content-center align-items-center mb-3"
-                                    style="width:70px;height:70px;">
-
-                                    <i class="bi bi-person-plus-fill fs-2"></i>
-
-                                </div>
-
-                                <h5 class="fw-bold mb-1">
-
-                                    Add Chief Guest
-
-                                </h5>
-
-                                <small class="text-secondary">
-
-                                    Upload a new chief guest
-
-                                </small>
-
-                            </div>
-
-                        </div>
-
                     </div>
                 </div>
-
-
             </div>
-
         </div>
 
         <!-- ========================================= -->
         <!-- GALLERY IMAGES -->
         <!-- ========================================= -->
-
         <div class="card border-0 shadow rounded-4 mt-4">
-
             <div class="card-header bg-white border-0 py-3 px-4">
-
                 <div class="d-flex justify-content-between align-items-center">
-
                     <div>
-
-                        <h4 class="fw-bold mb-0">
-
-                            Gallery Images
-
-                        </h4>
-
-                        <small class="text-secondary">
-
-                            Manage gallery images.
-
-                        </small>
-
+                        <h4 class="fw-bold mb-0">Gallery Images</h4>
+                        <small class="text-secondary">Manage gallery images.</small>
                     </div>
                 </div>
-
             </div>
 
             <div class="card-body">
-
-                <div class="row g-4">
-
+                <div class="row g-4" cdkDropList [cdkDropListData]="event.galleryImages" (cdkDropListDropped)="dropGallery($event)">
                     <!-- Existing Images -->
-
-                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let image of event.galleryImages; let i=index">
-
-                        <div class="card border rounded-4 overflow-hidden shadow-sm h-100">
-
+                    <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let image of event.galleryImages; let i=index" cdkDrag>
+                        <div class="card border rounded-4 overflow-hidden shadow-sm h-100 bg-white">
                             <div class="position-relative">
-
-                                <img [src]="image.image" class="card-img-top" style="height:220px;object-fit:cover;">
-
+                                <img [src]="image.image" class="card-img-top w-100" style="height:220px;object-fit:cover;">
                                 <!-- Delete -->
-
                                 <button class="btn btn-danger btn-sm rounded-circle position-absolute top-0 start-0 m-2"
                                     (click)="deleteGalleryImage(i)">
-
                                     <i class="bi bi-trash-fill"></i>
-
                                 </button>
-
                                 <!-- Replace -->
-
                                 <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2"
                                     (click)="replaceGalleryImage(image)">
-
                                     <i class="bi bi-arrow-repeat"></i>
-
                                 </button>
-
                             </div>
-
                         </div>
-
                     </div>
 
                     <!-- ADD IMAGE CARD -->
-
                     <div class="col-xl-3 col-lg-4 col-md-6">
-
                         <div class="card h-100 border-2 border-primary border-opacity-25 rounded-4 shadow-sm"
-                            role="button" (click)="addGalleryImage()">
-
+                            role="button" (click)="addGalleryImage()" style="border-style: dashed !important; cursor: pointer;">
                             <div class="card-body d-flex flex-column justify-content-center align-items-center text-center"
                                 style="min-height:220px;">
-
                                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-3"
                                     style="width:70px;height:70px;">
-
                                     <i class="bi bi-plus-lg fs-2"></i>
-
                                 </div>
-
-                                <h5 class="fw-bold mb-1">
-
-                                    Add Image
-
-                                </h5>
-
-                                <small class="text-secondary">
-
-                                    Upload Gallery Image
-
-                                </small>
-
+                                <h5 class="fw-bold mb-1">Add Image</h5>
+                                <small class="text-secondary">Upload Gallery Image</small>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </div>
 
         <!-- ========================================= -->
         <!-- STICKY SAVE -->
         <!-- ========================================= -->
-
-        <div class="position-sticky bottom-0 bg-white border-top shadow-lg rounded-top-4 mt-4">
-
+        <div class="position-sticky bottom-0 bg-white border-top shadow-lg rounded-top-4 mt-4 z-3">
             <div class="d-flex justify-content-between align-items-center p-3">
-
                 <div>
-
-                    <h6 class="fw-bold mb-0">
-
-                        Unsaved Changes
-
-                    </h6>
-
-                    <small class="text-secondary">
-
-                        Save your changes before leaving.
-
-                    </small>
-
+                    <h6 class="fw-bold mb-0">Unsaved Changes</h6>
+                    <small class="text-secondary">Save your changes before leaving.</small>
                 </div>
-
                 <div class="d-flex gap-2">
-
-                    <button class="btn btn-outline-secondary" (click)="back()">
-
-                        Cancel
-
+                    <button class="btn btn-outline-secondary rounded-pill px-4" (click)="back()">Cancel</button>
+                    <button class="btn btn-success px-4 rounded-pill" (click)="saveChanges()">
+                        <i class="bi bi-check-circle me-2"></i> Save Changes
                     </button>
-
-                    <button class="btn btn-success px-4" (click)="saveChanges()">
-
-                        <i class="bi bi-check-circle me-2"></i>
-
-                        Save Changes
-
-                    </button>
-
                 </div>
-
             </div>
-
         </div>
 
     </div>
-
 </div>
+
 <!-- ========================================= -->
 <!-- HIDDEN FILE INPUTS -->
 <!-- ========================================= -->
-
 <input #thumbnailInput type="file" accept="image/*" hidden (change)="onThumbnailSelected($event)">
-
 <input #guestInput type="file" accept="image/*" hidden (change)="onGuestSelected($event)">
-
 <input #galleryInput type="file" accept="image/*" hidden (change)="onGallerySelected($event)">

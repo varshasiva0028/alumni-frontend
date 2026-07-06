@@ -49,11 +49,4 @@ export class Dashboard implements OnInit {
     this.dashboardService.incrementStudents(gender);
   }
 
-  refresh(): void {
-    this.dashboardService.refreshDashboard();
-  }
-
-  reset(): void {
-    this.dashboardService.resetDashboardStats();
-  }
 }

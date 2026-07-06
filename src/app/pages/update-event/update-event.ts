@@ -5,6 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { GalleryService } from '../../services/gallery.service';
 import { Event } from '../../models/event.model';
 import {
+  DragDropModule,
+  CdkDragDrop,
+  moveItemInArray
+} from '@angular/cdk/drag-drop';
+import {
   Component,
   ViewChild,
   ElementRef
@@ -13,8 +18,11 @@ import {
 @Component({
   selector: 'app-update-event',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './update-event.html',
+  imports: [
+    CommonModule,
+    FormsModule,
+    DragDropModule
+  ], templateUrl: './update-event.html',
   styleUrl: './update-event.css'
 })
 export class UpdateEventComponent {
@@ -276,6 +284,25 @@ export class UpdateEventComponent {
     this.changeThumbnail();
 
   }
+  dropGuests(event: CdkDragDrop<any[]>): void {
+
+  moveItemInArray(
+    this.event.chiefGuests,
+    event.previousIndex,
+    event.currentIndex
+  );
+
+}
+
+dropGallery(event: CdkDragDrop<any[]>): void {
+
+  moveItemInArray(
+    this.event.galleryImages,
+    event.previousIndex,
+    event.currentIndex
+  );
+
+}
 
   // ===========================================
   // SAVE
@@ -292,4 +319,5 @@ export class UpdateEventComponent {
     this.router.navigate(['/gallery']);
 
   }
+
 }

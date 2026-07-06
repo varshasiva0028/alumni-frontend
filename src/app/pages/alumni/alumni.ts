@@ -1,19 +1,9 @@
-import { Component, HostListener, Inject } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface AlumniModel {
-  id: number;
-  name: string;
-  gender: 'male' | 'female';
-  batch: number;
-  phone: string;
-  classStudied: string;
-  email: string;
-  occupation: string;
-  address: string;
-  photo: string;
-}
+import { Observable, Subscription } from 'rxjs';
+import { AlumniModel } from '../../models/alumni.model';
+import { AlumniService } from '../../services/alumni.service';
 
 @Component({
   selector: 'app-alumni',
@@ -25,84 +15,18 @@ interface AlumniModel {
   templateUrl: './alumni.html',
   styleUrl: './alumni.css'
 })
-export class Alumni {
-  searchText: string = '';
-  viewType: 'grid' | 'list' = 'grid'; // Grid view by default
+export class Alumni implements OnInit, OnDestroy {
+  // Observables consumed via async pipe in HTML
+  searchText$!: Observable<string>;
+  viewType$!: Observable<'grid' | 'list'>;
+  filteredAlumni$!: Observable<AlumniModel[]>;
+  totalAlumni$!: Observable<number>;
+  maleCount$!: Observable<number>;
+  femaleCount$!: Observable<number>;
 
-  alumniList: AlumniModel[] = [
-    {
-      id: 1,
-      name: 'Aruna',
-      gender: 'female',
-      batch: 2022,
-      phone: '9876543210',
-      classStudied: 'B.Tech - CSE',
-      email: 'aruna@gmail.com',
-      occupation: 'Software Engineer',
-      address: 'Chennai',
-      photo: 'https://i.pravatar.cc/250?img=11'
-    },
-    {
-      id: 2,
-      name: 'Vicky',
-      gender: 'male',
-      batch: 2021,
-      phone: '9876543211',
-      classStudied: 'B.Tech - IT',
-      email: 'vignesh@gmail.com',
-      occupation: 'Backend Developer',
-      address: 'Coimbatore',
-      photo: 'https://i.pravatar.cc/250?img=12'
-    },
-    {
-      id: 3,
-      name: 'Priya',
-      gender: 'female',
-      batch: 2020,
-      phone: '9876543212',
-      classStudied: 'B.E - ECE',
-      email: 'priya@gmail.com',
-      occupation: 'QA Engineer',
-      address: 'Madurai',
-      photo: 'https://i.pravatar.cc/250?img=13'
-    },
-    {
-      id: 4,
-      name: 'Rahul',
-      gender: 'male',
-      batch: 2023,
-      phone: '9876543213',
-      classStudied: 'B.Tech - AI & DS',
-      email: 'rahul@gmail.com',
-      occupation: 'Machine Learning Engineer',
-      address: 'Salem',
-      photo: 'https://i.pravatar.cc/250?img=14'
-    },
-    {
-      id: 5,
-      name: 'Meena',
-      gender: 'female',
-      batch: 2021,
-      phone: '9876543214',
-      classStudied: 'B.Sc - Computer Science',
-      email: 'meena@gmail.com',
-      occupation: 'Data Analyst',
-      address: 'Trichy',
-      photo: 'https://i.pravatar.cc/250?img=15'
-    },
-    {
-      id: 6,
-      name: 'Karthik',
-      gender: 'male',
-      batch: 2019,
-      phone: '9876543215',
-      classStudied: 'B.Tech - Mechanical',
-      email: 'karthik@gmail.com',
-      occupation: 'Project Engineer',
-      address: 'Bangalore',
-      photo: 'https://i.pravatar.cc/250?img=16'
-    }
-  ];
+  // Subscription reference to sync filtered list for Lightbox navigation
+  private filteredAlumniSub!: Subscription;
+  currentFilteredAlumni: AlumniModel[] = [];
 
   // Image Lightbox States
   isLightboxOpen = false;
@@ -121,36 +45,42 @@ export class Alumni {
   touchStartX = 0;
   touchEndX = 0;
 
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private alumniService: AlumniService
+  ) {}
 
-  get totalAlumni(): number {
-    return this.alumniList.length;
+  ngOnInit(): void {
+    // Bind Observables to service
+    this.searchText$ = this.alumniService.getSearchText();
+    this.viewType$ = this.alumniService.getViewType();
+    this.filteredAlumni$ = this.alumniService.getFilteredAlumni();
+    this.totalAlumni$ = this.alumniService.getTotalAlumni();
+    this.maleCount$ = this.alumniService.getMaleCount();
+    this.femaleCount$ = this.alumniService.getFemaleCount();
+
+    // Cache current filtered list for synchronous index-based lightbox navigation
+    this.filteredAlumniSub = this.filteredAlumni$.subscribe(list => {
+      this.currentFilteredAlumni = list;
+    });
   }
 
-  get maleCount(): number {
-    return 251;
-  }
-
-  get femaleCount(): number {
-    return 231;
-  }
-
-  get filteredAlumni(): AlumniModel[] {
-    if (!this.searchText.trim()) {
-      return this.alumniList;
+  ngOnDestroy(): void {
+    if (this.filteredAlumniSub) {
+      this.filteredAlumniSub.unsubscribe();
     }
-    const search = this.searchText.toLowerCase();
-    return this.alumniList.filter(alumni =>
-      alumni.name.toLowerCase().includes(search) ||
-      alumni.phone.includes(search) ||
-      alumni.email.toLowerCase().includes(search) ||
-      alumni.classStudied.toLowerCase().includes(search) ||
-      alumni.occupation.toLowerCase().includes(search) ||
-      alumni.address.toLowerCase().includes(search) ||
-      alumni.batch.toString().includes(search)
-    );
   }
-  
+
+  // Update search query via service
+  onSearchChange(text: string): void {
+    this.alumniService.setSearchText(text);
+  }
+
+  // Update layout view via service
+  onViewTypeChange(view: 'grid' | 'list'): void {
+    this.alumniService.setViewType(view);
+  }
+
   // Open Lightbox
   openLightbox(index: number, event: MouseEvent): void {
     event.stopPropagation();
@@ -173,13 +103,13 @@ export class Alumni {
   }
 
   get currentLightboxAlumni(): AlumniModel {
-    return this.filteredAlumni[this.activeImgIndex];
+    return this.currentFilteredAlumni[this.activeImgIndex];
   }
 
   // Navigation Options
   navigateLightbox(direction: number, event?: MouseEvent): void {
     if (event) event.stopPropagation();
-    const total = this.filteredAlumni.length;
+    const total = this.currentFilteredAlumni.length;
     if (total === 0) return;
     this.activeImgIndex = (this.activeImgIndex + direction + total) % total;
     this.isImageLoading = true;
