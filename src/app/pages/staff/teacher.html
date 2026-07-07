@@ -1,31 +1,42 @@
-<div class="container-fluid">
+<div class="container-fluid ">
+
     <!-- ========================================= -->
     <!-- HEADER -->
     <!-- ========================================= -->
-    <div class="sticky-top pt-3 pb-2 bg-body" style="top:0; z-index:1020;">
+<div
+    class="position-fixed top-0 end-0 bg-white px-4 pt-4 pb-3 "
+    style="left:240px; z-index:1030;">
 
-        <div class="card border-0 shadow-sm rounded-4 mb-3">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <div>
-                        <h2 class="fw-bold mb-1">
-                            Teacher Management
-                        </h2>
-                        <p class="text-secondary mb-0">
-                            Manage all teaching staff of the institution.
-                        </p>
-                    </div>
-                    <div>
-                        <span class="badge bg-primary fs-6 px-3 py-2">
-                            <i class="bi bi-people-fill me-2"></i>
-                            Total Teachers :
-                            {{ (teachers$ | async)?.length }}
-                        </span>
-                    </div>
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h2 class="fw-bold mb-1">
+                        Staff Management
+                    </h2>
+
+                    <p class="text-secondary mb-0">
+                        Manage teaching and non-teaching staff of the institution.
+                    </p>
                 </div>
+
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    <i class="bi bi-people-fill me-2"></i>
+                    Total Staff :
+                    {{ (teachers$ | async)?.length || 0 }}
+                </span>
+
             </div>
+
         </div>
     </div>
+
+</div>
+
+<!-- Spacer -->
+<div style="height:80px;"></div>
     <!-- ========================================= -->
     <!-- SEARCH & FILTERS -->
     <!-- ========================================= -->
@@ -42,7 +53,6 @@
                             placeholder="Search by name, role, qualification..." (input)="onSearch($event)">
                     </div>
                 </div>
-
                 <!-- Gender Selector -->
                 <div class="col-lg-3">
                     <div class="input-group shadow-none border rounded-3 overflow-hidden px-2 py-1 bg-light">
@@ -58,7 +68,6 @@
                         </select>
                     </div>
                 </div>
-
                 <!-- Role Selector -->
                 <div class="col-lg-4">
                     <div class="input-group shadow-none border rounded-3 overflow-hidden px-2 py-1 bg-light">
@@ -71,22 +80,17 @@
 
                             <option value="">All Roles</option>
 
-                            <!-- Teaching Staff -->
                             <optgroup label="Teaching Staff">
                                 <option *ngFor="let role of teachingRoles" [value]="role">
                                     {{ role }}
                                 </option>
                             </optgroup>
-
-                            <!-- Non-Teaching Staff -->
                             <optgroup label="Non-Teaching Staff">
                                 <option *ngFor="let role of nonTeachingRoles" [value]="role">
                                     {{ role }}
                                 </option>
                             </optgroup>
-
                         </select>
-
                     </div>
                 </div>
             </div>
@@ -94,9 +98,10 @@
     </div>
 
     <!-- ========================================= -->
-    <!-- TEACHER CARDS -->
+    <!-- TEACHER CARDS GRID -->
     <!-- ========================================= -->
-    <div class="row g-4" *ngIf="((teachers$ | async)?.length || 0) > 0">
+    <div class="row g-4">
+        <!-- Existing Teacher Cards -->
         <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let teacher of (teachers$ | async)">
             <div class="card border rounded-4 overflow-hidden h-100 bg-body transition-card hover-card-lift cursor-pointer position-relative"
                 [class.opacity-75]="!teacher.visible" (click)="viewTeacher(teacher)">
@@ -169,28 +174,247 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+</div>
+<!-- Floating Add Staff Button -->
+<button
+    type="button"
+    class="btn btn-success rounded-circle shadow-lg position-fixed"
+    (click)="addTeacher()"
+    style="
+        width: 70px;
+        height: 70px;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1060;
+    "
+    title="Add Staff">
 
-    <!-- ========================================= -->
-    <!-- EMPTY SEARCH / RESULTS STATE -->
-    <!-- ========================================= -->
-    <div class="row" *ngIf="((teachers$ | async)?.length || 0) === 0">
-        <div class="col-12 text-center py-5">
-            <div class="p-5 bg-body rounded-4 border shadow-sm max-w-sm mx-auto">
-                <div class="p-3 bg-secondary bg-opacity-10 text-secondary rounded-circle mb-3 d-inline-flex">
-                    <i class="bi bi-people-fill fs-2"></i>
+    <i class="bi bi-plus-lg fs-1"></i>
+
+</button>
+<!-- ========================================= -->
+<!-- ADD STAFF MODAL (REACTIVE FORM) -->
+<!-- ========================================= -->
+<div class="modal fade" [class.show]="isAddModalOpen" [style.display]="isAddModalOpen ? 'block' : 'none'" tabindex="-1"
+    role="dialog" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); z-index: 1060;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <!-- Modal Header -->
+            <div class="modal-header bg-gradient-primary text-white border-0 py-3 px-4">
+                <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+                    <i class="bi bi-person-plus-fill"></i> Add New Staff Profile
+                </h5>
+                <button type="button" class="btn-close btn-close-white shadow-none" (click)="closeAddModal()"
+                    aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4 bg-light" style="max-height: 70vh; overflow-y: auto;">
+
+                <!-- Error message inside modal -->
+                <div class="alert alert-danger border-0 rounded-3 small fw-semibold py-2 px-3 mb-3 animate-fade-in"
+                    *ngIf="modalErrorMessage">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ modalErrorMessage }}
                 </div>
-                <h4 class="fw-bold text-dark">No Teachers Found</h4>
-                <p class="text-secondary mb-4">No profiles matched your current search filters or database is empty.
-                </p>
-                <button class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="addTeacher()">
-                    <i class="bi bi-plus-lg me-1"></i> Add New Teacher
+
+                <form [formGroup]="newTeacherForm">
+                    <!-- Profile Photo Selector -->
+                    <div class="row mb-4">
+                        <div class="col-12 text-center">
+                            <div class="d-inline-block position-relative profile-avatar-container shadow-sm p-1.5 rounded-circle bg-white"
+                                style="cursor: pointer;" (click)="photoInput.click()">
+                                <img *ngIf="newTeacherForm.get('photo')?.value"
+                                    [src]="newTeacherForm.get('photo')?.value" class="rounded-circle animate-fade-in"
+                                    style="width: 110px; height: 110px; object-fit: cover;">
+                                <div *ngIf="!newTeacherForm.get('photo')?.value"
+                                    class="rounded-circle bg-secondary-subtle d-flex flex-column align-items-center justify-content-center text-secondary"
+                                    style="width: 110px; height: 110px;">
+                                    <i class="bi bi-camera fs-2"></i>
+                                    <span style="font-size: 10px; font-weight: 600;">UPLOAD</span>
+                                </div>
+                            </div>
+                            <input #photoInput type="file" accept="image/*" hidden (change)="onPhotoUploaded($event)">
+                            <small class="text-secondary d-block mt-2">Click circle to upload profile photo (max
+                                5MB)</small>
+                        </div>
+                    </div>
+
+                    <!-- Section: Personal Information -->
+                    <div class="card border-0 shadow-sm rounded-3 p-3 mb-4 bg-white">
+                        <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-person-fill me-1"></i> Personal Information
+                        </h6>
+
+                        <div class="row g-3">
+                            <!-- Name -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Full Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" formControlName="name"
+                                    placeholder="e.g. K. Revathi">
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Gender <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" formControlName="gender">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Date of Birth <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control" formControlName="dateOfBirth">
+                            </div>
+
+                            <!-- Blood Group -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Blood Group</label>
+                                <input type="text" class="form-control" formControlName="bloodGroup"
+                                    placeholder="e.g. A+">
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Phone Number <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" formControlName="phoneNumber"
+                                    placeholder="e.g. 9876543212">
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Email Address</label>
+                                <input type="email" class="form-control" formControlName="email"
+                                    placeholder="e.g. revathi@school.edu">
+                            </div>
+
+                            <!-- Aadhaar -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Aadhaar Number</label>
+                                <input type="text" class="form-control" formControlName="aadhaar"
+                                    placeholder="12 digit number">
+                            </div>
+
+                            <!-- Address -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Address <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" formControlName="address"
+                                    placeholder="e.g. Coimbatore">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Professional Information -->
+                    <div class="card border-0 shadow-sm rounded-3 p-3 mb-3 bg-white">
+                        <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-briefcase-fill me-1"></i> Professional & Experience Details
+                        </h6>
+
+                        <div class="row g-3">
+                            <!-- Current Role -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">
+                                    Current Role <span class="text-danger">*</span>
+                                </label>
+
+                                <select class="form-select" formControlName="currentRole">
+
+                                    <option value="">Select Role</option>
+
+                                    <optgroup label="Teaching Staff">
+                                        <option *ngFor="let role of teachingRoles" [value]="role">
+                                            {{ role }}
+                                        </option>
+                                    </optgroup>
+
+                                    <optgroup label="Non-Teaching Staff">
+                                        <option *ngFor="let role of nonTeachingRoles" [value]="role">
+                                            {{ role }}
+                                        </option>
+                                    </optgroup>
+
+                                </select>
+                            </div>
+
+                            <!-- Qualification -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Qualification <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" formControlName="qualification"
+                                    placeholder="e.g. M.A">
+                            </div>
+
+                            <!-- Salary -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Salary (₹) <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" formControlName="salary"
+                                    placeholder="e.g. 48000">
+                            </div>
+
+                            <!-- Has Experience? -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">Has Experience? <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" formControlName="hasExperience">
+                                    <option [ngValue]="false">No</option>
+                                    <option [ngValue]="true">Yes</option>
+                                </select>
+                            </div>
+
+                            <!-- Experience Years (Conditional) -->
+                            <div class="col-md-6 animate-fade-in"
+                                *ngIf="newTeacherForm.get('hasExperience')?.value === true">
+                                <label class="form-label small fw-bold text-secondary">Years of Experience</label>
+                                <input type="number" class="form-control" formControlName="experienceYears"
+                                    placeholder="e.g. 8">
+                            </div>
+
+                            <!-- Experience Details (Conditional) -->
+                            <div class="col-12 animate-fade-in"
+                                *ngIf="newTeacherForm.get('hasExperience')?.value === true">
+                                <label class="form-label small fw-bold text-secondary">Experience Details</label>
+                                <textarea class="form-control" rows="2" formControlName="experienceDetails"
+                                    placeholder="e.g. Spoken English & Literature"></textarea>
+                            </div>
+
+                            <!-- Languages Known -->
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-secondary d-block">Languages Known</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check" *ngFor="let lang of availableLanguages">
+                                        <input class="form-check-input" type="checkbox" [id]="'lang_' + lang"
+                                            [checked]="isLanguageSelected(lang)"
+                                            (change)="toggleLanguage(lang, $event)">
+                                        <label class="form-check-label" [for]="'lang_' + lang">{{ lang }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer bg-light border-0 py-3 px-4">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                    (click)="closeAddModal()">Cancel</button>
+                <button type="button" class="btn btn-success rounded-pill px-4 shadow-sm" (click)="submitTeacherForm()">
+                    <i class="bi bi-check-circle me-1"></i> Add Teacher
                 </button>
             </div>
         </div>
     </div>
-
 </div>

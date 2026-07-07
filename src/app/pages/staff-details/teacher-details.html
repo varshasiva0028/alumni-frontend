@@ -8,10 +8,13 @@
 
         <div class="d-flex align-items-center gap-3">
 
-            <button
-                class="btn btn-light rounded-circle shadow"
-                style="width:50px;height:50px;"
-                (click)="back()">
+            <button class="btn btn-light rounded-circle shadow position-fixed" style="
+        width: 52px;
+        height: 52px;
+        top: 20px;
+        left: 270px;
+        z-index: 1050;
+    " (click)="back()">
 
                 <i class="bi bi-arrow-left fs-5"></i>
 
@@ -31,9 +34,7 @@
 
         </div>
 
-        <button
-            class="btn btn-success rounded-pill px-4"
-            (click)="editStaff()">
+        <button class="btn btn-success rounded-pill px-4" (click)="editStaff()">
 
             <i class="bi bi-pencil-fill me-2"></i>
 
@@ -55,9 +56,7 @@
 
                 <div class="col-lg-3 text-center">
 
-                    <img
-                        [src]="teacher.photo"
-                        class="rounded-circle shadow border border-4 border-white"
+                    <img [src]="teacher.photo" class="rounded-circle shadow border border-4 border-white"
                         style="width:180px;height:180px;object-fit:cover;">
 
                 </div>
@@ -427,9 +426,7 @@
 
         <div class="card-body">
 
-            <span
-                *ngFor="let language of teacher.languagesKnown"
-                class="badge bg-success me-2 mb-2 px-3 py-2">
+            <span *ngFor="let language of teacher.languagesKnown" class="badge bg-success me-2 mb-2 px-3 py-2">
 
                 {{ language }}
 

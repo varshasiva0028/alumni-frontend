@@ -85,3 +85,28 @@
 .max-w-sm {
   max-width: 440px;
 }
+
+/* Add Staff Dashed Card style */
+.border-dashed-card {
+  border: 2px dashed rgba(13, 110, 253, 0.35) !important;
+  background-color: rgba(13, 110, 253, 0.01) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.border-dashed-card:hover {
+  border-color: #0d6efd !important;
+  background-color: rgba(13, 110, 253, 0.05) !important;
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(13, 110, 253, 0.08) !important;
+}
+
+/* Pulse animation for the plus sign */
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
