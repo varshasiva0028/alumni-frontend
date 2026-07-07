@@ -1,0 +1,442 @@
+<div class="container-fluid py-4" *ngIf="teacher">
+
+    <!-- ========================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <button
+                class="btn btn-light rounded-circle shadow"
+                style="width:50px;height:50px;"
+                (click)="back()">
+
+                <i class="bi bi-arrow-left fs-5"></i>
+
+            </button>
+
+            <div>
+
+                <h2 class="fw-bold mb-1">
+                    Staff Details
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    View complete staff profile.
+                </p>
+
+            </div>
+
+        </div>
+
+        <button
+            class="btn btn-success rounded-pill px-4"
+            (click)="editStaff()">
+
+            <i class="bi bi-pencil-fill me-2"></i>
+
+            Edit Staff
+
+        </button>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- PROFILE CARD -->
+    <!-- ========================================= -->
+
+    <div class="card border-0 shadow rounded-4 mb-4">
+
+        <div class="card-body p-5">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-3 text-center">
+
+                    <img
+                        [src]="teacher.photo"
+                        class="rounded-circle shadow border border-4 border-white"
+                        style="width:180px;height:180px;object-fit:cover;">
+
+                </div>
+
+                <div class="col-lg-9">
+
+                    <h2 class="fw-bold mb-2">
+
+                        {{ teacher.name }}
+
+                    </h2>
+
+                    <span class="badge bg-primary fs-6 px-3 py-2 mb-3">
+
+                        {{ teacher.currentRole }}
+
+                    </span>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+
+                            <div class="small text-secondary">
+                                Qualification
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ teacher.qualification }}
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="small text-secondary">
+                                Experience
+                            </div>
+
+                            <div class="fw-semibold">
+
+                                {{ teacher.experienceYears }}
+                                Years
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="small text-secondary">
+                                Salary
+                            </div>
+
+                            <div class="fw-semibold">
+
+                                ₹ {{ teacher.salary }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- PERSONAL INFORMATION -->
+    <!-- ========================================= -->
+
+    <div class="card border-0 shadow rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                Personal Information
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Date of Birth
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.dateOfBirth | date:'dd MMM yyyy' }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Gender
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.gender }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Blood Group
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.bloodGroup || '-' }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Phone Number
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.phoneNumber }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Email
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.email || '-' }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Aadhaar
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.aadhaarNumber || '-' }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-12">
+
+                    <small class="text-secondary">
+
+                        Address
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.address }}
+
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- PROFESSIONAL INFORMATION -->
+    <!-- ========================================= -->
+
+    <div class="card border-0 shadow rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                Professional Information
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Current Role
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.currentRole }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Qualification
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.qualification }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <small class="text-secondary">
+
+                        Salary
+
+                    </small>
+
+                    <h6>
+
+                        ₹ {{ teacher.salary }}
+
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- EXPERIENCE -->
+    <!-- ========================================= -->
+
+    <div class="card border-0 shadow rounded-4 mb-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                Experience
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div *ngIf="teacher.hasExperience; else noExperience">
+
+                <div class="mb-3">
+
+                    <small class="text-secondary">
+
+                        Years of Experience
+
+                    </small>
+
+                    <h6>
+
+                        {{ teacher.experienceYears }}
+
+                    </h6>
+
+                </div>
+
+                <div>
+
+                    <small class="text-secondary">
+
+                        Details
+
+                    </small>
+
+                    <p class="mb-0">
+
+                        {{ teacher.experienceDetails }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <ng-template #noExperience>
+
+                <p class="text-secondary mb-0">
+
+                    No previous teaching experience.
+
+                </p>
+
+            </ng-template>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- LANGUAGES -->
+    <!-- ========================================= -->
+
+    <div class="card border-0 shadow rounded-4">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+
+                Languages Known
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <span
+                *ngFor="let language of teacher.languagesKnown"
+                class="badge bg-success me-2 mb-2 px-3 py-2">
+
+                {{ language }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>

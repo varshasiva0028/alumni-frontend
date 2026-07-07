@@ -1,0 +1,87 @@
+/* Fade-in Animation */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card Hover Micro-Animations */
+.hover-card-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+.hover-card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(13, 110, 253, 0.25) !important;
+}
+
+/* Color Bands mapping to Alumni design */
+.color-band {
+  height: 90px;
+  width: 100%;
+  position: relative;
+  transition: opacity 0.2s ease;
+}
+
+.bg-pink-band {
+  background: linear-gradient(135deg, #f472b6 0%, #db2777 100%) !important; /* Premium Pink */
+}
+
+.bg-blue-band {
+  background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%) !important; /* Premium Blue */
+}
+
+.bg-secondary-band {
+  background: linear-gradient(135deg, #94a3b8 0%, #475569 100%) !important; /* Neutral slate */
+}
+
+/* Avatar Photo Container */
+.profile-avatar-container {
+  display: inline-block;
+  padding: 4px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* Zoom Transition */
+.transition-zoom {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-card-lift:hover .transition-zoom {
+  transform: scale(1.06);
+}
+
+/* Hover buttons scales */
+.hover-scale {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale:active {
+  transform: scale(0.98);
+}
+
+/* Gradient Primary Card */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%) !important;
+}
+
+/* Input shadow resets */
+.form-control:focus, .form-select:focus {
+  box-shadow: none !important;
+}
+
+/* Maximum width utility for centering empty states */
+.max-w-sm {
+  max-width: 440px;
+}
