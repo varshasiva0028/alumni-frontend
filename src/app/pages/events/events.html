@@ -94,11 +94,19 @@
     </div>
   </div>
   <!---- Error Alerts Container ---->
-  <div class="alert alert-danger border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-4 animate-fade-in"
-    *ngIf="errorMessage">
+  <div *ngIf="errorMessage"
+    class="position-fixed top-0 end-0 mt-4 me-4 alert alert-danger border-0 shadow-sm rounded-3 d-flex align-items-center gap-2"
+    style="z-index:9999; min-width:420px;">
+
     <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-    <div class="fw-semibold small">{{ errorMessage }}</div>
-    <button type="button" class="btn-close ms-auto shadow-none" (click)="errorMessage = ''" aria-label="Close"></button>
+
+    <div class="fw-semibold flex-grow-1">
+      {{ errorMessage }}
+    </div>
+
+    <button type="button" class="btn-close" (click)="errorMessage = ''">
+    </button>
+
   </div>
   <!---- Dynamic Content Workspace ---->
   <div class="row g-4">

@@ -6,9 +6,9 @@ export interface ChiefGuest {
 
   visible: boolean;
 
-  designation?: string;
+  detail1?: string;
 
-  organization?: string;
+  detail2?: string;
 
 }
 

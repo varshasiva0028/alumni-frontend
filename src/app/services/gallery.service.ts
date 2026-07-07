@@ -20,15 +20,15 @@ export class GalleryService {
         name: 'Chief Guest 1',
         image: `https://i.pravatar.cc/600?img=${img1}`,
         visible: true,
-        designation: '',
-        organization: ''
+       detail1: '',
+        detail2: ''
       },
       {
         name: 'Chief Guest 2',
         image: `https://i.pravatar.cc/600?img=${img2}`,
         visible: true,
-        designation: '',
-        organization: ''
+        detail1: '',
+        detail2: ''
       }
     ];
 

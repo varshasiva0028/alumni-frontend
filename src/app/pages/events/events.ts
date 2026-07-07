@@ -107,9 +107,9 @@ export class EventsComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private zone: NgZone,
     private router: Router
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   // Compute other photos limit dynamically
   get isAnnualDay(): boolean {
@@ -121,8 +121,9 @@ export class EventsComponent implements OnInit {
     return this.isAnnualDay ? 5 : 3;
   }
 
+  // Event gallery image limit is now set to 10 photos maximum
   get maxOtherPhotos(): number {
-    return this.isAnnualDay ? 80 : 40;
+    return 10;
   }
 
   get currentYear(): number {
@@ -150,12 +151,10 @@ export class EventsComponent implements OnInit {
     this.customEventTitle = '';
     this.customEventQuote = '';
     this.errorMessage = '';
-
     // Automatically truncate lists if switching to lower bounds
     if (this.chiefGuests.length > this.maxGuests) {
       this.chiefGuests = this.chiefGuests.slice(0, this.maxGuests);
     }
-
     if (this.otherPhotos.length > this.maxOtherPhotos) {
       this.otherPhotos = this.otherPhotos.slice(0, this.maxOtherPhotos);
     }
@@ -188,14 +187,12 @@ export class EventsComponent implements OnInit {
     const element = event.target as HTMLInputElement;
     const file = element.files?.[0];
     if (!file) return;
-
     if (!this.validateImage(file)) {
       this.errorMessage = `Guest photo file "${file.name}" is invalid or exceeds 5 MB. Allowed formats: JPG, JPEG, PNG, WEBP.`;
       element.value = '';
       this.cdr.detectChanges();
       return;
     }
-
     const reader = new FileReader();
     reader.onload = (e: any) => {
       this.zone.run(() => {
@@ -296,7 +293,7 @@ export class EventsComponent implements OnInit {
         this.zone.run(() => {
           this.otherPhotos.push(e.target.result);
           this.otherPhotos = [...this.otherPhotos];
-          
+
           loadedCount++;
           this.uploadProgress = Math.round((loadedCount / totalFiles) * 100);
           this.cdr.detectChanges();
@@ -404,72 +401,67 @@ export class EventsComponent implements OnInit {
   }
 
   validateChiefGuests(): boolean {
+
+    if (this.chiefGuests.length === 0) {
+      this.errorMessage = 'Please add at least one Chief Guest.';
+      return false;
+    }
+
     for (let i = 0; i < this.chiefGuests.length; i++) {
+
       const guest = this.chiefGuests[i];
 
-      // Name Validation
-      this.guestNameControl.setValue(guest.name || '');
-      if (this.guestNameControl.invalid) {
-        if (this.guestNameControl.hasError('required')) {
-          this.errorMessage = `Chief Guest #${i + 1} Name is required.`;
-        } else if (this.guestNameControl.hasError('minlength')) {
-          this.errorMessage = `Chief Guest #${i + 1} Name must be at least 3 characters long.`;
-        } else if (this.guestNameControl.hasError('maxlength')) {
-          this.errorMessage = `Chief Guest #${i + 1} Name cannot exceed 60 characters.`;
-        } else if (this.guestNameControl.hasError('pattern')) {
-          this.errorMessage = `Chief Guest #${i + 1} Name can only contain alphabets, spaces, and dots.`;
-        }
-        this.cdr.detectChanges();
+      if (!guest.photoUrl) {
+        this.errorMessage = `Please upload photo for Chief Guest #${i + 1}.`;
         return false;
       }
 
-      // Guest Photo validation (Only validated if photo is uploaded)
-      if (guest.photoUrl && !this.validateImage(guest.photoUrl)) {
-        this.errorMessage = `Chief Guest #${i + 1} Photo format is invalid or exceeds 5 MB limit.`;
-        this.cdr.detectChanges();
+      if (!guest.name.trim()) {
+        this.errorMessage = `Please enter name for Chief Guest #${i + 1}.`;
         return false;
       }
 
-      // validation (detail1)
-      this.detail1Control.setValue(guest.detail1 || '');
-      if (this.detail1Control.invalid) {
-        if (this.detail1Control.hasError('maxlength')) {
-          this.errorMessage = `Chief Guest #${i + 1} Designation cannot exceed 80 characters.`;
-        }
-        this.cdr.detectChanges();
+      if (!guest.detail1.trim()) {
+        this.errorMessage = `Please enter detail 1 for Chief Guest ${i + 1}.`;
         return false;
       }
 
-      // validation (detail2)
-      this.detail2Control.setValue(guest.detail2 || '');
-      if (this.detail2Control.invalid) {
-        if (this.detail2Control.hasError('maxlength')) {
-          this.errorMessage = `Chief Guest #${i + 1} Organization cannot exceed 120 characters.`;
-        }
-        this.cdr.detectChanges();
+      if (!guest.detail2.trim()) {
+        this.errorMessage = `Please enter detail 2 for Chief Guest ${i + 1}.`;
         return false;
       }
     }
+
     return true;
   }
 
   validateGallery(): boolean {
-    if (this.otherPhotos.length === 0) {
-      this.errorMessage = 'At least one gallery image is required before saving.';
+
+    if (this.otherPhotos.length < 10) {
+      this.errorMessage =
+        `Please upload at least 10 gallery images. Currently uploaded: ${this.otherPhotos.length}.`;
       this.cdr.detectChanges();
       return false;
     }
 
+    // Optional: Prevent more than 10 images
+    if (this.otherPhotos.length > 10) {
+      this.errorMessage =
+        'You can upload a maximum of 10 gallery images.';
+      this.cdr.detectChanges();
+      return false;
+    }
+    // Validate each image
     for (let i = 0; i < this.otherPhotos.length; i++) {
-      if (!this.validateImage(this.otherPhotos[i])) {
-        this.errorMessage = `Gallery image #${i + 1} is invalid or exceeds 5 MB.`;
+      if (this.otherPhotos.length !== 10) {
+        this.errorMessage =
+          `Exactly 10 gallery images are required. Uploaded: ${this.otherPhotos.length}.`;
         this.cdr.detectChanges();
         return false;
       }
     }
     return true;
   }
-
   validateThumbnail(): boolean {
     this.thumbnailControl.setValue(this.thumbnailUrl || '');
     if (this.thumbnailControl.invalid) {
