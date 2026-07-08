@@ -237,19 +237,9 @@ export class AddStaffComponent implements OnInit {
     'ITI',
     'Diploma',
     'B.A.',
-    'B.Sc.',
     'B.Com.',
     'BBA',
-    'BCA',
-    'B.E.',
-    'B.Tech.',
-    'M.A.',
-    'M.Sc.',
-    'M.Com.',
     'MBA',
-    'MCA',
-    'M.E.',
-    'M.Tech.',
     'Other'
   ];
 

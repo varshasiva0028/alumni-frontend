@@ -10,7 +10,7 @@ export class TeacherService {
     constructor() { }
 
     // ===========================================
-    // DUMMY DATA
+    // DUMMY DATA BUILDER
     // ===========================================
     private createTeacher(
         id: number,
@@ -57,8 +57,9 @@ export class TeacherService {
             visible: true
         };
     }
-    private teachers: Teacher[] = [
 
+    private teachers: Teacher[] = [
+        // --- Teaching Faculty Mock Data ---
         this.createTeacher(
             1,
             11,
@@ -99,7 +100,7 @@ export class TeacherService {
             true,
             12,
             'Higher Secondary Mathematics',
-             'experience-certificate.pdf',
+            'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -121,7 +122,7 @@ export class TeacherService {
             true,
             8,
             'Spoken English & Literature',
-             'experience-certificate.pdf',
+            'experience-certificate.pdf',
             ['Tamil', 'English', 'Hindi']
         ),
 
@@ -143,7 +144,7 @@ export class TeacherService {
             true,
             10,
             'Physics & Chemistry',
-             'experience-certificate.pdf',
+            'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -165,7 +166,7 @@ export class TeacherService {
             true,
             5,
             'Primary Education',
-             'experience-certificate.pdf',
+            'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -187,7 +188,7 @@ export class TeacherService {
             true,
             11,
             'Programming & Computer Science',
-             'experience-certificate.pdf',
+            'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -209,10 +210,11 @@ export class TeacherService {
             true,
             7,
             'Sports & Physical Training',
-             'experience-certificate.pdf',
+            'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
+        // --- Support & Non-Teaching Mock Data ---
         this.createTeacher(
             8,
             18,
@@ -224,15 +226,15 @@ export class TeacherService {
             'B+',
             'Thanjavur',
             '123456789019',
-            'M.A Music',
-            'Music',
-            'Music Teacher',
+            'Diploma',
+            'Library',
+            'Librarian',
             40000,
             true,
             15,
-            'Carnatic Music',
-             'experience-certificate.pdf',
-            ['Tamil']
+            'Librarian',
+            'library-certification.pdf',
+            ['Tamil', 'English']
         ),
 
         this.createTeacher(
@@ -246,15 +248,15 @@ export class TeacherService {
             'AB-',
             'Tirunelveli',
             '123456789020',
-            'MFA',
-            'Arts',
-            'Art Teacher',
-            39000,
+            'B.Com.',
+            'Accounts',
+            'Accountant',
+            45000,
             true,
             6,
-            'Drawing & Painting',
-             'experience-certificate.pdf',
-            ['Tamil', 'English']
+            'Accountant',
+            'tally-certification.png',
+            ['Tamil', 'English','Malayalam']
         ),
 
         this.createTeacher(
@@ -268,23 +270,21 @@ export class TeacherService {
             'O+',
             'Namakkal',
             '123456789021',
-            'M.Ed',
-            'Maths',
-            'Vice Principal',
-            70000,
+            'MBA',
+            'Administration',
+            'Office Administrator',
+            65000,
             true,
             18,
-            'School Administration',
-             'experience-certificate.pdf',
+            'Administrative Officer',
+            'admin-experience.pdf',
             ['Tamil', 'English', 'Hindi']
         )
-
     ];
 
     // ===========================================
     // STATE MANAGEMENT
     // ===========================================
-
     private teacherSubject = new BehaviorSubject<Teacher[]>(
         structuredClone(this.teachers)
     );
@@ -300,9 +300,7 @@ export class TeacherService {
         this.roleSubject
     ]).pipe(
         map(([teachers, search, gender, role]) => {
-
             return teachers.filter(teacher => {
-
                 const matchesSearch =
                     teacher.name.toLowerCase().includes(search.toLowerCase());
 
@@ -313,11 +311,10 @@ export class TeacherService {
                     !role || teacher.currentRole === role;
 
                 return matchesSearch && matchesGender && matchesRole;
-
             });
-
         })
     );
+
     searchTeachers(value: string): void {
         this.searchSubject.next(value);
     }
@@ -337,7 +334,6 @@ export class TeacherService {
     // ===========================================
     // CRUD METHODS
     // ===========================================
-
     getTeachers(): Observable<Teacher[]> {
         return this.teachers$;
     }
@@ -369,7 +365,6 @@ export class TeacherService {
         this.teachers = this.teachers.filter(
             t => t.id !== id
         );
-
         this.teacherSubject.next(
             structuredClone(this.teachers)
         );
@@ -396,5 +391,4 @@ export class TeacherService {
             0
         ) + 1;
     }
-
 }

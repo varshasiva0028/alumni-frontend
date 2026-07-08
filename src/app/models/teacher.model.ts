@@ -14,17 +14,17 @@ export interface Teacher {
 
   // Professional Information
   qualification: string;
-  subject: string;
-  currentRole: string;
+  subject: string; // Acts as "Department" for Non-Teaching Staff
+  currentRole: string; // Acts as "Designation" for Non-Teaching Staff
   salary: number;
 
   // Experience
   hasExperience: boolean;
   experienceYears?: number;
-  experienceDetails?: string;
+  experienceDetails?: string; // Acts as "Previous Job Role" for Non-Teaching Staff
 
-  // NEW
-  teacherExperienceCertificate?: string;
+  // Certificates
+  teacherExperienceCertificate?: string; // Serves as Teaching Certificate or Non-Teaching Professional Certificate
 
   // Languages
   languagesKnown: string[];

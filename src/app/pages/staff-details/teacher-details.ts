@@ -15,6 +15,23 @@ import { TeacherService } from '../../services/teacher.service';
 export class TeacherDetails implements OnInit {
 
   teacher: Teacher | null = null;
+  isTeachingStaff = true;
+
+  teachingRoles: string[] = [
+    'Principal',
+    'Vice Principal',
+    'Headmaster',
+    'Headmistress',
+    'PG Teacher',
+    'UG Teacher',
+    'Primary Teacher',
+    'Secondary Teacher',
+    'Physical Education Teacher',
+    'Computer Instructor',
+    'Music Teacher',
+    'Art Teacher',
+    'Dance Teacher'
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +52,7 @@ export class TeacherDetails implements OnInit {
 
     if (staff) {
       this.teacher = JSON.parse(JSON.stringify(staff));
+      this.isTeachingStaff = this.teachingRoles.includes(this.teacher?.currentRole || '');
     } else {
       alert('Staff member not found.');
       this.back();

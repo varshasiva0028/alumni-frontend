@@ -67,6 +67,26 @@ export class TeacherComponent implements OnInit {
     this.teachers$ = this.teacherService.getFilteredTeachers();
   }
 
+  getTeachingCount(teachers: Teacher[] | null): number {
+    if (!teachers) return 0;
+    return teachers.filter(t => this.teachingRoles.includes(t.currentRole)).length;
+  }
+
+  getNonTeachingCount(teachers: Teacher[] | null): number {
+    if (!teachers) return 0;
+    return teachers.filter(t => this.nonTeachingRoles.includes(t.currentRole)).length;
+  }
+
+  getTeachingStaff(teachers: Teacher[] | null): Teacher[] {
+    if (!teachers) return [];
+    return teachers.filter(t => this.teachingRoles.includes(t.currentRole));
+  }
+
+  getNonTeachingStaff(teachers: Teacher[] | null): Teacher[] {
+    if (!teachers) return [];
+    return teachers.filter(t => this.nonTeachingRoles.includes(t.currentRole));
+  }
+
   addTeacher(): void {
     this.router.navigate(['/add-staff']);
   }

@@ -15,8 +15,8 @@
 }
 
 .transition-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* Typography Enhancements */
