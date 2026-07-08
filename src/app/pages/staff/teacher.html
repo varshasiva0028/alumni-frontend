@@ -3,40 +3,38 @@
     <!-- ========================================= -->
     <!-- HEADER -->
     <!-- ========================================= -->
-<div
-    class="position-fixed top-0 end-0 bg-white px-4 pt-4 pb-3 "
-    style="left:240px; z-index:1030;">
+    <div class="position-fixed top-0 end-0 bg-white px-4 pt-4 pb-3 " style="left:240px; z-index:1030;">
 
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body">
 
-            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
 
-                <div>
-                    <h2 class="fw-bold mb-1">
-                        Staff Management
-                    </h2>
+                    <div>
+                        <h2 class="fw-bold mb-1">
+                            Staff Management
+                        </h2>
 
-                    <p class="text-secondary mb-0">
-                        Manage teaching and non-teaching staff of the institution.
-                    </p>
+                        <p class="text-secondary mb-0">
+                            Manage teaching and non-teaching staff of the institution.
+                        </p>
+                    </div>
+
+                    <span class="badge bg-primary fs-6 px-3 py-2">
+                        <i class="bi bi-people-fill me-2"></i>
+                        Total Staff :
+                        {{ (teachers$ | async)?.length || 0 }}
+                    </span>
+
                 </div>
 
-                <span class="badge bg-primary fs-6 px-3 py-2">
-                    <i class="bi bi-people-fill me-2"></i>
-                    Total Staff :
-                    {{ (teachers$ | async)?.length || 0 }}
-                </span>
-
             </div>
-
         </div>
+
     </div>
 
-</div>
-
-<!-- Spacer -->
-<div style="height:80px;"></div>
+    <!-- Spacer -->
+    <div style="height:80px;"></div>
     <!-- ========================================= -->
     <!-- SEARCH & FILTERS -->
     <!-- ========================================= -->
@@ -179,18 +177,13 @@
     </div>
 </div>
 <!-- Floating Add Staff Button -->
-<button
-    type="button"
-    class="btn btn-success rounded-circle shadow-lg position-fixed"
-    (click)="addTeacher()"
-    style="
+<button type="button" class="btn btn-success rounded-circle shadow-lg position-fixed" (click)="addTeacher()" style="
         width: 70px;
         height: 70px;
         bottom: 30px;
         right: 30px;
         z-index: 1060;
-    "
-    title="Add Staff">
+    " title="Add Staff">
 
     <i class="bi bi-plus-lg fs-1"></i>
 
@@ -290,6 +283,18 @@
                                 <input type="text" class="form-control" formControlName="phoneNumber"
                                     placeholder="e.g. 9876543212">
                             </div>
+                            <div class="text-danger small mt-1" *ngIf="newTeacherForm.get('phoneNumber')?.touched &&
+          newTeacherForm.get('phoneNumber')?.invalid">
+
+                                <span *ngIf="newTeacherForm.get('phoneNumber')?.errors?.['required']">
+                                    Phone number is required.
+                                </span>
+
+                                <span *ngIf="newTeacherForm.get('phoneNumber')?.errors?.['pattern']">
+                                    Enter a valid 10-digit mobile number.
+                                </span>
+
+                            </div>
 
                             <!-- Email -->
                             <div class="col-md-6">
@@ -347,14 +352,6 @@
                                 </select>
                             </div>
 
-                            <!-- Qualification -->
-                            <div class="col-md-6">
-                                <label class="form-label small fw-bold text-secondary">Qualification <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" class="form-control" formControlName="qualification"
-                                    placeholder="e.g. M.A">
-                            </div>
-
                             <!-- Salary -->
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-secondary">Salary (₹) <span
@@ -363,14 +360,97 @@
                                     placeholder="e.g. 48000">
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">
+                                    Qualification <span class="text-danger">*</span>
+                                </label>
+
+                                <select class="form-select" formControlName="qualification">
+                                    <option value="">Select Qualification</option>
+
+                                    <optgroup label="Bachelor's Degree">
+                                        <option *ngFor="let degree of bachelors" [value]="degree">
+                                            {{ degree }}
+                                        </option>
+                                    </optgroup>
+
+                                    <optgroup label="Master's Degree">
+                                        <option *ngFor="let degree of masters" [value]="degree">
+                                            {{ degree }}
+                                        </option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="mt-2" *ngIf="newTeacherForm.get('qualification')?.value === 'Other'">
+
+                                <input type="text" class="form-control" formControlName="qualificationOther"
+                                    placeholder="Enter Qualification">
+
+                                <div class="text-danger small mt-1" *ngIf="
+            newTeacherForm.get('qualificationOther')?.invalid &&
+            newTeacherForm.get('qualificationOther')?.touched">
+
+                                    Qualification is required.
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-secondary">
+                                    Subject <span class="text-danger">*</span>
+                                </label>
+
+                                <select class="form-select" formControlName="subject">
+                                    <option value="">Select Subject</option>
+
+                                    <option *ngFor="let subject of subjects" [value]="subject">
+                                        {{ subject }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mt-2" *ngIf="newTeacherForm.get('subject')?.value === 'Other'">
+
+                                <input type="text" class="form-control" formControlName="subjectOther"
+                                    placeholder="Enter Subject">
+
+                                <div class="text-danger small mt-1" *ngIf="
+            newTeacherForm.get('subjectOther')?.invalid &&
+            newTeacherForm.get('subjectOther')?.touched">
+
+                                    Subject is required.
+
+                                </div>
+
+                            </div>
+
                             <!-- Has Experience? -->
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-secondary">Has Experience? <span
-                                        class="text-danger">*</span></label>
-                                <select class="form-select" formControlName="hasExperience">
-                                    <option [ngValue]="false">No</option>
-                                    <option [ngValue]="true">Yes</option>
-                                </select>
+                                <label class="form-label fw-bold text-secondary">
+                                    Has Experience? <span class="text-danger">*</span>
+                                </label>
+
+                                <div class="d-flex align-items-center gap-4 mt-2">
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="experienceYes" [value]="true"
+                                            formControlName="hasExperience">
+
+                                        <label class="form-check-label" for="experienceYes">
+                                            Yes
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="experienceNo" [value]="false"
+                                            formControlName="hasExperience">
+
+                                        <label class="form-check-label" for="experienceNo">
+                                            No
+                                        </label>
+                                    </div>
+
+                                </div>
                             </div>
 
                             <!-- Experience Years (Conditional) -->

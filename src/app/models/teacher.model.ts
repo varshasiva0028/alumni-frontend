@@ -14,6 +14,7 @@ export interface Teacher {
 
   // Professional Information
   qualification: string;
+  subject:string;
   currentRole: string;
   salary: number;
 
