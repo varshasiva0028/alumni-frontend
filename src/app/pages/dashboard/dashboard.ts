@@ -19,6 +19,8 @@ export class Dashboard implements OnInit {
   stats$!: Observable<DashboardStats>;
   totalAlumni$!: Observable<number>;
   totalStudents$!: Observable<number>;
+  totalTeachingStaff$!: Observable<number>;
+  totalNonTeachingStaff$!: Observable<number>;
 
   constructor(private dashboardService: DashboardService) { }
 
@@ -34,6 +36,14 @@ export class Dashboard implements OnInit {
     this.totalStudents$ = this.stats$.pipe(
       map(stats => stats.students.male + stats.students.female)
     );
+
+    this.totalTeachingStaff$ = this.stats$.pipe(
+      map(stats => stats.teachingStaff.male + stats.teachingStaff.female)
+    );
+
+    this.totalNonTeachingStaff$ = this.stats$.pipe(
+      map(stats => stats.nonTeachingStaff.male + stats.nonTeachingStaff.female)
+    );
   }
 
   // Delegate actions to the service keeping component lean
@@ -47,6 +57,14 @@ export class Dashboard implements OnInit {
 
   incrementStudents(gender: 'male' | 'female'): void {
     this.dashboardService.incrementStudents(gender);
+  }
+
+  incrementTeachingStaff(gender: 'male' | 'female'): void {
+    this.dashboardService.incrementTeachingStaff(gender);
+  }
+
+  incrementNonTeachingStaff(gender: 'male' | 'female'): void {
+    this.dashboardService.incrementNonTeachingStaff(gender);
   }
 
 }

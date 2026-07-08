@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <!-- Institution Card (Wider padding, bigger text columns) -->
+  <!-- Institution Card -->
   <div
     class="card border-0 border-top border-success border-5 shadow-sm rounded-4 bg-success-subtle mb-5 transition-card">
     <div class="card-body p-4 p-lg-5">
@@ -55,30 +55,30 @@
     </div>
   </div>
 
-  <!-- Bottom Cards Section (Spacious layout with g-5 gutter spacing) -->
-  <div class="row g-4 g-lg-5">
-    <!-- Alumni Card -->
+  <!-- Middle Cards Section: Teaching and Non-Teaching Staff -->
+  <div class="row g-4 g-lg-5 mb-5">
+    <!-- Teaching Staff Card -->
     <div class="col-lg-6">
       <div
-        class="card border-0 border-top border-primary border-5 shadow-sm rounded-4 bg-primary-subtle h-100 transition-card">
+        class="card border-0 border-top border-warning border-5 shadow-sm rounded-4 bg-warning-subtle h-100 transition-card">
         <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-between">
           <div>
             <div class="d-flex align-items-center mb-4">
-              <div class="bg-primary text-white d-flex justify-content-center align-items-center rounded-3 shadow"
+              <div class="bg-warning text-dark d-flex justify-content-center align-items-center rounded-3 shadow"
                 style="width: 54px; height: 54px; flex-shrink: 0;">
-                <i class="bi bi-person-badge-fill fs-3"></i>
+                <i class="bi bi-person-workspace fs-3"></i>
               </div>
               <div class="ms-3">
-                <h4 class="fw-bold mb-0 text-dark">Alumni</h4>
-                <small class="text-secondary">Registered Alumni Database</small>
+                <h4 class="fw-bold mb-0 text-dark">Teaching Staff</h4>
+                <small class="text-secondary">Active Faculty Registry</small>
               </div>
             </div>
 
             <div class="text-center py-4 mb-3">
-              <h1 class="display-4 fw-bold text-primary mb-0">
-                {{ totalAlumni$ | async }}
+              <h1 class="display-4 fw-bold text-warning mb-0">
+                {{ totalTeachingStaff$ | async }}
               </h1>
-              <span class="text-secondary fw-semibold text-uppercase small tracking-wider">Total Registered</span>
+              <span class="text-secondary fw-semibold text-uppercase small tracking-wider">Total Faculty</span>
             </div>
           </div>
 
@@ -87,17 +87,17 @@
 
             <!-- Gender Split Section -->
             <div class="row text-center g-3">
-              <div class="col-6 border-end border-secondary-subtle cursor-pointer" (click)="incrementAlumni('male')"
-                title="Click to increment male alumni">
+              <div class="col-6 border-end border-secondary-subtle cursor-pointer" (click)="incrementTeachingStaff('male')"
+                title="Click to increment male teaching staff">
                 <i class="bi bi-gender-male fs-2 text-primary"></i>
                 <div class="small text-secondary fw-semibold mt-2">Male</div>
-                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.alumni.male }}</h4>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.teachingStaff.male }}</h4>
               </div>
-              <div class="col-6 cursor-pointer" (click)="incrementAlumni('female')"
-                title="Click to increment female alumni">
+              <div class="col-6 cursor-pointer" (click)="incrementTeachingStaff('female')"
+                title="Click to increment female teaching staff">
                 <i class="bi bi-gender-female fs-2 text-danger"></i>
                 <div class="small text-secondary fw-semibold mt-2">Female</div>
-                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.alumni.female }}</h4>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.teachingStaff.female }}</h4>
               </div>
             </div>
           </div>
@@ -105,6 +105,57 @@
       </div>
     </div>
 
+    <!-- Non-Teaching Staff Card -->
+    <div class="col-lg-6">
+      <div
+        class="card border-0 border-top border-info border-5 shadow-sm rounded-4 bg-info-subtle h-100 transition-card">
+        <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex align-items-center mb-4">
+              <div class="bg-info text-white d-flex justify-content-center align-items-center rounded-3 shadow"
+                style="width: 54px; height: 54px; flex-shrink: 0;">
+                <i class="bi bi-briefcase-fill fs-3"></i>
+              </div>
+              <div class="ms-3">
+                <h4 class="fw-bold mb-0 text-dark">Non-Teaching Staff</h4>
+                <small class="text-secondary">Support & Admin Registry</small>
+              </div>
+            </div>
+
+            <div class="text-center py-4 mb-3">
+              <h1 class="display-4 fw-bold text-info mb-0">
+                {{ totalNonTeachingStaff$ | async }}
+              </h1>
+              <span class="text-secondary fw-semibold text-uppercase small tracking-wider">Total Support Staff</span>
+            </div>
+          </div>
+
+          <div>
+            <hr class="text-muted opacity-25 my-4">
+
+            <!-- Gender Split Section -->
+            <div class="row text-center g-3">
+              <div class="col-6 border-end border-secondary-subtle cursor-pointer" (click)="incrementNonTeachingStaff('male')"
+                title="Click to increment male non-teaching staff">
+                <i class="bi bi-gender-male fs-2 text-primary"></i>
+                <div class="small text-secondary fw-semibold mt-2">Male</div>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.nonTeachingStaff.male }}</h4>
+              </div>
+              <div class="col-6 cursor-pointer" (click)="incrementNonTeachingStaff('female')"
+                title="Click to increment female non-teaching staff">
+                <i class="bi bi-gender-female fs-2 text-danger"></i>
+                <div class="small text-secondary fw-semibold mt-2">Female</div>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.nonTeachingStaff.female }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Cards Section: Students (left) and Alumni (right) -->
+  <div class="row g-4 g-lg-5">
     <!-- Students Card -->
     <div class="col-lg-6">
       <div
@@ -146,6 +197,54 @@
                 <i class="bi bi-gender-female fs-2 text-danger"></i>
                 <div class="small text-secondary fw-semibold mt-2">Female</div>
                 <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.students.female }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alumni Card -->
+    <div class="col-lg-6">
+      <div
+        class="card border-0 border-top border-primary border-5 shadow-sm rounded-4 bg-primary-subtle h-100 transition-card">
+        <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex align-items-center mb-4">
+              <div class="bg-primary text-white d-flex justify-content-center align-items-center rounded-3 shadow"
+                style="width: 54px; height: 54px; flex-shrink: 0;">
+                <i class="bi bi-person-badge-fill fs-3"></i>
+              </div>
+              <div class="ms-3">
+                <h4 class="fw-bold mb-0 text-dark">Alumni</h4>
+                <small class="text-secondary">Registered Alumni Database</small>
+              </div>
+            </div>
+
+            <div class="text-center py-4 mb-3">
+              <h1 class="display-4 fw-bold text-primary mb-0">
+                {{ totalAlumni$ | async }}
+              </h1>
+              <span class="text-secondary fw-semibold text-uppercase small tracking-wider">Total Registered</span>
+            </div>
+          </div>
+
+          <div>
+            <hr class="text-muted opacity-25 my-4">
+
+            <!-- Gender Split Section -->
+            <div class="row text-center g-3">
+              <div class="col-6 border-end border-secondary-subtle cursor-pointer" (click)="incrementAlumni('male')"
+                title="Click to increment male alumni">
+                <i class="bi bi-gender-male fs-2 text-primary"></i>
+                <div class="small text-secondary fw-semibold mt-2">Male</div>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.alumni.male }}</h4>
+              </div>
+              <div class="col-6 cursor-pointer" (click)="incrementAlumni('female')"
+                title="Click to increment female alumni">
+                <i class="bi bi-gender-female fs-2 text-danger"></i>
+                <div class="small text-secondary fw-semibold mt-2">Female</div>
+                <h4 class="fw-bold text-dark mt-1 mb-0">{{ stats.alumni.female }}</h4>
               </div>
             </div>
           </div>

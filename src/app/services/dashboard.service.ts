@@ -12,18 +12,60 @@ export class DashboardService {
       totalEvents: 18,
       status: 'Active'
     },
+
     alumni: {
       male: 251,
       female: 231
     },
+
     students: {
       male: 134,
       female: 100
+    },
+
+    teachingStaff: {
+      male: 18,
+      female: 22
+    },
+
+    nonTeachingStaff: {
+      male: 9,
+      female: 12
     }
   };
 
   // BehaviorSubject as the single source of truth for dashboard statistics
   private readonly stats$ = new BehaviorSubject<DashboardStats>(this.initialStats);
+
+  incrementTeachingStaff(
+    gender: 'male' | 'female'
+  ): void {
+
+    const current = this.stats$.value;
+
+    this.updateDashboardStats({
+      teachingStaff: {
+        ...current.teachingStaff,
+        [gender]: current.teachingStaff[gender] + 1
+      }
+    });
+
+  }
+
+  incrementNonTeachingStaff(
+    gender: 'male' | 'female'
+  ): void {
+
+    const current = this.stats$.value;
+
+    this.updateDashboardStats({
+      nonTeachingStaff: {
+        ...current.nonTeachingStaff,
+        [gender]: current.nonTeachingStaff[gender] + 1
+      }
+    });
+
+  }
 
   /**
    * Returns dashboard stats as an Observable for components to subscribe to
@@ -40,7 +82,9 @@ export class DashboardService {
     this.stats$.next({
       institution: { ...stats.institution },
       alumni: { ...stats.alumni },
-      students: { ...stats.students }
+      students: { ...stats.students },
+      teachingStaff: { ...stats.teachingStaff },
+      nonTeachingStaff: { ...stats.nonTeachingStaff }
     });
   }
 

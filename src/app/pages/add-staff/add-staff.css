@@ -7,11 +7,6 @@
     animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.page-content {
-    margin-top: 200px;
-    /* Adjust if your header height changes */
-}
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -78,7 +73,6 @@
 
 /* Dossier paper inputs styling */
 .form-control-custom {
-    height: 48px !important;
     border-radius: 8px !important;
     border: 1px solid #cbd5e1 !important;
     font-size: 0.925rem !important;

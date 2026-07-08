@@ -15,6 +15,8 @@ import { TeacherService } from '../../services/teacher.service';
 export class AddStaffComponent implements OnInit {
   modalErrorMessage = '';
   availableLanguages: string[] = ['Tamil', 'English', 'Hindi', 'Telugu', 'Malayalam', 'Kannada'];
+  
+  isTeachingStaff = true;
 
   // Reactive Form Group matching the official Teacher model
   newTeacherForm = new FormGroup({
@@ -46,6 +48,16 @@ export class AddStaffComponent implements OnInit {
     experienceYears: new FormControl<number | null>(null),
     experienceDetails: new FormControl(''),
     teacherExperienceCertificate: new FormControl(''),
+
+    // Non-Teaching specific fields
+    nonTeachingDepartment: new FormControl(''),
+    nonTeachingDesignation: new FormControl(''),
+    nonTeachingQualification: new FormControl(''),
+    nonTeachingSalary: new FormControl<number | null>(null),
+    nonTeachingHasExperience: new FormControl<boolean>(false),
+    nonTeachingExperienceYears: new FormControl<number | null>(null),
+    nonTeachingPreviousJobRole: new FormControl(''),
+    nonTeachingCertificate: new FormControl(''),
 
     languages: new FormArray([])
   });
@@ -165,6 +177,108 @@ export class AddStaffComponent implements OnInit {
     'Gardener'
   ];
 
+  // Non-Teaching Departments
+  departments = [
+    'Administration',
+    'Accounts',
+    'Library',
+    'Laboratory',
+    'Transport',
+    'IT Support',
+    'Maintenance',
+    'Security',
+    'Housekeeping',
+    'Reception',
+    'Hostel',
+    'Medical',
+    'Sports',
+    'Office',
+    'Other'
+  ];
+
+  // Non-Teaching Designations
+  designations = [
+    'Administrative Officer',
+    'Office Assistant',
+    'Office Clerk',
+    'Receptionist',
+    'Accountant',
+    'Cashier',
+    'Store Keeper',
+    'Librarian',
+    'Assistant Librarian',
+    'Lab Assistant',
+    'Computer Lab Assistant',
+    'System Administrator',
+    'IT Support Executive',
+    'Network Administrator',
+    'Driver',
+    'Transport Coordinator',
+    'Security Guard',
+    'Security Supervisor',
+    'Housekeeping Staff',
+    'Cleaner',
+    'Electrician',
+    'Plumber',
+    'Maintenance Technician',
+    'Gardener',
+    'Office Attender',
+    'Nurse',
+    'Cook',
+    'Helper',
+    'Warden',
+    'Other'
+  ];
+
+  // Non-Teaching Qualifications
+  qualifications = [
+    'SSLC (10th)',
+    'HSC (12th)',
+    'ITI',
+    'Diploma',
+    'B.A.',
+    'B.Sc.',
+    'B.Com.',
+    'BBA',
+    'BCA',
+    'B.E.',
+    'B.Tech.',
+    'M.A.',
+    'M.Sc.',
+    'M.Com.',
+    'MBA',
+    'MCA',
+    'M.E.',
+    'M.Tech.',
+    'Other'
+  ];
+
+  // Non-Teaching Previous Job Roles
+  previousJobRoles = [
+    'Administrative Officer',
+    'Office Assistant',
+    'Receptionist',
+    'Accountant',
+    'Cashier',
+    'Librarian',
+    'Lab Assistant',
+    'Computer Operator',
+    'IT Support',
+    'System Administrator',
+    'Driver',
+    'Security Guard',
+    'Housekeeping Staff',
+    'Maintenance Technician',
+    'Electrician',
+    'Plumber',
+    'Store Keeper',
+    'Office Clerk',
+    'Nurse',
+    'Cook',
+    'Helper',
+    'Other'
+  ];
+
   constructor(
     private router: Router,
     private location: Location,
@@ -175,7 +289,7 @@ export class AddStaffComponent implements OnInit {
     // Qualification -> Other
     this.newTeacherForm.get('qualification')?.valueChanges.subscribe(value => {
       const other = this.newTeacherForm.get('qualificationOther');
-      if (value === 'Other') {
+      if (this.isTeachingStaff && value === 'Other') {
         other?.setValidators([Validators.required]);
       } else {
         other?.clearValidators();
@@ -187,7 +301,7 @@ export class AddStaffComponent implements OnInit {
     // Subject -> Other
     this.newTeacherForm.get('subject')?.valueChanges.subscribe(value => {
       const other = this.newTeacherForm.get('subjectOther');
-      if (value === 'Other') {
+      if (this.isTeachingStaff && value === 'Other') {
         other?.setValidators([Validators.required]);
       } else {
         other?.clearValidators();
@@ -196,22 +310,15 @@ export class AddStaffComponent implements OnInit {
       other?.updateValueAndValidity();
     });
 
-    // Experience -> Certificate, Years & Details
+    // Experience -> Certificate, Years & Details (Teaching Staff)
     this.newTeacherForm.get('hasExperience')?.valueChanges.subscribe(value => {
       const years = this.newTeacherForm.get('experienceYears');
       const details = this.newTeacherForm.get('experienceDetails');
       const certificate = this.newTeacherForm.get('teacherExperienceCertificate');
-      if (value) {
-        years?.setValidators([
-          Validators.required,
-          Validators.min(1)
-        ]);
-        details?.setValidators([
-          Validators.required
-        ]);
-        certificate?.setValidators([
-          Validators.required
-        ]);
+      if (this.isTeachingStaff && value) {
+        years?.setValidators([Validators.required, Validators.min(1)]);
+        details?.setValidators([Validators.required]);
+        certificate?.setValidators([Validators.required]);
       } else {
         years?.clearValidators();
         years?.setValue(null);
@@ -224,7 +331,77 @@ export class AddStaffComponent implements OnInit {
       details?.updateValueAndValidity();
       certificate?.updateValueAndValidity();
     });
+
+    // Experience -> Certificate, Years & Details (Non-Teaching Staff)
+    this.newTeacherForm.get('nonTeachingHasExperience')?.valueChanges.subscribe(value => {
+      const years = this.newTeacherForm.get('nonTeachingExperienceYears');
+      const prevRole = this.newTeacherForm.get('nonTeachingPreviousJobRole');
+      if (!this.isTeachingStaff && value) {
+        years?.setValidators([Validators.required, Validators.min(1)]);
+        prevRole?.setValidators([Validators.required]);
+      } else {
+        years?.clearValidators();
+        years?.setValue(null);
+        prevRole?.clearValidators();
+        prevRole?.setValue('');
+      }
+      years?.updateValueAndValidity();
+      prevRole?.updateValueAndValidity();
+    });
   }
+
+  setEmploymentCategory(isTeaching: boolean): void {
+    this.isTeachingStaff = isTeaching;
+    
+    // Clear and set validators dynamically based on role type
+    const qualification = this.newTeacherForm.get('qualification');
+    const subject = this.newTeacherForm.get('subject');
+    const currentRole = this.newTeacherForm.get('currentRole');
+    const salary = this.newTeacherForm.get('salary');
+
+    const ntDept = this.newTeacherForm.get('nonTeachingDepartment');
+    const ntDesig = this.newTeacherForm.get('nonTeachingDesignation');
+    const ntQual = this.newTeacherForm.get('nonTeachingQualification');
+    const ntSalary = this.newTeacherForm.get('nonTeachingSalary');
+
+    if (isTeaching) {
+      qualification?.setValidators([Validators.required]);
+      subject?.setValidators([Validators.required]);
+      currentRole?.setValidators([Validators.required]);
+      salary?.setValidators([Validators.required, Validators.min(0)]);
+
+      ntDept?.clearValidators();
+      ntDesig?.clearValidators();
+      ntQual?.clearValidators();
+      ntSalary?.clearValidators();
+    } else {
+      qualification?.clearValidators();
+      subject?.clearValidators();
+      currentRole?.clearValidators();
+      salary?.clearValidators();
+
+      ntDept?.setValidators([Validators.required]);
+      ntDesig?.setValidators([Validators.required]);
+      ntQual?.setValidators([Validators.required]);
+      ntSalary?.setValidators([Validators.required, Validators.min(0)]);
+    }
+
+    // Update form validity
+    qualification?.updateValueAndValidity();
+    subject?.updateValueAndValidity();
+    currentRole?.updateValueAndValidity();
+    salary?.updateValueAndValidity();
+
+    ntDept?.updateValueAndValidity();
+    ntDesig?.updateValueAndValidity();
+    ntQual?.updateValueAndValidity();
+    ntSalary?.updateValueAndValidity();
+
+    // Trigger experience updates to clear/re-evaluate
+    this.newTeacherForm.get('hasExperience')?.setValue(this.newTeacherForm.get('hasExperience')?.value || false);
+    this.newTeacherForm.get('nonTeachingHasExperience')?.setValue(this.newTeacherForm.get('nonTeachingHasExperience')?.value || false);
+  }
+
   get languagesFormArray(): FormArray {
     return this.newTeacherForm.get('languages') as FormArray;
   }
@@ -266,6 +443,20 @@ export class AddStaffComponent implements OnInit {
     });
   }
 
+  onNonTeachingCertificateUpload(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      this.modalErrorMessage = 'Professional certificate must be less than 5 MB.';
+      return;
+    }
+
+    this.newTeacherForm.patchValue({
+      nonTeachingCertificate: file.name
+    });
+  }
+
   toggleLanguage(lang: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     const arr = this.languagesFormArray;
@@ -290,47 +481,64 @@ export class AddStaffComponent implements OnInit {
     }
 
     const val = this.newTeacherForm.value;
-    const fullName =
-      `${val.firstName} ${val.lastName}`.trim();
+    const fullName = `${val.firstName} ${val.lastName}`.trim();
     this.modalErrorMessage = '';
-    const qualification =
-      val.qualification === 'Other'
-        ? val.qualificationOther
-        : val.qualification;
 
-    const subject =
-      val.subject === 'Other'
-        ? val.subjectOther
-        : val.subject;
+    let qualification = '';
+    let subject = '';
+    let role = '';
+    let salary = 0;
+    let hasExperience = false;
+    let expYears: number | undefined = undefined;
+    let expDetails: string | undefined = undefined;
+    let certificate = '';
 
-    // Fetch next auto-incremented ID
+    if (this.isTeachingStaff) {
+      qualification = (val.qualification === 'Other' ? val.qualificationOther : val.qualification) || '';
+      subject = (val.subject === 'Other' ? val.subjectOther : val.subject) || '';
+      role = val.currentRole || '';
+      salary = Number(val.salary || 0);
+      hasExperience = !!val.hasExperience;
+      expYears = val.hasExperience ? Number(val.experienceYears || 0) : undefined;
+      expDetails = val.hasExperience ? (val.experienceDetails || undefined) : undefined;
+      certificate = val.teacherExperienceCertificate || '';
+    } else {
+      qualification = val.nonTeachingQualification || '';
+      subject = val.nonTeachingDepartment || '';
+      role = val.nonTeachingDesignation || '';
+      salary = Number(val.nonTeachingSalary || 0);
+      hasExperience = !!val.nonTeachingHasExperience;
+      expYears = val.nonTeachingHasExperience ? Number(val.nonTeachingExperienceYears || 0) : undefined;
+      expDetails = val.nonTeachingHasExperience ? (val.nonTeachingPreviousJobRole || undefined) : undefined;
+      certificate = val.nonTeachingCertificate || '';
+    }
+
     const nextId = this.teacherService.getNextTeacherId();
 
-    // Add new teacher profile details matching type constraints of your Teacher interface
     this.teacherService.addTeacher({
       id: nextId,
-     name: fullName,
+      name: fullName,
       photo: val.photo || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
       gender: val.gender as 'Male' | 'Female' | 'Other',
       visible: true,
-      currentRole: val.currentRole || '',
-      qualification: qualification?.trim() || '',
-      subject: subject?.trim() || '',
+      currentRole: role,
+      qualification: qualification.trim(),
+      subject: subject.trim(),
       phoneNumber: (val.phoneNumber || '').trim(),
       dateOfBirth: val.dateOfBirth ? new Date(val.dateOfBirth) : new Date(),
       bloodGroup: val.bloodGroup || undefined,
       email: val.email || undefined,
       aadhaarNumber: val.aadhaar || undefined,
       address: (val.address || '').trim(),
-      salary: Number(val.salary || 0),
-      hasExperience: !!val.hasExperience,
-      experienceYears: val.hasExperience ? Number(val.experienceYears || 0) : undefined,
-      experienceDetails: val.hasExperience ? (val.experienceDetails || undefined) : undefined,
-      teacherExperienceCertificate: val.teacherExperienceCertificate || '',
+      salary: salary,
+      hasExperience: hasExperience,
+      experienceYears: expYears,
+      experienceDetails: expDetails,
+      teacherExperienceCertificate: certificate,
       languagesKnown: (val.languages as string[]) || []
     });
 
-    alert('Teacher added successfully!');
+    alert('Staff added successfully!');
     this.back();
   }
 

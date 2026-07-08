@@ -33,4 +33,5 @@
 [data-bs-theme="dark"] .bg-success-subtle { background-color: rgba(25, 135, 84, 0.15) !important; }
 [data-bs-theme="dark"] .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.15) !important; }
 [data-bs-theme="dark"] .bg-info-subtle { background-color: rgba(13, 202, 240, 0.15) !important; }
+[data-bs-theme="dark"] .bg-warning-subtle { background-color: rgba(255, 193, 7, 0.15) !important; }
 [data-bs-theme="dark"] .text-dark { color: #f8f9fa !important; }

@@ -13,8 +13,21 @@ export interface StudentStats {
   female: number;
 }
 
+export interface TeachingStaffStats {
+  male: number;
+  female: number;
+}
+
+export interface NonTeachingStaffStats {
+  male: number;
+  female: number;
+}
+
 export interface DashboardStats {
   institution: InstitutionStats;
   alumni: AlumniStats;
   students: StudentStats;
+
+  teachingStaff: TeachingStaffStats;
+  nonTeachingStaff: NonTeachingStaffStats;
 }
