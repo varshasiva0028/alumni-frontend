@@ -14,7 +14,7 @@ export interface Teacher {
 
   // Professional Information
   qualification: string;
-  subject:string;
+  subject: string;
   currentRole: string;
   salary: number;
 
@@ -22,6 +22,9 @@ export interface Teacher {
   hasExperience: boolean;
   experienceYears?: number;
   experienceDetails?: string;
+
+  // NEW
+  teacherExperienceCertificate?: string;
 
   // Languages
   languagesKnown: string[];

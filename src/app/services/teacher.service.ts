@@ -30,6 +30,7 @@ export class TeacherService {
         hasExperience: boolean,
         years: number,
         details: string,
+        certificate: string,
         languages: string[]
     ): Teacher {
 
@@ -51,10 +52,10 @@ export class TeacherService {
             hasExperience,
             experienceYears: years,
             experienceDetails: details,
+            teacherExperienceCertificate: certificate,
             languagesKnown: languages,
             visible: true
         };
-
     }
     private teachers: Teacher[] = [
 
@@ -70,12 +71,13 @@ export class TeacherService {
             'Chennai',
             '123456789012',
             'M.Ed',
-            'tamil',
+            'Tamil',
             'Principal',
             85000,
             true,
             22,
             'Academic Administration',
+            'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -97,6 +99,7 @@ export class TeacherService {
             true,
             12,
             'Higher Secondary Mathematics',
+             'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -118,6 +121,7 @@ export class TeacherService {
             true,
             8,
             'Spoken English & Literature',
+             'experience-certificate.pdf',
             ['Tamil', 'English', 'Hindi']
         ),
 
@@ -139,6 +143,7 @@ export class TeacherService {
             true,
             10,
             'Physics & Chemistry',
+             'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -160,6 +165,7 @@ export class TeacherService {
             true,
             5,
             'Primary Education',
+             'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -181,6 +187,7 @@ export class TeacherService {
             true,
             11,
             'Programming & Computer Science',
+             'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -202,6 +209,7 @@ export class TeacherService {
             true,
             7,
             'Sports & Physical Training',
+             'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -223,6 +231,7 @@ export class TeacherService {
             true,
             15,
             'Carnatic Music',
+             'experience-certificate.pdf',
             ['Tamil']
         ),
 
@@ -244,6 +253,7 @@ export class TeacherService {
             true,
             6,
             'Drawing & Painting',
+             'experience-certificate.pdf',
             ['Tamil', 'English']
         ),
 
@@ -265,6 +275,7 @@ export class TeacherService {
             true,
             18,
             'School Administration',
+             'experience-certificate.pdf',
             ['Tamil', 'English', 'Hindi']
         )
 

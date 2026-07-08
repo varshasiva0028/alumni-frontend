@@ -13,6 +13,7 @@ import { UpdateEventComponent } from './pages/update-event/update-event';
 import { TeacherComponent } from './pages/staff/teacher';
 import { UpdateTeacher } from './pages/update-staff/update-teacher';
 import { TeacherDetails } from './pages/staff-details/teacher-details';
+import { AddStaffComponent } from './pages/add-staff/add-staff';
 export const routes: Routes = [
   {
     path: '',
@@ -61,17 +62,18 @@ export const routes: Routes = [
         component: TeacherComponent
       },
       {
+        path: 'staff-details/:id',
+        component: TeacherDetails
+      },
+      {
         path: 'add-staff',
-        component: UpdateTeacher
+        component: AddStaffComponent
       },
       {
         path: 'update-staff/:id',
         component: UpdateTeacher
       },
-      {
-        path: 'staff-details/:id',
-        component: TeacherDetails
-      },
+
     ]
   }
 ];

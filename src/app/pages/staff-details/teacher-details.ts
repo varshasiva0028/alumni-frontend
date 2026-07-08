@@ -24,7 +24,6 @@ export class TeacherDetails implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!id) {
@@ -44,12 +43,10 @@ export class TeacherDetails implements OnInit {
 
   editStaff(): void {
     if (!this.teacher) return;
-
     this.router.navigate(['/update-staff', this.teacher.id]);
   }
 
   back(): void {
     this.location.back();
   }
-
 }
