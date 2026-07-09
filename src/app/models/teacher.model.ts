@@ -12,19 +12,25 @@ export interface Teacher {
   address: string;
   aadhaarNumber?: string;
 
+  // Employment
+  employmentCategory: 'Teaching' | 'Non-Teaching' | 'Support';
+
   // Professional Information
   qualification: string;
-  subject: string; // Acts as "Department" for Non-Teaching Staff
-  currentRole: string; // Acts as "Designation" for Non-Teaching Staff
+  department: string;
+  currentRole: string;
   salary: number;
+
+  // Teaching Only
+  subject?: string;
 
   // Experience
   hasExperience: boolean;
   experienceYears?: number;
-  experienceDetails?: string; // Acts as "Previous Job Role" for Non-Teaching Staff
+  experienceDetails?: string;
 
-  // Certificates
-  teacherExperienceCertificate?: string; // Serves as Teaching Certificate or Non-Teaching Professional Certificate
+  // Certificate
+  teacherExperienceCertificate?: string;
 
   // Languages
   languagesKnown: string[];

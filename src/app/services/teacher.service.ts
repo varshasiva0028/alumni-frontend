@@ -14,46 +14,66 @@ export class TeacherService {
     // ===========================================
     private createTeacher(
         id: number,
-        photo: number,
+        photo: string | number,
         name: string,
-        dob: Date,
+        dateOfBirth: Date,
         gender: 'Male' | 'Female' | 'Other',
-        phone: string,
+        phoneNumber: string,
         email: string,
         bloodGroup: string,
         address: string,
-        aadhaar: string,
+        aadhaarNumber: string,
+
+        employmentCategory: 'Teaching' | 'Non-Teaching' | 'Support',
+        department: string,
+
         qualification: string,
         subject: string,
-        role: string,
+        currentRole: string,
         salary: number,
+
         hasExperience: boolean,
-        years: number,
-        details: string,
-        certificate: string,
-        languages: string[]
+        experienceYears: number,
+        experienceDetails: string,
+        teacherExperienceCertificate: string,
+
+        languagesKnown: string[]
     ): Teacher {
 
         return {
             id,
-            photo: `https://i.pravatar.cc/400?img=${photo}`,
+
+            // Personal
+            photo: typeof photo === 'number' ? `https://i.pravatar.cc/400?img=${photo}` : photo,
             name,
-            dateOfBirth: dob,
+            dateOfBirth,
             gender,
-            phoneNumber: phone,
+            phoneNumber,
             email,
             bloodGroup,
             address,
-            aadhaarNumber: aadhaar,
+            aadhaarNumber,
+
+            // Employment
+            employmentCategory,
+            department,
+
+            // Professional
             qualification,
             subject,
-            currentRole: role,
+            currentRole,
             salary,
+
+            // Experience
             hasExperience,
-            experienceYears: years,
-            experienceDetails: details,
-            teacherExperienceCertificate: certificate,
-            languagesKnown: languages,
+            experienceYears,
+            experienceDetails,
+            teacherExperienceCertificate,
+
+            // Languages
+            languagesKnown,
+
+            // Status
             visible: true
         };
     }
@@ -71,14 +91,20 @@ export class TeacherService {
             'O+',
             'Chennai',
             '123456789012',
+
+            'Teaching',
+            'Administration',
+
             'M.Ed',
             'Tamil',
             'Principal',
             85000,
+
             true,
             22,
             'Academic Administration',
             'experience-certificate.pdf',
+
             ['Tamil', 'English']
         ),
 
@@ -93,14 +119,20 @@ export class TeacherService {
             'B+',
             'Madurai',
             '123456789013',
+
+            'Teaching',
+            'Mathematics',
+
             'M.Sc',
-            'Maths',
-            'Mathematics Teacher',
+            'Mathematics',
+            'PG Teacher',
             52000,
+
             true,
             12,
             'Higher Secondary Mathematics',
             'experience-certificate.pdf',
+
             ['Tamil', 'English']
         ),
 
@@ -115,14 +147,20 @@ export class TeacherService {
             'A+',
             'Coimbatore',
             '123456789014',
+
+            'Teaching',
+            'English',
+
             'M.A',
             'English',
-            'English Teacher',
+            'UG Teacher',
             48000,
+
             true,
             8,
             'Spoken English & Literature',
             'experience-certificate.pdf',
+
             ['Tamil', 'English', 'Hindi']
         ),
 
@@ -137,14 +175,20 @@ export class TeacherService {
             'AB+',
             'Salem',
             '123456789015',
+
+            'Teaching',
+            'Science',
+
             'M.Sc',
             'Science',
-            'Science Teacher',
+            'UG Teacher',
             50000,
+
             true,
             10,
             'Physics & Chemistry',
             'experience-certificate.pdf',
+
             ['Tamil', 'English']
         ),
 
@@ -159,14 +203,20 @@ export class TeacherService {
             'B-',
             'Trichy',
             '123456789016',
+
+            'Teaching',
+            'Primary',
+
             'B.Ed',
             'English',
             'Primary Teacher',
             35000,
+
             true,
             5,
             'Primary Education',
             'experience-certificate.pdf',
+
             ['Tamil', 'English']
         ),
 
@@ -181,14 +231,20 @@ export class TeacherService {
             'O-',
             'Erode',
             '123456789017',
+
+            'Teaching',
+            'Computer Science',
+
             'MCA',
             'Computer Science',
             'Computer Instructor',
             56000,
+
             true,
             11,
             'Programming & Computer Science',
             'experience-certificate.pdf',
+
             ['Tamil', 'English']
         ),
 
@@ -203,18 +259,80 @@ export class TeacherService {
             'A-',
             'Vellore',
             '123456789018',
+
+            'Teaching',
+            'Physical Education',
+
             'M.P.Ed',
-            'PET',
+            'Physical Education',
             'Physical Education Teacher',
             42000,
+
             true,
             7,
             'Sports & Physical Training',
             'experience-certificate.pdf',
+
             ['Tamil', 'English']
         ),
 
-        // --- Support & Non-Teaching Mock Data ---
+        this.createTeacher(
+            11,
+            21,
+            'K. Naveen',
+            new Date('2001-08-15'),
+            'Male',
+            '9876543220',
+            'naveen@school.edu',
+            'O+',
+            'Chennai',
+            '123456789022',
+
+            'Teaching',
+            'Primary',
+
+            'B.Ed',
+            'Mathematics',
+            'Primary Teacher',
+            25000,
+
+            false,
+            0,
+            '',
+            '',
+
+            ['Tamil', 'English']
+        ),
+
+        this.createTeacher(
+            12,
+            24,
+            'S. Ranjith',
+            new Date('2001-08-15'),
+            'Male',
+            '9876543221',
+            'ranjith@school.edu',
+            'O+',
+            'Chennai',
+            '',
+
+            'Teaching',
+            'Primary',
+
+            'B.Ed',
+            'Mathematics',
+            'Primary Teacher',
+            25000,
+
+            false,
+            0,
+            '',
+            '',
+
+            ['Tamil', 'English']
+        ),
+        
+        // --- Non-Teaching Mock Data ---
         this.createTeacher(
             8,
             18,
@@ -226,6 +344,10 @@ export class TeacherService {
             'B+',
             'Thanjavur',
             '123456789019',
+
+            'Non-Teaching',
+            'Library',
+
             'Diploma',
             'Library',
             'Librarian',
@@ -248,6 +370,10 @@ export class TeacherService {
             'AB-',
             'Tirunelveli',
             '123456789020',
+
+            'Non-Teaching',
+            'Accounts',
+
             'B.Com.',
             'Accounts',
             'Accountant',
@@ -256,7 +382,7 @@ export class TeacherService {
             6,
             'Accountant',
             'tally-certification.png',
-            ['Tamil', 'English','Malayalam']
+            ['Tamil', 'English', 'Malayalam']
         ),
 
         this.createTeacher(
@@ -270,6 +396,10 @@ export class TeacherService {
             'O+',
             'Namakkal',
             '123456789021',
+
+            'Non-Teaching',
+            'Administration',
+
             'MBA',
             'Administration',
             'Office Administrator',
@@ -279,6 +409,163 @@ export class TeacherService {
             'Administrative Officer',
             'admin-experience.pdf',
             ['Tamil', 'English', 'Hindi']
+        ),
+
+        // ---------- Support Staff ----------
+        this.createTeacher(
+            13,
+            25,
+            'D. Kumar',
+            new Date('1984-03-18'),
+            'Male',
+            '9876543223',
+            'kumar@school.edu',
+            'B+',
+            'Chennai',
+            '123456789023',
+
+            'Support',
+            'Transport',
+
+            'Diploma',
+            'Transport',
+            'Driver',
+            28000,
+            true,
+            12,
+            'School Bus Driver',
+            'driving-license.pdf',
+            ['Tamil']
+        ),
+
+        this.createTeacher(
+            14,
+            26,
+            'S. Lakshmi',
+            new Date('1992-11-08'),
+            'Female',
+            '9876543224',
+            'lakshmi@school.edu',
+            'O+',
+            'Madurai',
+            '123456789024',
+
+            'Support',
+            'Medical',
+
+            'GNM Nursing',
+            'Medical',
+            'School Nurse',
+            42000,
+            true,
+            8,
+            'Student Health Care',
+            'nursing-certificate.pdf',
+            ['Tamil', 'English']
+        ),
+
+        this.createTeacher(
+            15,
+            30,
+            'R. Mani',
+            new Date('1988-07-12'),
+            'Male',
+            '9876543225',
+            'mani@school.edu',
+            'A+',
+            'Salem',
+            '123456789025',
+
+            'Support',
+            'Maintenance',
+
+            'ITI Electrician',
+            'Maintenance',
+            'Electrician',
+            35000,
+            true,
+            10,
+            'Electrical Maintenance',
+            'electrician-license.pdf',
+            ['Tamil']
+        ),
+
+        this.createTeacher(
+            16,
+            28,
+            'P. Selvi',
+            new Date('1995-09-20'),
+            'Female',
+            '9876543226',
+            'selvi@school.edu',
+            'O-',
+            'Trichy',
+            '123456789026',
+
+            'Support',
+            'Housekeeping',
+
+            'SSLC',
+            'Housekeeping',
+            'Housekeeping',
+            22000,
+            true,
+            5,
+            'Campus Cleaning & Hygiene',
+            'housekeeping-training.pdf',
+            ['Tamil']
+        ),
+
+        this.createTeacher(
+            17,
+            34,
+            'M. Ravi',
+            new Date('1986-05-27'),
+            'Male',
+            '9876543227',
+            'ravi@school.edu',
+            'AB+',
+            'Coimbatore',
+            '123456789027',
+
+            'Support',
+            'Security',
+
+            'Diploma',
+            'Security',
+            'Security Guard',
+            26000,
+            true,
+            9,
+            'Campus Security',
+            'security-training.pdf',
+            ['Tamil', 'English']
+        ),
+
+        this.createTeacher(
+            18,
+            30,
+            'V. Anitha',
+            new Date('1991-01-15'),
+            'Female',
+            '9876543228',
+            'anitha@school.edu',
+            'A-',
+            'Erode',
+            '123456789028',
+
+            'Support',
+            'Counselling',
+
+            'M.A Psychology',
+            'Counselling',
+            'Counsellor',
+            48000,
+            true,
+            7,
+            'Student Counselling',
+            'psychology-certificate.pdf',
+            ['Tamil', 'English']
         )
     ];
 

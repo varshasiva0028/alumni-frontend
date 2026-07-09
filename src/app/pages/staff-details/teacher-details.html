@@ -1,51 +1,33 @@
+<div class="staff-header bg-white border-bottom shadow-sm fixed-top top-0 end-0"
+    style="left: 240px; height: 80px; z-index: 1030;">
+    <div class="container-fluid px-4 h-100">
+        <div class="d-flex justify-content-between align-items-center h-100">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-light rounded-circle shadow-sm" style="width:48px;height:48px;" (click)="back()">
+                    <i class="bi bi-arrow-left fs-5"></i>
+                </button>
+                <div>
+                    <h2 class="fw-bold mb-1 fs-3">
+                        Staff Profile Details
+                    </h2>
+                    <p class="text-secondary mb-0 small">
+                        Review and manage the active staff member information.
+                    </p>
+                </div>
+            </div>
+            <button class="btn btn-success rounded-pill px-4" (click)="editStaff()">
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit Profile
+            </button>
+        </div>
+    </div>
+</div>
 <div class="container-fluid px-1 animate-fade-in bg-light min-vh-100" *ngIf="teacher">
 
-    <!-- ========================================= -->
-    <!-- FIXED PAGE HEADER -->
-    <!-- ========================================= -->
-    <header class="position-fixed top-0 start-0 end-0 bg-white border-bottom shadow-sm z-3"
-        style="left:240px; height:90px;">
 
-        <div class="container-fluid h-100 px-4">
+    <!-- Fixed Header Spacer -->
+    <!-- <div style="height: 80px;"></div> -->
 
-            <div class="d-flex justify-content-between align-items-center h-100">
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <button class="btn btn-light rounded-circle shadow-sm" style="width:48px;height:48px;"
-                        (click)="back()">
-
-                        <i class="bi bi-arrow-left fs-5"></i>
-
-                    </button>
-
-                    <div>
-
-                        <h2 class="fw-bold mb-1">
-                            Staff Profile Details
-                        </h2>
-
-                        <p class="text-secondary mb-0">
-                            Review and manage the active staff member information.
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <button class="btn btn-success rounded-pill px-4" (click)="editStaff()">
-
-                    <i class="bi bi-pencil-square me-2"></i>
-                    Edit Profile
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </header>
-    <div style="height:80px;"></div>
     <div class="px-3 py-4">
         <!-- ========================================= -->
         <!-- PROFILE HERO HEADER CARD -->
@@ -57,35 +39,38 @@
                     <div
                         class="col-lg-3 text-center text-lg-start d-flex justify-content-center justify-content-lg-start border-end-md">
                         <div
-                            class="profile-avatar-container bg-light p-2 rounded-circle shadow-sm d-inline-block border border-2 border-primary border-opacity-25">
+                            class="profile-avatar-container bg-light p-3 rounded-circle shadow-sm d-inline-block border border-3 border-primary border-opacity-25">
                             <img [src]="teacher.photo" class="rounded-circle bg-white shadow-sm"
-                                style="width:130px; height:130px; object-fit:cover;" alt="Staff Photo">
+                                style="width:170px; height:170px; object-fit:cover;" alt="Staff Photo">
                         </div>
                     </div>
-
                     <!-- Name & Quick Stats -->
-                    <div class="col-lg-9 text-center text-lg-start ps-lg-5">
+                    <div class="col-lg-8 text-center text-lg-start ps-lg-4 ">
                         <span
                             class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 mb-3 fw-semibold tracking-wider text-uppercase"
                             style="font-size: 11px;">
                             {{ teacher.currentRole }}
                         </span>
-                        <h1 class="fw-bold mb-2 tracking-tight text-dark">{{ teacher.name }}</h1>
+                        <div
+                            class="d-flex align-items-center justify-content-center justify-content-lg-start gap-3 flex-wrap mb-3">
+                            <h1 class="fw-bold mb-0 tracking-tight text-dark fs-2">
+                                {{ teacher.name }}
+                            </h1>
+                            <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-semibold fs-6">
+                                {{ teacher.qualification }}
+                            </span>
+                        </div>
 
                         <!-- Key Metrics Block Row -->
                         <div class="d-flex flex-wrap gap-3 mt-3 justify-content-center justify-content-lg-start">
                             <div class="px-4 py-2 bg-light rounded-pill border border-light">
-                                <span class="text-secondary small me-2">Qualification:</span>
-                                <span class="fw-bold text-dark">{{ teacher.qualification }}</span>
+                                <span class="text-secondary small me-2">Experience:</span>
+                                <span class="fw-bold text-dark">{{ teacher.experienceYears || 0 }} Years</span>
                             </div>
                             <div class="px-4 py-2 bg-light rounded-pill border border-light">
                                 <span class="text-secondary small me-2">{{ isTeachingStaff ? 'Subject' : 'Department'
                                     }}:</span>
                                 <span class="fw-bold text-dark">{{ teacher.subject }}</span>
-                            </div>
-                            <div class="px-4 py-2 bg-light rounded-pill border border-light">
-                                <span class="text-secondary small me-2">Experience:</span>
-                                <span class="fw-bold text-dark">{{ teacher.experienceYears || 0 }} Years</span>
                             </div>
                         </div>
                     </div>
@@ -98,58 +83,73 @@
         <!-- ========================================= -->
         <div class="row g-4">
             <!-- Left Column: Personal Information -->
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="col-lg-6">
+                <!-- ========================================= -->
+                <!-- Personal Details -->
+                <!-- ========================================= -->
+                <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-header bg-white border-0 py-3 px-4 border-bottom">
                         <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
-                            <i class="bi bi-person-fill text-primary"></i> Personal Particulars
+                            <i class="bi bi-person-fill text-primary"></i>
+                            Personal Particulars
                         </h5>
                     </div>
+
                     <div class="card-body p-4">
                         <div class="row g-4">
-
                             <!-- Date of Birth -->
-                            <div class="col-md-6 border-bottom pb-3">
+                            <div class="col-md-4 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
-                                        style="width: 44px; height: 44px;">
+                                        style="width:44px;height:44px;">
                                         <i class="bi bi-calendar-event fs-5"></i>
                                     </div>
                                     <div>
-                                        <small class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 10px;">Date of Birth</small>
-                                        <span class="fw-bold text-dark fs-6">{{ teacher.dateOfBirth | date:'dd MMM yyyy'
-                                            }}</span>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            DOB
+                                        </small>
+                                        <span class="fw-bold text-dark fs-6">
+                                            {{ teacher.dateOfBirth | date:'dd MMM yyyy' }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Gender -->
-                            <div class="col-md-6 border-bottom pb-3">
+                            <div class="col-md-4 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
-                                        style="width: 44px; height: 44px;">
+                                        style="width:44px;height:44px;">
                                         <i class="bi bi-gender-ambiguous fs-5"></i>
                                     </div>
                                     <div>
-                                        <small class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 10px;">Gender</small>
-                                        <span class="fw-bold text-dark fs-6">{{ teacher.gender }}</span>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Gender
+                                        </small>
+                                        <span class="fw-bold text-dark fs-6">
+                                            {{ teacher.gender }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Blood Group -->
-                            <div class="col-md-6 border-bottom pb-3">
+                            <div class="col-md-4 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
-                                        style="width: 44px; height: 44px;">
+                                        style="width:44px;height:44px;">
                                         <i class="bi bi-droplet-half fs-5"></i>
                                     </div>
                                     <div>
-                                        <small class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 10px;">Blood Group</small>
-                                        <span class="fw-bold text-dark fs-6">{{ teacher.bloodGroup || '-' }}</span>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Blood Group
+                                        </small>
+                                        <span class="fw-bold text-dark fs-6">
+                                            {{ teacher.bloodGroup || '-' }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -158,156 +158,244 @@
                             <div class="col-md-6 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
-                                        style="width: 44px; height: 44px;">
+                                        style="width:44px;height:44px;">
                                         <i class="bi bi-telephone fs-5"></i>
                                     </div>
                                     <div>
-                                        <small class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 10px;">Phone Number</small>
-                                        <span class="fw-bold text-dark fs-6">{{ teacher.phoneNumber }}</span>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Phone Number
+                                        </small>
+                                        <span class="fw-bold text-dark fs-6">
+                                            {{ teacher.phoneNumber }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Email Address -->
-                            <div class="col-md-6 border-bottom pb-3">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
-                                        style="width: 44px; height: 44px;">
-                                        <i class="bi bi-envelope fs-5"></i>
-                                    </div>
-                                    <div>
-                                        <small class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 10px;">Email Address</small>
-                                        <span class="fw-bold text-dark text-break fs-6">{{ teacher.email || '-'
-                                            }}</span>
-                                    </div>
-                                </div>
-                            </div>
+
                             <!-- Aadhaar Number -->
                             <div class="col-md-6 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
-                                        style="width: 44px; height: 44px;">
+                                        style="width:44px;height:44px;">
                                         <i class="bi bi-card-text fs-5"></i>
                                     </div>
                                     <div>
-                                        <small class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 10px;">Aadhaar Number</small>
-                                        <span class="fw-bold text-dark fs-6">{{ teacher.aadhaarNumber || '-' }}</span>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Aadhaar Number
+                                        </small>
+                                        <span class="fw-bold text-dark fs-6">
+                                            {{ teacher.aadhaarNumber || '-' }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Full Address -->
-                            <div class="col-12 mt-3">
+                            <!-- Email Address -->
+                            <div class="col-12 border-bottom pb-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
-                                        style="width: 44px; height: 44px; flex-shrink: 0;">
+                                        style="width:44px;height:44px;">
+                                        <i class="bi bi-envelope fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Email Address
+                                        </small>
+                                        <span class="fw-bold text-dark text-break fs-6">
+                                            {{ teacher.email || '-' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="col-12 mt-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
+                                        style="width:44px;height:44px;">
                                         <i class="bi bi-geo-alt fs-5"></i>
                                     </div>
                                     <div>
-                                        <small class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 10px;">Residential Address</small>
-                                        <span class="fw-semibold text-dark fs-6">{{ teacher.address }}</span>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                             Address
+                                        </small>
+                                        <span class="fw-semibold text-dark fs-6">
+                                            {{ teacher.address }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- Experience Card -->
+                <!-- ========================================= -->
+                <div class="card border-0 shadow-sm rounded-4 mt-4">
+                    <div class="card-header bg-white border-0 py-3 px-4 border-bottom">
+                        <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-award text-primary"></i>
+                            {{ isTeachingStaff ? 'Teaching Experience' : 'Work Experience' }}
+                        </h5>
+                    </div>
+                    <div class="card-body px-4 py-3">
+                        <div *ngIf="teacher.hasExperience; else noExperience">
+                            <div class="row g-3 mb-3">
+                                <!-- Total Experience -->
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-4 border border-light h-100">
+                                        <span class="text-secondary small d-block text-uppercase fw-bold mb-2"
+                                            style="font-size:10px;">
+                                            Total Experience
+                                        </span>
+                                        <h4 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                                            <i class="bi bi-calendar-check text-primary"></i>
+                                            {{ teacher.experienceYears }} Years
+                                        </h4>
+                                    </div>
+                                </div>
+                                <!-- Details / Previous Role -->
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-4 border border-light h-100">
+                                        <span class="text-secondary small d-block text-uppercase fw-bold mb-2"
+                                            style="font-size:10px;">
+                                            {{ isTeachingStaff ? 'Details & Specialization' : 'Previous Job Role' }}
+                                        </span>
+                                        <div class="fw-bold text-dark fs-6">
+                                            {{ teacher.experienceDetails }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Experience Certificate -->
+                            <div class="p-3 bg-light rounded-4 d-flex justify-content-between align-items-center border border-primary border-opacity-25"
+                                *ngIf="teacher.teacherExperienceCertificate">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white rounded-3 shadow-sm d-flex align-items-center justify-content-center text-danger"
+                                        style="width:48px;height:48px;">
+                                        <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:9px;">
+                                            Experience Certificate
+                                        </span>
+                                        <span class="fw-bold">
+                                            {{ teacher.teacherExperienceCertificate }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary rounded-pill px-4">
+                                    <i class="bi bi-eye me-1"></i>
+                                    View
+                                </button>
+                            </div>
                         </div>
+                        <ng-template #noExperience>
+                            <div class="text-center py-5 bg-light rounded-4 border border-dashed">
+                                <i class="bi bi-patch-question fs-1 text-secondary"></i>
+                                <div class="small fw-bold text-secondary mt-2">
+                                    No previous experience records
+                                </div>
+                            </div>
+                        </ng-template>
                     </div>
                 </div>
             </div>
 
             <!-- Right Column: Professional Details & Languages -->
-            <div class="col-lg-4 d-flex flex-column gap-4">
-
+            <div class="col-lg-6 d-flex flex-column gap-4">
                 <!-- Professional Information Card -->
                 <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-header bg-white border-0 py-3 px-4 border-bottom">
+                    <div class="card-header bg-white border-0 py-3 px-4">
                         <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
                             <i class="bi bi-briefcase-fill text-primary"></i> Professional Details
                         </h5>
                     </div>
-                    <div class="card-body px-4 py-3">
-                        <div class="d-flex flex-column gap-3">
-                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
-                                <span class="text-secondary fw-semibold">Current Role</span>
-                                <span class="fw-bold text-dark text-end">{{ teacher.currentRole }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
-                                <span class="text-secondary fw-semibold">Highest Qualification</span>
-                                <span class="fw-bold text-dark text-end">{{ teacher.qualification }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
-                                <span class="text-secondary fw-semibold">{{ isTeachingStaff ? 'Main Subject' :
-                                    'Department' }}</span>
-                                <span class="fw-bold text-dark text-end">{{ teacher.subject }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-secondary fw-semibold">Expected Salary</span>
-                                <span class="fw-bold text-success fs-5">₹ {{ teacher.salary | number }} / mo</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Experience Card -->
-                <div class="card border-0 shadow-sm rounded-4 flex-grow-1">
-                    <div class="card-header bg-white border-0 py-3 px-4 border-bottom">
-                        <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
-                            <i class="bi bi-award text-primary"></i> {{ isTeachingStaff ? 'Teaching Experience' : 'Work
-                            Experience' }}
-                        </h5>
-                    </div>
-                    <div class="card-body px-4 py-3">
-                        <div *ngIf="teacher.hasExperience; else noExperience">
-                            <div class="p-3 bg-light rounded-4 mb-3 border border-light">
-                                <span class="text-secondary small d-block text-uppercase tracking-wider fw-bold mb-1"
-                                    style="font-size: 10px;">Total Experience</span>
-                                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
-                                    <i class="bi bi-calendar-check text-primary"></i>
-                                    {{ teacher.experienceYears }} Years
-                                </h5>
-                            </div>
-
-                            <div class="p-3 bg-light rounded-4 mb-3 border border-light">
-                                <span class="text-secondary small d-block text-uppercase tracking-wider fw-bold mb-1"
-                                    style="font-size: 10px;">{{ isTeachingStaff ? 'Details & Specialization' : 'Previous
-                                    Job Role' }}</span>
-                                <p class="mb-0 text-dark small fw-semibold leading-relaxed">{{ teacher.experienceDetails
-                                    }}</p>
-                            </div>
-
-                            <!-- Certificate View/Download Button -->
-                            <div class="p-3 bg-light rounded-4 d-flex align-items-center justify-content-between border border-dashed border-primary border-opacity-25"
-                                *ngIf="teacher.teacherExperienceCertificate">
-                                <div class="d-flex align-items-center gap-3 overflow-hidden">
-                                    <div class="bg-white rounded-3 shadow-sm d-flex align-items-center justify-content-center text-danger"
-                                        style="width: 40px; height: 40px; flex-shrink: 0;">
-                                        <i class="bi bi-file-pdf-fill fs-4"></i>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <!-- Current Role -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
+                                        style="width:44px;height:44px;flex-shrink:0;">
+                                        <i class="bi bi-briefcase fs-5"></i>
                                     </div>
-                                    <div class="overflow-hidden">
-                                        <span class="text-secondary d-block text-uppercase tracking-wider fw-bold"
-                                            style="font-size: 9px;">Experience Certificate</span>
-                                        <span class="fw-bold text-dark text-truncate d-inline-block small"
-                                            style="max-width: 140px;" [title]="teacher.teacherExperienceCertificate">{{
-                                            teacher.teacherExperienceCertificate }}</span>
+                                    <div>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Current Role
+                                        </small>
+                                        <span class="fw-bold text-dark">
+                                            {{ teacher.currentRole }}
+                                        </span>
                                     </div>
                                 </div>
-                                <button
-                                    class="btn btn-sm btn-primary rounded-pill px-3 py-1 flex-shrink-0 hover-scale shadow-sm">
-                                    <i class="bi bi-eye"></i> View
-                                </button>
+                            </div>
+
+                            <!-- Qualification -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
+                                        style="width:44px;height:44px;flex-shrink:0;">
+                                        <i class="bi bi-mortarboard fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Highest Qualification
+                                        </small>
+                                        <span class="fw-bold text-dark">
+                                            {{ teacher.qualification }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Subject / Department -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
+                                        style="width:44px;height:44px;flex-shrink:0;">
+                                        <i class="bi bi-journal-bookmark fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            {{ isTeachingStaff ? 'Main Subject' : 'Department' }}
+                                        </small>
+                                        <span class="fw-bold text-dark">
+                                            {{ teacher.subject }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Salary -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-box bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center"
+                                        style="width:44px;height:44px;flex-shrink:0;">
+                                        <i class="bi bi-cash-stack fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-secondary d-block text-uppercase fw-bold"
+                                            style="font-size:10px;">
+                                            Expected Salary
+                                        </small>
+                                        <span class="fw-bold text-success fs-5">
+                                            ₹ {{ teacher.salary | number }} / mo
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <ng-template #noExperience>
-                            <div
-                                class="text-center py-5 bg-light rounded-4 border border-dashed border-secondary border-opacity-20">
-                                <i class="bi bi-patch-question text-secondary fs-1 mb-2 d-block"></i>
-                                <span class="text-secondary small fw-bold">No previous experience records</span>
-                            </div>
-                        </ng-template>
                     </div>
                 </div>
 
@@ -331,9 +419,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
 </div>

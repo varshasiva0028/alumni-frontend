@@ -15,8 +15,20 @@ import { TeacherService } from '../../services/teacher.service';
 export class AddStaffComponent implements OnInit {
   modalErrorMessage = '';
   availableLanguages: string[] = ['Tamil', 'English', 'Hindi', 'Telugu', 'Malayalam', 'Kannada'];
-  
-  isTeachingStaff = true;
+
+  employmentCategory: 'teaching' | 'nonTeaching' | 'support' = 'teaching';
+
+  get isTeachingStaff() {
+    return this.employmentCategory === 'teaching';
+  }
+
+  get isNonTeachingStaff() {
+    return this.employmentCategory === 'nonTeaching';
+  }
+
+  get isSupportStaff() {
+    return this.employmentCategory === 'support';
+  }
 
   // Reactive Form Group matching the official Teacher model
   newTeacherForm = new FormGroup({
@@ -156,7 +168,7 @@ export class AddStaffComponent implements OnInit {
   ];
 
   // Non-Teaching Roles
-  nonTeachingRoles: string[] = [
+  nonTeachingRoles = [
     'Office Administrator',
     'Administrative Officer',
     'Receptionist',
@@ -164,7 +176,10 @@ export class AddStaffComponent implements OnInit {
     'Office Assistant',
     'Clerk',
     'Librarian',
-    'Lab Assistant',
+    'Lab Assistant'
+  ];
+
+  supportRoles = [
     'School Nurse',
     'Counsellor',
     'Transport Manager',
@@ -178,26 +193,27 @@ export class AddStaffComponent implements OnInit {
   ];
 
   // Non-Teaching Departments
-  departments = [
+  nonTeachingDepartments = [
     'Administration',
     'Accounts',
     'Library',
     'Laboratory',
-    'Transport',
-    'IT Support',
-    'Maintenance',
-    'Security',
-    'Housekeeping',
     'Reception',
-    'Hostel',
-    'Medical',
-    'Sports',
     'Office',
-    'Other'
+    'IT Support'
   ];
 
+  supportDepartments = [
+    'Transport',
+    'Security',
+    'Housekeeping',
+    'Maintenance',
+    'Medical',
+    'Sports',
+    'Gardening'
+  ];
   // Non-Teaching Designations
-  designations = [
+  nonTeachingDesignations = [
     'Administrative Officer',
     'Office Assistant',
     'Office Clerk',
@@ -212,6 +228,11 @@ export class AddStaffComponent implements OnInit {
     'System Administrator',
     'IT Support Executive',
     'Network Administrator',
+    'Office Attender',
+    'Warden',
+    'Other'
+  ];
+  supportDesignations = [
     'Driver',
     'Transport Coordinator',
     'Security Guard',
@@ -222,24 +243,34 @@ export class AddStaffComponent implements OnInit {
     'Plumber',
     'Maintenance Technician',
     'Gardener',
-    'Office Attender',
     'Nurse',
     'Cook',
     'Helper',
-    'Warden',
     'Other'
   ];
 
   // Non-Teaching Qualifications
-  qualifications = [
+  nonTeachingQualifications = [
+    'SSLC (10th)',
+    'HSC (12th)',
+    'Diploma',
+    'B.Com.',
+    'BBA',
+    'BCA',
+    'MBA',
+    'M.Com.',
+    'Other'
+  ];
+
+  supportQualifications = [
     'SSLC (10th)',
     'HSC (12th)',
     'ITI',
     'Diploma',
-    'B.A.',
-    'B.Com.',
-    'BBA',
-    'MBA',
+    'Driving License',
+    'First Aid Certificate',
+    'Security Training Certificate',
+    'Nursing Certificate',
     'Other'
   ];
 
@@ -340,15 +371,18 @@ export class AddStaffComponent implements OnInit {
     });
   }
 
-  setEmploymentCategory(isTeaching: boolean): void {
-    this.isTeachingStaff = isTeaching;
-    
-    // Clear and set validators dynamically based on role type
+  setEmploymentCategory(category: 'teaching' | 'nonTeaching' | 'support'): void {
+    this.employmentCategory = category;
+
+    const isTeaching = category === 'teaching';
+
+    // Teaching Controls
     const qualification = this.newTeacherForm.get('qualification');
     const subject = this.newTeacherForm.get('subject');
     const currentRole = this.newTeacherForm.get('currentRole');
     const salary = this.newTeacherForm.get('salary');
 
+    // Non Teaching / Support Controls
     const ntDept = this.newTeacherForm.get('nonTeachingDepartment');
     const ntDesig = this.newTeacherForm.get('nonTeachingDesignation');
     const ntQual = this.newTeacherForm.get('nonTeachingQualification');
@@ -358,38 +392,81 @@ export class AddStaffComponent implements OnInit {
       qualification?.setValidators([Validators.required]);
       subject?.setValidators([Validators.required]);
       currentRole?.setValidators([Validators.required]);
-      salary?.setValidators([Validators.required, Validators.min(0)]);
+      salary?.setValidators([
+        Validators.required,
+        Validators.min(0)
+      ]);
 
       ntDept?.clearValidators();
       ntDesig?.clearValidators();
       ntQual?.clearValidators();
       ntSalary?.clearValidators();
+
+      // Optional: clear old values
+      ntDept?.reset();
+      ntDesig?.reset();
+      ntQual?.reset();
+      ntSalary?.reset();
     } else {
       qualification?.clearValidators();
       subject?.clearValidators();
       currentRole?.clearValidators();
       salary?.clearValidators();
 
+      qualification?.reset();
+      subject?.reset();
+      currentRole?.reset();
+      salary?.reset();
+
       ntDept?.setValidators([Validators.required]);
       ntDesig?.setValidators([Validators.required]);
       ntQual?.setValidators([Validators.required]);
-      ntSalary?.setValidators([Validators.required, Validators.min(0)]);
+      ntSalary?.setValidators([
+        Validators.required,
+        Validators.min(0)
+      ]);
     }
 
-    // Update form validity
-    qualification?.updateValueAndValidity();
-    subject?.updateValueAndValidity();
-    currentRole?.updateValueAndValidity();
-    salary?.updateValueAndValidity();
+    [
+      qualification,
+      subject,
+      currentRole,
+      salary,
+      ntDept,
+      ntDesig,
+      ntQual,
+      ntSalary
+    ].forEach(control => control?.updateValueAndValidity());
 
-    ntDept?.updateValueAndValidity();
-    ntDesig?.updateValueAndValidity();
-    ntQual?.updateValueAndValidity();
-    ntSalary?.updateValueAndValidity();
+    this.newTeacherForm.get('hasExperience')
+      ?.setValue(this.newTeacherForm.get('hasExperience')?.value ?? false);
 
-    // Trigger experience updates to clear/re-evaluate
-    this.newTeacherForm.get('hasExperience')?.setValue(this.newTeacherForm.get('hasExperience')?.value || false);
-    this.newTeacherForm.get('nonTeachingHasExperience')?.setValue(this.newTeacherForm.get('nonTeachingHasExperience')?.value || false);
+    this.newTeacherForm.get('nonTeachingHasExperience')
+      ?.setValue(this.newTeacherForm.get('nonTeachingHasExperience')?.value ?? false);
+  }
+
+  get designationRoles(): string[] {
+    return this.isSupportStaff
+      ? this.supportRoles
+      : this.nonTeachingRoles;
+  }
+
+  get departmentList(): string[] {
+    return this.isSupportStaff
+      ? this.supportDepartments
+      : this.nonTeachingDepartments;
+  }
+
+  get designationList(): string[] {
+    return this.isSupportStaff
+      ? this.supportDesignations
+      : this.nonTeachingDesignations;
+  }
+
+  get qualificationList(): string[] {
+    return this.isSupportStaff
+      ? this.supportQualifications
+      : this.nonTeachingQualifications;
   }
 
   get languagesFormArray(): FormArray {
@@ -483,9 +560,15 @@ export class AddStaffComponent implements OnInit {
     let expDetails: string | undefined = undefined;
     let certificate = '';
 
+    // Map department & category correctly
+    let category: 'Teaching' | 'Non-Teaching' | 'Support' = 'Teaching';
+    let department = '';
+
     if (this.isTeachingStaff) {
+      category = 'Teaching';
       qualification = (val.qualification === 'Other' ? val.qualificationOther : val.qualification) || '';
       subject = (val.subject === 'Other' ? val.subjectOther : val.subject) || '';
+      department = subject; // For Teaching, Department maps to subject
       role = val.currentRole || '';
       salary = Number(val.salary || 0);
       hasExperience = !!val.hasExperience;
@@ -493,8 +576,9 @@ export class AddStaffComponent implements OnInit {
       expDetails = val.hasExperience ? (val.experienceDetails || undefined) : undefined;
       certificate = val.teacherExperienceCertificate || '';
     } else {
+      category = this.isSupportStaff ? 'Support' : 'Non-Teaching';
       qualification = val.nonTeachingQualification || '';
-      subject = val.nonTeachingDepartment || '';
+      department = val.nonTeachingDepartment || '';
       role = val.nonTeachingDesignation || '';
       salary = Number(val.nonTeachingSalary || 0);
       hasExperience = !!val.nonTeachingHasExperience;
@@ -513,7 +597,9 @@ export class AddStaffComponent implements OnInit {
       visible: true,
       currentRole: role,
       qualification: qualification.trim(),
-      subject: subject.trim(),
+      subject: this.isTeachingStaff ? subject.trim() : undefined,
+      department: department.trim(),
+      employmentCategory: category,
       phoneNumber: (val.phoneNumber || '').trim(),
       dateOfBirth: val.dateOfBirth ? new Date(val.dateOfBirth) : new Date(),
       bloodGroup: val.bloodGroup || undefined,

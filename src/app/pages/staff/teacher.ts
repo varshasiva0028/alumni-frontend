@@ -45,7 +45,10 @@ export class TeacherComponent implements OnInit {
     'Office Assistant',
     'Clerk',
     'Librarian',
-    'Lab Assistant',
+    'Lab Assistant'
+  ];
+
+  supportRoles: string[] = [
     'School Nurse',
     'Counsellor',
     'Transport Manager',
@@ -85,6 +88,15 @@ export class TeacherComponent implements OnInit {
   getNonTeachingStaff(teachers: Teacher[] | null): Teacher[] {
     if (!teachers) return [];
     return teachers.filter(t => this.nonTeachingRoles.includes(t.currentRole));
+  }
+  getSupportStaff(teachers: Teacher[] | null): Teacher[] {
+    if (!teachers) return [];
+    return teachers.filter(t => this.supportRoles.includes(t.currentRole));
+  }
+
+  getSupportCount(teachers: Teacher[] | null): number {
+    if (!teachers) return 0;
+    return teachers.filter(t => this.supportRoles.includes(t.currentRole)).length;
   }
 
   addTeacher(): void {
