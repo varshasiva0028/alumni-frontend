@@ -11,7 +11,7 @@ import { GalleryComponent } from './pages/gallery/gallery';
 import { GalleryDetails } from './pages/gallery-details/gallery-details';
 import { UpdateEventComponent } from './pages/update-event/update-event';
 import { TeacherComponent } from './pages/staff/teacher';
-import { UpdateTeacher } from './pages/update-staff/update-teacher';
+import { UpdateStaffComponent } from './pages/update-staff/update-teacher';
 import { TeacherDetails } from './pages/staff-details/teacher-details';
 import { AddStaffComponent } from './pages/add-staff/add-staff';
 export const routes: Routes = [
@@ -71,8 +71,8 @@ export const routes: Routes = [
       },
       {
         path: 'update-staff/:id',
-        component: UpdateTeacher
-      },
+        component: UpdateStaffComponent
+      }
 
     ]
   }
