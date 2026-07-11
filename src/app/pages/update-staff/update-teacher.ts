@@ -22,6 +22,16 @@ export class UpdateStaffComponent implements OnInit {
   staffId!: number;
   originalVisibility = true;
 
+  employmentCategory: 'teaching' | 'nonTeaching' | 'support' = 'teaching';
+
+  get isNonTeachingStaff() {
+    return this.employmentCategory === 'nonTeaching';
+  }
+
+  get isSupportStaff() {
+    return this.employmentCategory === 'support';
+  }
+
   // Reactive Form Group matching the official Teacher model
   newTeacherForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -168,17 +178,7 @@ export class UpdateStaffComponent implements OnInit {
     'Office Assistant',
     'Clerk',
     'Librarian',
-    'Lab Assistant',
-    'School Nurse',
-    'Counsellor',
-    'Transport Manager',
-    'Driver',
-    'Security Guard',
-    'Housekeeping',
-    'Maintenance Staff',
-    'Electrician',
-    'Plumber',
-    'Gardener'
+    'Lab Assistant'
   ];
 
   // Non-Teaching Departments
@@ -283,6 +283,124 @@ export class UpdateStaffComponent implements OnInit {
     'Other'
   ];
 
+  supportRoles = [
+    'School Nurse',
+    'Counsellor',
+    'Transport Manager',
+    'Driver',
+    'Security Guard',
+    'Housekeeping',
+    'Maintenance Staff',
+    'Electrician',
+    'Plumber',
+    'Gardener'
+  ];
+
+  nonTeachingDepartments = [
+    'Administration',
+    'Accounts',
+    'Library',
+    'Laboratory',
+    'Reception',
+    'Office',
+    'IT Support'
+  ];
+
+  supportDepartments = [
+    'Transport',
+    'Security',
+    'Housekeeping',
+    'Maintenance',
+    'Medical',
+    'Sports',
+    'Gardening'
+  ];
+
+  nonTeachingDesignations = [
+    'Administrative Officer',
+    'Office Assistant',
+    'Office Clerk',
+    'Receptionist',
+    'Accountant',
+    'Cashier',
+    'Store Keeper',
+    'Librarian',
+    'Assistant Librarian',
+    'Lab Assistant',
+    'Computer Lab Assistant',
+    'System Administrator',
+    'IT Support Executive',
+    'Network Administrator',
+    'Office Attender',
+    'Warden',
+    'Other'
+  ];
+
+  supportDesignations = [
+    'Driver',
+    'Transport Coordinator',
+    'Security Guard',
+    'Security Supervisor',
+    'Housekeeping Staff',
+    'Cleaner',
+    'Electrician',
+    'Plumber',
+    'Maintenance Technician',
+    'Gardener',
+    'Nurse',
+    'Cook',
+    'Helper',
+    'Other'
+  ];
+
+  nonTeachingQualifications = [
+    'SSLC (10th)',
+    'HSC (12th)',
+    'Diploma',
+    'B.Com.',
+    'BBA',
+    'BCA',
+    'MBA',
+    'M.Com.',
+    'Other'
+  ];
+
+  supportQualifications = [
+    'SSLC (10th)',
+    'HSC (12th)',
+    'ITI',
+    'Diploma',
+    'Driving License',
+    'First Aid Certificate',
+    'Security Training Certificate',
+    'Nursing Certificate',
+    'Other'
+  ];
+
+  get designationRoles(): string[] {
+    return this.isSupportStaff
+      ? this.supportRoles
+      : this.nonTeachingRoles;
+  }
+
+  get departmentList(): string[] {
+    return this.isSupportStaff
+      ? this.supportDepartments
+      : this.nonTeachingDepartments;
+  }
+
+  get designationList(): string[] {
+    return this.isSupportStaff
+      ? this.supportDesignations
+      : this.nonTeachingDesignations;
+  }
+
+  get qualificationList(): string[] {
+    return this.isSupportStaff
+      ? this.supportQualifications
+      : this.nonTeachingQualifications;
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -312,8 +430,20 @@ export class UpdateStaffComponent implements OnInit {
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
 
-    // Check if Teaching Staff
-    this.isTeachingStaff = this.teachingRoles.includes(staff.currentRole);
+    // Detect Teaching / Non-Teaching / Support using staff.employmentCategory
+    if (staff.employmentCategory === 'Teaching') {
+      this.employmentCategory = 'teaching';
+      this.isTeachingStaff = true;
+    } else if (staff.employmentCategory === 'Support') {
+      this.employmentCategory = 'support';
+      this.isTeachingStaff = false;
+    } else if (staff.employmentCategory === 'Non-Teaching') {
+      this.employmentCategory = 'nonTeaching';
+      this.isTeachingStaff = false;
+    } else {
+      this.isTeachingStaff = this.teachingRoles.includes(staff.currentRole);
+      this.employmentCategory = this.isTeachingStaff ? 'teaching' : 'nonTeaching';
+    }
 
     // Format DOB for HTML date input (YYYY-MM-DD)
     let dobString = '';
@@ -335,15 +465,15 @@ export class UpdateStaffComponent implements OnInit {
 
     let subjValue = staff.subject ?? '';
     let subjOtherValue = '';
-   if (
-  this.isTeachingStaff &&
-  !this.subjects.includes(subjValue)
-) {
-  subjValue = 'Other';
-  subjOtherValue = staff.subject ?? '';
-}
+    if (
+      this.isTeachingStaff &&
+      !this.subjects.includes(subjValue)
+    ) {
+      subjValue = 'Other';
+      subjOtherValue = staff.subject ?? '';
+    }
     // Set toggle state
-    this.setEmploymentCategory(this.isTeachingStaff);
+    this.setEmploymentCategory(this.employmentCategory);
 
     // Pre-fill reactive form values
     this.newTeacherForm.patchValue({
@@ -374,7 +504,7 @@ export class UpdateStaffComponent implements OnInit {
       });
     } else {
       this.newTeacherForm.patchValue({
-        nonTeachingDepartment: staff.subject,
+        nonTeachingDepartment: staff.department || staff.subject || '',
         nonTeachingDesignation: staff.currentRole,
         nonTeachingQualification: staff.qualification,
         nonTeachingSalary: staff.salary,
@@ -463,8 +593,19 @@ export class UpdateStaffComponent implements OnInit {
     });
   }
 
-  setEmploymentCategory(isTeaching: boolean): void {
-    this.isTeachingStaff = isTeaching;
+  setEmploymentCategory(category: boolean | 'teaching' | 'nonTeaching' | 'support'): void {
+    if (category === true || category === 'teaching') {
+      this.employmentCategory = 'teaching';
+      this.isTeachingStaff = true;
+    } else if (category === false || category === 'nonTeaching') {
+      this.employmentCategory = 'nonTeaching';
+      this.isTeachingStaff = false;
+    } else if (category === 'support') {
+      this.employmentCategory = 'support';
+      this.isTeachingStaff = false;
+    }
+
+    const isTeaching = this.isTeachingStaff;
 
     // Clear and set validators dynamically based on role type
     const qualification = this.newTeacherForm.get('qualification');
@@ -509,6 +650,12 @@ export class UpdateStaffComponent implements OnInit {
     ntDesig?.updateValueAndValidity();
     ntQual?.updateValueAndValidity();
     ntSalary?.updateValueAndValidity();
+
+    this.newTeacherForm.get('hasExperience')
+      ?.setValue(this.newTeacherForm.get('hasExperience')?.value ?? false);
+
+    this.newTeacherForm.get('nonTeachingHasExperience')
+      ?.setValue(this.newTeacherForm.get('nonTeachingHasExperience')?.value ?? false);
   }
 
   get languagesFormArray(): FormArray {
@@ -639,7 +786,7 @@ export class UpdateStaffComponent implements OnInit {
       dateOfBirth: val.dateOfBirth ? new Date(val.dateOfBirth) : new Date(),
 
       // NEW REQUIRED FIELDS
-      employmentCategory: this.isTeachingStaff ? 'Teaching' : 'Non-Teaching',
+      employmentCategory: this.isTeachingStaff ? 'Teaching' : (this.isSupportStaff ? 'Support' : 'Non-Teaching'),
 
       department: this.isTeachingStaff
         ? subject.trim()
@@ -647,7 +794,7 @@ export class UpdateStaffComponent implements OnInit {
 
       // Professional
       qualification: qualification.trim(),
-      subject: subject.trim(),
+      subject: this.isTeachingStaff ? subject.trim() : (this.isSupportStaff ? undefined : subject.trim()),
       currentRole: role,
       salary,
 
