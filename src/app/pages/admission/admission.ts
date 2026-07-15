@@ -19,6 +19,8 @@ export class AdmComponent implements OnInit {
   rr: any;
   fgret: FormGroup;
   g!: boolean;
+  searchQuery: string = '';
+  allRecords: any[] = [];
   constructor(private serving: CommunService, private http: HttpClient, private fb: FormBuilder, private rout: Router) {
     this.fgret = fb.group({
       dstr: [null, Validators.required],
@@ -107,22 +109,49 @@ export class AdmComponent implements OnInit {
         res = res.trimLeft(); res = res.trimRight();
         if (!res) {
           console.log('alret res is empty');
-          this.rr = [];
+          this.allRecords = [];
+          this.applySearchAndFilter();
         }
         else {
           console.log('alret res parsing JSON:', res);
           try {
-            this.rr = JSON.parse(res).br;
-            console.log('alret rr parsed successfully:', this.rr);
+            this.allRecords = JSON.parse(res).br;
+            console.log('alret allRecords parsed successfully:', this.allRecords);
+            this.applySearchAndFilter();
           } catch (e) {
             console.error('alret JSON parse error:', e);
-            this.rr = [];
+            this.allRecords = [];
+            this.applySearchAndFilter();
           }
         }
       },
       (err: any) => {
         console.error('alret HTTP error:', err);
       });
+  }
+
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchQuery = input ? input.value : '';
+    this.applySearchAndFilter();
+  }
+
+  applySearchAndFilter() {
+    if (!this.searchQuery) {
+      this.rr = this.allRecords || [];
+      return;
+    }
+
+    const query = this.searchQuery.toLowerCase().trim();
+    this.rr = (this.allRecords || []).filter(rg => {
+      return Object.keys(rg).some(key => {
+        const val = rg[key];
+        if (val !== null && val !== undefined) {
+          return String(val).toLowerCase().includes(query);
+        }
+        return false;
+      });
+    });
   }
 
   logRR() {

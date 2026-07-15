@@ -1,3 +1,152 @@
 .card{
     border-radius: 16px;
   }
+  
+  .btn-group input[type="radio"] {
+    display: none !important;
+  }
+
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+
+  .search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  /* ===========================
+   Tablet
+=========================== */
+@media (max-width: 991.98px) {
+
+    /* Cards */
+    .card.alert {
+        width: 100%;
+        margin: 10px 0 !important;
+    }
+
+    /* Top Controls */
+    .form-group .row {
+        row-gap: 15px;
+    }
+
+    .form-group .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 10px;
+    }
+
+    .form-control {
+        max-width: 100% !important;
+        width: 100%;
+        margin-right: 0 !important;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    .btn-group {
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        flex: 1;
+    }
+}
+
+/* ===========================
+   Mobile
+=========================== */
+@media (max-width: 768px) {
+
+    /* Hide the empty left column */
+    .row.align-items-center > .col-md-6:first-child {
+        display: none;
+    }
+
+    /* Search section */
+    .row.align-items-center > .col-md-6:last-child {
+        width: 100%;
+    }
+
+    /* Stack Date + Button */
+    .form-group .d-flex {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-control {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    /* Filters */
+    .btn-group {
+        display: flex;
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        flex: 1;
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    /* One card per row */
+    .row.d-flex.justify-content-around > .col-sm-5 {
+        width: 100%;
+        margin: 8px 0 !important;
+    }
+
+    /* Card padding */
+    .card.alert {
+        padding: 12px !important;
+    }
+
+    /* Reduce text size slightly */
+    .card .row > div {
+        font-size: 14px;
+    }
+
+    /* Phone number button */
+    .btn-primary.rounded-pill {
+        font-size: 14px;
+    }
+
+    /* Bottom buttons */
+    .flex-fill {
+        font-size: 14px;
+    }
+}
+
+/* ===========================
+   Small Mobile
+=========================== */
+@media (max-width: 576px) {
+
+    .card.alert {
+        margin: 6px 0 !important;
+    }
+
+    .card .row > div {
+        font-size: 13px;
+    }
+
+    .btn-group .btn {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .flex-fill {
+        font-size: 13px;
+    }
+
+    .text-end {
+        text-align: right !important;
+    }
+}

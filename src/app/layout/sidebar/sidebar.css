@@ -22,4 +22,99 @@
   background-color: #212529 !important;
   border-color: #2b3035 !important;
 }
+/* ==========================
+   Desktop (Default)
+========================== */
+
+.position-fixed {
+    width: 240px !important;
+}
+
+/* ==========================
+   Large Tablets
+========================== */
+
+@media (max-width: 992px) {
+
+    .position-fixed {
+        width: 220px !important;
+    }
+
+    .position-fixed .nav-link {
+        padding: .75rem !important;
+        font-size: .95rem;
+    }
+}
+
+/* ==========================
+   Tablets
+========================== */
+
+@media (max-width: 768px) {
+
+    .position-fixed {
+        width: 190px !important;
+    }
+
+    .position-fixed .nav-link {
+        gap: .75rem !important;
+        padding: .7rem !important;
+        font-size: .9rem;
+    }
+
+    .position-fixed .nav-link i {
+        font-size: 1rem !important;
+    }
+
+    .position-fixed button {
+        font-size: .9rem;
+    }
+
+    .position-fixed .tracking-wider {
+        font-size: .85rem;
+    }
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 576px) {
+
+    .position-fixed {
+        width: 75px !important;
+        padding: .75rem !important;
+    }
+
+    /* Hide text */
+    .position-fixed span:not(.d-inline-flex) {
+        display: none;
+    }
+
+    /* Center navigation */
+    .position-fixed .nav-link {
+        justify-content: center;
+        padding: .8rem 0 !important;
+        gap: 0 !important;
+    }
+
+    .position-fixed button {
+        justify-content: center;
+        padding: .8rem 0 !important;
+        gap: 0 !important;
+    }
+
+    /* Hide logo text */
+    .tracking-wider {
+        display: none;
+    }
+
+    hr {
+        margin: .75rem 0 !important;
+    }
+
+    .position-fixed i {
+        font-size: 1.2rem !important;
+    }
+}
 

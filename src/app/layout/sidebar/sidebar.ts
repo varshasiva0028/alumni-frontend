@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { CommunService } from 'src/app/commun.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,4 +15,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './sidebar.css'
 })
 export class Sidebar {
+  constructor(private serving: CommunService, private rout: Router) {}
+
+  logout() {
+    this.serving.logcheckout(localStorage.getItem('iid')).subscribe(
+      (res: any) => { });
+    localStorage.clear();
+    this.rout.navigate(["/admsign"]);
+  }
 }
