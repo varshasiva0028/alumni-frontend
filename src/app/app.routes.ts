@@ -3,10 +3,10 @@ import { Routes } from '@angular/router';
 import { AdminLayout } from './layout/admin-layout/admin-layout';
 
 import { Dashboard } from './pages/dashboard/dashboard';
-import { Admission } from './pages/admission/admission';
+import { AdmComponent } from './pages/admission/admission';
 import { Alumni } from './pages/alumni/alumni';
 import { EventsComponent } from './pages/events/events';
-import { Results } from './pages/results/results';
+import { ExiadmComponent } from './pages/results/results';
 import { GalleryComponent } from './pages/gallery/gallery';
 import { GalleryDetails } from './pages/gallery-details/gallery-details';
 import { UpdateEventComponent } from './pages/update-event/update-event';
@@ -14,6 +14,9 @@ import { TeacherComponent } from './pages/staff/teacher';
 import { UpdateStaffComponent } from './pages/update-staff/update-teacher';
 import { TeacherDetails } from './pages/staff-details/teacher-details';
 import { AddStaffComponent } from './pages/add-staff/add-staff';
+import { AdmsignComponent } from './pages/admsign/admsign';
+import { NewadmComponent } from './pages/newadm/newadm';
+
 export const routes: Routes = [
   {
     path: '',
@@ -30,7 +33,7 @@ export const routes: Routes = [
       },
       {
         path: 'admission',
-        component: Admission
+        component: AdmComponent
       },
       {
         path: 'events',
@@ -42,13 +45,12 @@ export const routes: Routes = [
       },
       {
         path: 'results',
-        component: Results
+        component: ExiadmComponent
       },
       {
         path: 'gallery',
         component: GalleryComponent
       },
-
       {
         path: 'gallery/:id',
         component: GalleryDetails
@@ -73,7 +75,18 @@ export const routes: Routes = [
         path: 'update-staff/:id',
         component: UpdateStaffComponent
       }
-
     ]
+  },
+  {
+    path: 'admsign',
+    component: AdmsignComponent
+  },
+  {
+    path: 'newadm',
+    component: NewadmComponent
+  },
+  {
+    path: 'admret',
+    component: AdmComponent
   }
 ];

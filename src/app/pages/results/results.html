@@ -1,1 +1,124 @@
-<p>results works!</p>
+<div class="jumbtron card m-5 alert-secondary" *ngIf="lg">
+    <div class="container-fluid">
+        <form [formGroup]="fglog" class="m-1 border-bottom">
+            <br>
+            <div class="form-group row ">
+                <div class="col text-center">
+                    <h5>
+                        <!-- Login -->
+                        தேர்வு முடிவுகள்
+                    </h5>
+                </div>
+
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm m-1">
+                    <!-- <input class="form-control" type="text" formControlName="lnum" placeholder="Phone No" maxlength="10" minlength="10" required> -->
+                    <input class="form-control" type="text" formControlName="lnum" placeholder="அலைபேசி எண்" maxlength="10" minlength="10" required>
+                </div>
+                <br>
+                <div class="col-sm m-1">
+                    <!-- <input class="form-control" type="date" formControlName="ldob" placeholder="Date of Birth (yyyy-mm-dd)" (ng-keypress)="sign()"  required pattern="\d{4}-\d{2}-\d{2}"> -->
+                    <input class="form-control" type="date" formControlName="ldob" placeholder="பிறந்த தேதி (yyyy-mm-dd)" (ng-keypress)="sign()"  required pattern="\d{4}-\d{2}-\d{2}">
+                    <!-- <br>Ex: 2000-12-21 -->
+                </div>
+                <!-- <div class="col-sm m-1">
+                    <input class="form-control" type="password" formControlName="lpass" placeholder="PIN" (ng-keypress)="sign()" required>
+
+                </div> -->
+                <div class="col text-center m-2">
+                    <button class=" btn btn-sm btn-outline-success rounded-pills " type="submit" (click)="open()" data-toggle="modal" [attr.data-target]="'#'+vds">
+                        <svg style="width: 24px;height: 24px" viewBox="0 0 512 512">
+                            <path d="M376 186h-20v-40c0-55-45-100-100-100S156 91 156 146h37.998c0-34.004 28.003-62.002 62.002-62.002 34.004 0 62.002 27.998 62.002 62.002H318v40H136c-22.002 0-40 17.998-40 40v200c0 22.002 17.998 40 40 40h240c22.002 0 40-17.998 40-40V226c0-22.002-17.998-40-40-40zM256 368c-22.002 0-40-17.998-40-40s17.998-40 40-40 40 17.998 40 40-17.998 40-40 40z"
+                            />
+                        </svg>
+                        <!-- Get My Result -->
+                        சமர்ப்பிக்க
+                    </button>
+                </div>
+            </div>
+            <!-- <div class="col text-danger text-center">
+                <label>{{lshow}}</label>
+            </div> -->
+        </form>
+    </div>
+</div>
+
+<div class="jumbtron card m-5 bg-bag d-flex justify-content-center" *ngIf="ex">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center " *ngFor="let bp of bp;let i=index">
+            <div class="col-sm-5 text-center">
+                <!-- <img src="{{dra.taddr}}" class=" card-img showvertical border  m-4" alt="..."> -->
+                <div class="d-block d-md-none d-lg-none d-sm-block d-xs-block ">
+                    <img src="/{{bp.imaddr}}" class=" card-img showvertical-m border bg-white m-4 " alt="...">
+                </div>
+                <div class="d-none d-md-block d-lg-block d-xs-none d-sm-none ">
+                    <img src="/{{bp.imaddr}}" class=" card-img showvertical border bg-white m-4 " alt="...">
+                </div>
+            </div>
+            <div class="col-sm-6 bg-white align-self-center  text-justify">
+                <div class="d-block d-md-none d-lg-none d-sm-block d-xs-block ">
+                    <h5>
+                        <p>
+                            <!-- Congrats, {{bp.name}} has promoted from Class {{bp.fclass}} std to {{bp.tclass}} std. Here I Accept
+                            that my {{bp.gen}} will continue this academic year of 2020-21 with NKKR School. -->
+                            வாழ்த்துகள், தங்கள் {{bp.tgen}} {{bp.tname}} {{bp.fclass}} ஆம் வகுப்பில் தேர்ச்சி பெற்று {{bp.tclass}} ஆம் வகுப்பிற்குச்
+                            செல்ல உள்ளார். <br>
+                            <!-- நாங்கள் எங்களது {{bp.tgen}} {{bp.tname}}  -->
+                            வரும் கல்வி ஆண்டு 2020-21 எங்கள் {{bp.tgen}} தங்கள் பள்ளியிலே தொடர
+                            எங்கள் விருப்பத்தை தெரிவித்துக் கொள்கிறோம். 
+                           <br>
+
+                        </p>
+                        <!-- <h6 class="text-primary">To confirm, Click continue</h6> -->
+                        <h6 class="text-primary">இதை உறுதி செய்வதற்கு, தொடரட்டும் என்ற பட்டனை அழுத்தவும்</h6>
+                    </h5>
+                </div>
+                <div class="d-none d-md-block d-lg-block d-xs-none d-sm-none ">
+                    <h4>
+                        <p>
+                            <!-- Congrats, {{bp.name}} has promoted from Class {{bp.fclass}} std to {{bp.tclass}} std. Here I Accept
+                            that my {{bp.gen}} will continue this academic year of 2020-21 with NKKR School. -->
+                            வாழ்த்துகள், தங்கள் {{bp.tgen}} {{bp.tname}} {{bp.fclass}} ஆம் வகுப்பில் தேர்ச்சி பெற்று {{bp.tclass}} ஆம் வகுப்பிற்குச்
+                            செல்ல உள்ளார். <br>
+                            <!-- நாங்கள் எங்களது {{bp.tgen}} {{bp.tname}}  -->
+                            வரும் கல்வி ஆண்டு 2020-21 எங்கள் {{bp.tgen}} தங்கள் பள்ளியிலே தொடர
+                            எங்கள் விருப்பத்தை தெரிவித்துக் கொள்கிறோம். 
+                            <br>
+
+                        </p>
+                        <!-- <h5 class="text-primary">To confirm, Click continue</h5> -->
+                        <h6 class="text-primary">இதை உறுதி செய்வதற்கு, தொடரட்டும் என்ற பட்டனை அழுத்தவும்</h6>
+                    </h4>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm  d-flex justify-content-center">
+            <button class=" btn btn-success rounded-pills m-4" type="submit" (click)="updat()" data-toggle="modal" [attr.data-target]="'#'+vds">
+                <!-- Continue -->தொடரட்டும்
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showdialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h5 class="modal-title" id="exampleModalCenterTitle">Information</h5> -->
+                <h5 class="modal-title" id="exampleModalCenterTitle">தகவல்</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{{msg}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+.showvertical{
+    width: 50%
+}
+.showvertical-m{
+    width: 70%
+}
+.bg-bag{
+    background-image: url("/assets/img/conf.jpg");
+    background-size: 65%;
+}

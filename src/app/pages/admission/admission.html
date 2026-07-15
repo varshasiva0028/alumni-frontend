@@ -1,1 +1,192 @@
-<p>admission works!</p>
+<ul class="nav nav-pills mb-3  nav-fill" id="actab" role="tablist">
+    <li class="nav-item m-1">
+        <button class="btn align-self-center" type="submit" (click)="logout()">
+            <svg style="width: 24px;height: 24px" viewBox="0 0 512 512">
+                <path d="M 376,186 H 356 V 146 C 356,91 311,46 256,46 201,46 156,91 156,146 v 40 h -20 c -22.002,0 -40,17.998 -40,40 v 200 c 0,22.002 17.998,40 40,40 h 240 c 22.002,0 40,-17.998 40,-40 V 226 c 0,-22.002 -17.998,-40 -40,-40 z M 256,368 c -22.002,0 -40,-17.998 -40,-40 0,-22.002 17.998,-40 40,-40 22.002,0 40,17.998 40,40 0,22.002 -17.998,40 -40,40 z M 318.002,186 H 193.998 v -40 c 0,-34.004 28.003,-62.002 62.002,-62.002 34.004,0 62.002,27.998 62.002,62.002 v 40 z"
+                />
+            </svg>
+            <!-- <i class="fas fa-tint"></i> -->
+        </button>
+    </li>
+
+    <li class="nav-item m-1">
+        <a class="nav-link active" id="searpill" data-toggle="pill" href="#pills-sear" role="tab" aria-controls="pills-sear" aria-selected="false">
+            <svg style="width: 24px;height: 24px" viewBox="0 0 512 512">
+                <path d="M443.5 420.2L336.7 312.4c20.9-26.2 33.5-59.4 33.5-95.5 0-84.5-68.5-153-153.1-153S64 132.5 64 217s68.5 153 153.1 153c36.6 0 70.1-12.8 96.5-34.2l106.1 107.1c3.2 3.4 7.6 5.1 11.9 5.1 4.1 0 8.2-1.5 11.3-4.5 6.6-6.3 6.8-16.7.6-23.3zm-226.4-83.1c-32.1 0-62.3-12.5-85-35.2-22.7-22.7-35.2-52.9-35.2-84.9 0-32.1 12.5-62.3 35.2-84.9 22.7-22.7 52.9-35.2 85-35.2s62.3 12.5 85 35.2c22.7 22.7 35.2 52.9 35.2 84.9 0 32.1-12.5 62.3-35.2 84.9-22.7 22.7-52.9 35.2-85 35.2z"
+                />
+            </svg>
+        </a>
+    </li>
+    <!-- <li class="nav-item m-1">
+        <a class="nav-link  " id="reqpill" data-toggle="pill" href="#pills-req" role="tab" aria-controls="pills-req" aria-selected="false">Request</a>
+    </li> -->
+</ul>
+<div class="tab-content" id="actabs">
+    <div class="tab-pane fade show active" id="pills-sear" role="tabpanel">
+        <form [formGroup]="fgret" class="m-1">
+            <div class="form-group  ">
+                <div class="btn-toolbar btn-group-toggle col" id='ar' data-toggle="buttons">
+                    <div class="row col-sm m-2 justify-content-center">
+                        <input class="form-control col-6 " type="date" formControlName="dstr" placeholder="DOB (yyyy-mm-dd)">
+                        <!-- required pattern="\d{4}-\d{2}-\d{2}" -->
+                        <input type="submit" class="col-5 ml-2 btn btn-primary" value="Submit" (click)="ag('specific')">
+                    </div>
+                    <div class="btn-group col-sm m-2">
+
+                        <label class="btn btn-outline-primary" (click)="ag('today')" [ngClass]="g===true? 'item active' :'item'">
+                            <input type="radio" name="range" id="op21" autocomplete="off">
+                            <b>Today</b>
+                        </label>
+                        <label class="btn btn-outline-danger active" (click)="alret('all')" [ngClass]="g===true? 'item active' :'item'">
+                            <input type="radio" name="range" id="op1" autocomplete="off">
+                            <b>All</b>
+                        </label>
+                        <label class="btn btn-outline-success" (click)="ag('allot')" [ngClass]="g===true? 'item active' :'item'">
+                            <input type="radio" name="range" id="op21" autocomplete="off">
+                            <b>Alloted</b>
+                        </label>
+                    </div>
+                    
+                </div>
+            </div>
+        </form>
+
+        <div class="row d-flex justify-content-around m-0 p-2">
+            <div class="col-sm-5 card m-2 alert alert-info" *ngFor="let rg of rr">
+                <!-- <div class=""> -->
+                    <!-- <div class="text-center  "> -->
+                        <!-- *ngFor="let rg of r;let i=index"> -->
+                        <div class="col  p-1  text-right text-muted"  >Applied On: {{rg.at}}</div>
+                        <div class="row d-flex align-self-center  m-0 p-1">
+                            <div class="col-8  p-1  ">
+                                {{rg.name}}
+                            </div>
+                            <!-- <div class="border text-secondary"></div> -->
+                            <div class="col-4 p-1 text-end">
+                                {{rg.dob}}
+                            </div>
+                            <div class="col-6 p-1 ">
+                                {{rg.adhr}}
+                            </div>
+                            <div class="col-6 btn btn-primary rounded rounded-pill p-1 ">
+                                {{rg.phno}}
+                            </div>
+                            <!-- <div class="p-1  w-100  align-self-center"> -->
+                                <!-- <div class="col"> -->
+                                <!-- {{rg.phno}} -->
+                                <!-- </div> -->
+                            <!-- </div> -->
+
+                            <div class="col-3  p-1  ">
+                                {{rg.gen}}
+                            </div>
+                            <!-- <div class="border text-white"></div> -->
+                            <div class="col-3 p-1 ">
+                                {{rg.rel}}
+                            </div>
+                            <!-- <div class="p-1  w-100  "></div> -->
+                            
+                            <!-- <div class="border text-white"></div> -->
+                            <div class="col-6  p-1  ">
+                                {{rg.comm}} - {{rg.subcst}}
+                            </div>
+                            <!-- <div class="border text-white"></div> -->
+                            <div class="col-4  p-1  ">
+                                {{rg.tongue}}
+                            </div>
+                            <div class="col-4  p-1  ">
+                                {{rg.dgn.length==0?'-':rg.dgn}}
+                            </div>
+                            <!-- <div class="border text-white"></div> -->
+                            <div class="col-4  p-1  ">
+                                {{rg.vsmp}}
+                            </div>
+
+                            <div class="col-4 p-1 ">
+                                {{rg.fpag}}
+                            </div>
+                            <!-- <div class="border text-white"></div> -->
+                            <div class="col-4 p-1 ">
+                                {{rg.fedu}}
+                            </div>
+                            <div class="col-4 p-1  ">
+                                <!-- <div class="col"> -->
+                                {{rg.fpos}}
+                                <!-- </div> -->
+                            </div>
+                            <div class="col-4 p-1 ">
+                                {{rg.mpag}}
+                            </div>
+                            <div class="col-4 p-1 ">
+                                {{rg.medu}}
+                            </div>
+                            <div class="col-4 p-1 ">
+                                {{rg.mpos}}
+                            </div>
+                            <div class="col-6 p-1 ">
+                                {{rg.pag}}
+                            </div>
+                            <div class="col-6 p-1 ">
+                                {{rg.anin}}
+                            </div>
+                            <div class="col-12 p-1 ">
+                                {{rg.addr}}
+                            </div>
+                            <div class="col-12 p-1 ">
+                                {{rg.fpag}}
+                            </div>
+                            <div class="p-1  col-12 ">
+                                <!-- <div class="col"> -->
+                                {{rg.lsn}}
+                                <!-- </div> -->
+                            </div>
+                            <!-- <div class="border text-white"></div> -->
+                            <div class="col-6  p-1 btn btn-warning rounded rounded-pill">
+                                {{rg.cs}} - {{rg.ncs}}
+                            </div>
+                            <!-- <div class="border text-white"></div> -->
+                            <div class="col-6 p-1 ">Smart - {{rg.sma}}
+                            </div>
+                            <!-- <div class="p-1  w-100  align-self-center"></div>
+                                <div class="col  p-1  ">
+                                    {{rg.name}}
+                                </div>
+                                <div class="border text-white"></div>
+                                <div class="col p-1 ">
+                                    {{rg.phno}}
+                                </div> -->
+                        </div>
+                        <div class="col  p-1  d-flex justify-content-around" *ngIf="rg.dec=='true' else elseb">
+
+                            <button class=" btn btn-primary rounded rounded-pill w-100 m-1" type="submit" id={{rg.phno}} (click)="sign('remove',rg.phno)">
+                                <!-- <svg style="width: 24px;height: 24px" viewBox="0 0 512 512">
+                                                <path d="M376 186h-20v-40c0-55-45-100-100-100S156 91 156 146h37.998c0-34.004 28.003-62.002 62.002-62.002 34.004 0 62.002 27.998 62.002 62.002H318v40H136c-22.002 0-40 17.998-40 40v200c0 22.002 17.998 40 40 40h240c22.002 0 40-17.998 40-40V226c0-22.002-17.998-40-40-40zM256 368c-22.002 0-40-17.998-40-40s17.998-40 40-40 40 17.998 40 40-17.998 40-40 40z"
+                                                />
+                                            </svg> -->
+                                Clear
+                            </button>
+                            <button class=" btn btn-primary rounded rounded-pill w-100 m-1" type="submit" id={{rg.phno}} (click)="sign('alloted',rg.phno)">
+                                <!-- <svg style="width: 24px;height: 24px" viewBox="0 0 512 512">
+                                                <path d="M376 186h-20v-40c0-55-45-100-100-100S156 91 156 146h37.998c0-34.004 28.003-62.002 62.002-62.002 34.004 0 62.002 27.998 62.002 62.002H318v40H136c-22.002 0-40 17.998-40 40v200c0 22.002 17.998 40 40 40h240c22.002 0 40-17.998 40-40V226c0-22.002-17.998-40-40-40zM256 368c-22.002 0-40-17.998-40-40s17.998-40 40-40 40 17.998 40 40-17.998 40-40 40z"
+                                                />
+                                            </svg> -->
+                                Allot
+                            </button>
+                        </div>
+                        <ng-template #elseb>
+                            <div class="col p-1 rounded rounded-pill btn btn-success">
+                                Alloted
+                            </div>
+                        </ng-template>
+
+                    <!-- </div> -->
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+    <!-- <div class="tab-pane fade  " id="pills-req" role="tabpanel">
+       
+    </div> -->
+
+</div>
+{{ logRR() }}

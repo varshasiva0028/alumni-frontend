@@ -1,0 +1,272 @@
+<nav id="alu" class="navbar bg-secondary sticky-top  border-0" role="navigation">
+    <div class="justify-content-center">
+        <div class=" nav nav-pills  ">
+            <a class="nav-link text-white  text-center" href="#alu">
+                <b>New Admission</b>
+                <span class="sr-only">(current)</span>
+            </a>
+        </div>
+    </div>
+    <div class="">
+        <a href="#">
+            <img style="width:40px;height: 40px;" class="btn btn-light rounded-circle  align-self-center"
+                src="assets/img/icon/left.svg">
+        </a>
+    </div>
+</nav>
+
+<div class="jumbtron p-3">
+    <div class="row">
+        <div class="col card m-3 p-3">
+            <form [formGroup]="fgreg" class="">
+                <br>
+                <div class="form-group row ">
+                    <div class="col alert-danger text-center ">
+                        <h5 class="m-2">
+                            Fill the Application Form
+                        </h5>
+                    </div>
+                </div>
+                <div class="col text-danger text-center">
+                    <label>{{rshow}}</label>
+                </div>
+                <br>
+
+                <div class="form-group row">
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rname"
+                            placeholder="Name of the pupil (In Block Letters)" required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="adhr" placeholder="Aadhaar No"
+                            required>
+                    </div>
+                <!-- </div>
+
+                <div class="form-group row"> -->
+                    <div class="col-sm m-1">
+                        <input class="form-control" type="text" onfocus="(this.type='date')" formControlName="rdob"
+                            placeholder="DOB (yyyy-mm-dd)" required>
+                    </div>
+
+                    <div class="btn-group btn-group-toggle col-sm m-1" data-toggle="buttons">
+                        <!-- <label class="btn btn-outline-secondary active">
+                      <input type="radio" name="options" id="option1" autocomplete="off"> Active
+                    </label> -->
+                        <label class="btn btn-outline-primary " (click)="genp('male',$event)" (keyup)="genp('male',$event)"
+                            [ngClass]="g===true? 'item active' :'item'" name="rgen">
+                            <input type="radio" formControlName="rgen" id="option12" autocomplete="off">
+                            Male
+                        </label>
+                        <label class="btn btn-outline-primary" (click)="genp('female',$event)" (keyup)="genp('female',$event)"
+                            [ngClass]="g===true? 'item active' :'item'" name="rgen">
+                            <input type="radio" formControlName="rgen" id="option14" autocomplete="off">
+                            Female
+                        </label>
+                    </div>
+
+
+                </div>
+                <div class="form-group row">
+                    <div class="btn-toolbar btn-group-toggle col" id='gr' data-toggle="buttons">
+                        <div class="btn-group col m-2">
+                            <label class="btn btn-outline-danger " name="bldg" *ngFor="let ib of tgp" (click)="bg(ib,$event)" (keyup)="bg(ib,$event)"
+                                [ngClass]="b===true? 'item active' :'item'">
+                                <input type="radio" formControlName="bldg" id="option1" autocomplete="off">
+                                <b>{{ib}}</b>
+                            </label>
+                        </div>
+                        <div class="btn-group col m-2">
+                            <label class="btn btn-outline-danger" name="bldg" *ngFor="let ibp of tgn" (click)="bg(ibp,$event)" (keyup)="bg(ibp,$event)"
+                                [ngClass]="b===true? 'item active' :'item'">
+                                <input type="radio" formControlName="bldg" id="option0" autocomplete="off">
+                                <b>{{ibp}}</b>
+                            </label>
+                        </div>
+                        <div class="btn-group col m-2">
+                            <label class="btn btn-outline-danger" name="bldg" (click)="bg('BOG',$event)" (keyup)="bg('BOG',$event)"
+                                [ngClass]="b===true? 'item active' :'item'">
+                                <input type="radio" formControlName="bldg" id="option9" autocomplete="off">
+                                <b>Bombay O Group</b>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rrel" placeholder="Religion"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rcomm" placeholder="Community"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rsubcst" placeholder="Sub Caste"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rtongue" placeholder="Mother Tongue"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rdgn" placeholder="Disability Group Name"
+                            >
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rvsmp" placeholder="Vaccinated for Small Pox or not"
+                            required>
+                    </div>
+                </div>
+
+                <p>Family Details:</p>
+                <div class="form-group row">
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rfpag" placeholder="Father Name"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rfedu" placeholder="Father Education"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rfposition"
+                            placeholder="Father's Occupation" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rmpag" placeholder="Mother Name"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rmedu" placeholder="Mother Education"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rmposition"
+                            placeholder="Mother's Occupation" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="rpag" placeholder="Name of Guardian"
+                            >
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class=" form-control" type="text" formControlName="anin" placeholder="Annual Income"
+                            required>
+                    </div><div class="col-sm m-1"></div>
+                </div>
+                <p>Communication Details:</p>
+                <div class="form-group row">
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="raddr"
+                            placeholder="Residential Address" required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="tel" formControlName="rphno" placeholder="Phone No"
+                            minlength="10" maxlength="10" required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="remail"
+                            placeholder="Email ID" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rlsn"
+                            placeholder="Last Studied School Name" required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rcs" placeholder="Last Studied Class"
+                            required>
+                    </div>
+                    <div class="col-sm m-1">
+                        <input class="  form-control" type="text" formControlName="rncs"
+                            placeholder="Proposal for New Class" required>
+                    </div>
+
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-sm-4 m-1 card">
+                        <div class="form-group row">
+                            <div class="col text-center">
+                                <br>
+                                <h5>Do you have a SmartPhone?</h5>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+
+                            <div class="btn-group btn-group-toggle col-sm m-1"  data-toggle="buttons">
+                                <label class="btn btn-outline-primary" (click)="trf('yes',$event)" (keyup)="trf('yes',$event)"
+                                    [ngClass]="g===true? 'item active' :'item'">
+                                    <input type="radio" formControlName="rsma" name="rsma" id="option20"
+                                        autocomplete="off" active> Yes
+                                </label>
+                                <label class="btn btn-outline-primary" (click)="trf('no',$event)" (keyup)="trf('no',$event)"
+                                    [ngClass]="g===true? 'item active' :'item'">
+                                    <input type="radio" formControlName="rsma" name="rsma" id="option21"
+                                        autocomplete="off"> No
+                                </label>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-sm-8 m-4 text-center">
+                        <input type="checkbox" class="btn-outline-primary" formControlName="rdec"
+                            (click)="dec('accepted',$event)" (keyup)="dec('accepted',$event)">
+                        <br>
+                        I declare that the statement above is correct and that the pupil has not attended any other
+                        school besides
+                        those mentioned above.
+                    </div>
+                </div>
+                <!-- <div class="form-group row d-flex justify-content-center">
+                    <div class="col-sm-2 m-1">
+                        <input class=" form-control text-center" type="text" formControlName="rpoy" placeholder="Passed out year" minlength="4" maxlength="4"
+                            min="1990" max="2018" value="1990" required>
+                    </div>
+                </div> -->
+                <!-- <div class="form-group row d-flex justify-content-center">
+                    <div class="col-sm-2 m-1">
+                        <input class=" form-control text-center" type="range" formControlName="rpoy" placeholder="Passed out year" minlength="4" maxlength="4" min="1990"  max="2018" value="1990" required>
+                    </div>
+                </div> -->
+                <div class="form-group col-sm text-center ">
+                    <button type="submit" class="btn btn-success col-md-8" (click)="newadm()" data-toggle="modal"
+                        [attr.data-target]="'#'+vds">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showdialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{{msg}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>
