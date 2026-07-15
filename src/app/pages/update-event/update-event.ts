@@ -56,6 +56,10 @@ export class UpdateEventComponent implements OnInit {
   // Reactive Form
   eventForm!: FormGroup;
 
+  thumbnailFile: File | null = null;
+  chiefGuestFiles: { [index: number]: File } = {};
+  galleryFiles: { [index: number]: File } = {};
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -239,6 +243,7 @@ export class UpdateEventComponent implements OnInit {
   }
 
   onThumbnailSelected(event: any): void {
+    // Step: File selection
     const file = event.target.files[0];
     if (!file) return;
 
@@ -248,6 +253,7 @@ export class UpdateEventComponent implements OnInit {
       return;
     }
 
+    this.thumbnailFile = file;
     this.errorMessage = '';
     const reader = new FileReader();
     reader.onload = () => {
@@ -258,6 +264,7 @@ export class UpdateEventComponent implements OnInit {
   }
 
   onGuestSelected(event: any): void {
+    // Step: File selection
     const file = event.target.files[0];
     if (!file || this.selectedGuestIndex === null) return;
 
@@ -267,6 +274,7 @@ export class UpdateEventComponent implements OnInit {
       return;
     }
 
+    this.chiefGuestFiles[this.selectedGuestIndex!] = file;
     this.errorMessage = '';
     const reader = new FileReader();
     reader.onload = () => {
@@ -280,6 +288,7 @@ export class UpdateEventComponent implements OnInit {
   }
 
   onGallerySelected(event: any): void {
+    // Step: File selection
     const file = event.target.files[0];
     if (!file) return;
 
@@ -287,6 +296,13 @@ export class UpdateEventComponent implements OnInit {
       this.errorMessage = `Gallery image file "${file.name}" is invalid or exceeds 5 MB. Allowed formats: JPG, JPEG, PNG, WEBP, GIF.`;
       event.target.value = '';
       return;
+    }
+
+    if (this.selectedGalleryImageIndex !== null) {
+      this.galleryFiles[this.selectedGalleryImageIndex] = file;
+    } else {
+      const newIndex = this.galleryImagesArray.length;
+      this.galleryFiles[newIndex] = file;
     }
 
     this.errorMessage = '';
@@ -325,6 +341,18 @@ export class UpdateEventComponent implements OnInit {
     const movingControl = arr.at(event.previousIndex);
     arr.removeAt(event.previousIndex);
     arr.insert(event.currentIndex, movingControl);
+
+    const guestFilesArray: (File | undefined)[] = [];
+    for (let i = 0; i < arr.length + 1; i++) {
+      guestFilesArray.push(this.chiefGuestFiles[i]);
+    }
+    const [moved] = guestFilesArray.splice(event.previousIndex, 1);
+    guestFilesArray.splice(event.currentIndex, 0, moved);
+    
+    this.chiefGuestFiles = {};
+    guestFilesArray.forEach((f, idx) => {
+      if (f) this.chiefGuestFiles[idx] = f;
+    });
   }
 
   dropGallery(event: CdkDragDrop<any[]>): void {
@@ -335,6 +363,18 @@ export class UpdateEventComponent implements OnInit {
     const movingControl = arr.at(event.previousIndex);
     arr.removeAt(event.previousIndex);
     arr.insert(event.currentIndex, movingControl);
+
+    const galleryFilesArray: (File | undefined)[] = [];
+    for (let i = 0; i < arr.length + 1; i++) {
+      galleryFilesArray.push(this.galleryFiles[i]);
+    }
+    const [moved] = galleryFilesArray.splice(event.previousIndex, 1);
+    galleryFilesArray.splice(event.currentIndex, 0, moved);
+    
+    this.galleryFiles = {};
+    galleryFilesArray.forEach((f, idx) => {
+      if (f) this.galleryFiles[idx] = f;
+    });
   }
 
   // ===========================================
@@ -415,7 +455,7 @@ export class UpdateEventComponent implements OnInit {
   // ===========================================
   // SAVE
   // ===========================================
-  saveChanges(): void {
+  async saveChanges(): Promise<void> {
     if (this.eventForm.get('title')?.invalid) {
       this.errorMessage = 'Please enter the Event Title.';
       return;
@@ -448,6 +488,44 @@ export class UpdateEventComponent implements OnInit {
 
     this.errorMessage = '';
 
+    try {
+      console.log('--- START RESIZING EVENT IMAGES BEFORE UPLOAD ---');
+      // Step: FormData creation
+      const formData = new FormData();
+
+      // Resize Thumbnail File
+      if (this.thumbnailFile) {
+        // Step: Upload preparation
+        const blob = await this.resizeImage(this.thumbnailFile);
+        formData.append('thumbnail', blob, this.thumbnailFile.name);
+      }
+
+      // Resize Chief Guest Files
+      for (const indexStr of Object.keys(this.chiefGuestFiles)) {
+        const index = Number(indexStr);
+        const file = this.chiefGuestFiles[index];
+        if (file) {
+          // Step: Upload preparation
+          const blob = await this.resizeImage(file);
+          formData.append('chiefGuests[]', blob, file.name);
+        }
+      }
+
+      // Resize Gallery Files
+      for (const indexStr of Object.keys(this.galleryFiles)) {
+        const index = Number(indexStr);
+        const file = this.galleryFiles[index];
+        if (file) {
+          // Step: Upload preparation
+          const blob = await this.resizeImage(file);
+          formData.append('gallery[]', blob, file.name);
+        }
+      }
+      console.log('--- END RESIZING EVENT IMAGES BEFORE UPLOAD ---');
+    } catch (e) {
+      console.error('Error processing event images resizing:', e);
+    }
+
     const formValue = this.eventForm.value;
     const updatedEvent: Event = {
       ...this.event,
@@ -474,5 +552,96 @@ export class UpdateEventComponent implements OnInit {
 
     alert('Changes saved successfully!');
     this.router.navigate(['/gallery']);
+  }
+
+  resizeImage(file: File): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        img.onload = () => {
+          // Step: Canvas resize
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            return reject(new Error('Could not get 2D context'));
+          }
+
+          const originalWidth = img.width;
+          const originalHeight = img.height;
+
+          // Determine orientation and target dimensions
+          let targetWidth = 0;
+          let targetHeight = 0;
+          let orientation = '';
+
+          if (originalWidth === originalHeight) {
+            targetWidth = 798;
+            targetHeight = 798;
+            orientation = 'Square';
+          } else if (originalWidth > originalHeight) {
+            targetWidth = 798;
+            targetHeight = 532;
+            orientation = 'Landscape';
+          } else {
+            targetWidth = 532;
+            targetHeight = 798;
+            orientation = 'Portrait';
+          }
+
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+
+          // Draw the image onto the canvas
+          ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+          // Get image type/format to preserve original image format where possible
+          const type = file.type || 'image/jpeg';
+          const quality = type === 'image/jpeg' || type === 'image/jpg' ? 0.85 : undefined;
+
+          // Step: Blob conversion
+          canvas.toBlob((blob) => {
+            if (blob) {
+              // Log to console exactly as requested
+              console.log('----------------------------------------');
+              console.log('Original Image');
+              console.log('----------------------------------------');
+              console.log('File Name:', file.name);
+              console.log('Dimensions:', `${originalWidth} × ${originalHeight}`);
+              console.log('Original Size:', file.size, 'bytes');
+              console.log('----------------------------------------');
+              console.log('Resize Result');
+              console.log('----------------------------------------');
+              console.log('Orientation:', orientation);
+              console.log('Resized Dimensions:', `${targetWidth} × ${targetHeight}`);
+              console.log('Blob Size:', blob.size, 'bytes');
+              console.log('----------------------------------------');
+              console.log('Upload');
+              console.log('----------------------------------------');
+              console.log('Uploading resized Blob...');
+              console.log('File Name:', file.name);
+              console.log('Blob Size:', blob.size, 'bytes');
+
+              // Display the temporary alert exactly as requested
+              alert(
+                `Original:\n${originalWidth} × ${originalHeight}\nFile Size: ${(file.size / 1024).toFixed(2)} KB\n\n` +
+                `Resized:\n${targetWidth} × ${targetHeight}\nBlob Size: ${(blob.size / 1024).toFixed(2)} KB`
+              );
+
+              resolve(blob);
+            } else {
+              reject(new Error('Canvas toBlob conversion failed'));
+            }
+          }, type, quality);
+        };
+
+        img.onerror = (err) => reject(err);
+        img.src = e.target.result;
+      };
+
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
   }
 }

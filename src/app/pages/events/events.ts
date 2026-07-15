@@ -62,6 +62,8 @@ export class EventsComponent implements OnInit {
 
   chiefGuests: ChiefGuest[] = [];
   otherPhotos: string[] = [];
+  chiefGuestFiles: { [index: number]: File } = {};
+  otherPhotoFiles: File[] = [];
 
   // Required Event Thumbnail field (prefilled with transparent 1x1 base64 png placeholder)
   thumbnailUrl: string = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -183,6 +185,7 @@ export class EventsComponent implements OnInit {
 
   // Chief Guest Profile circular avatar photo upload trigger
   onGuestPhotoSelected(event: Event, index: number): void {
+    // Step: File selection
     this.errorMessage = '';
     const element = event.target as HTMLInputElement;
     const file = element.files?.[0];
@@ -193,6 +196,7 @@ export class EventsComponent implements OnInit {
       this.cdr.detectChanges();
       return;
     }
+    this.chiefGuestFiles[index] = file;
     const reader = new FileReader();
     reader.onload = (e: any) => {
       this.zone.run(() => {
@@ -207,6 +211,7 @@ export class EventsComponent implements OnInit {
 
   // Chief Guests Uploader (Automatically generates cards on upload)
   onChiefGuestFileChange(event: Event): void {
+    // Step: File selection
     this.errorMessage = '';
     const element = event.target as HTMLInputElement;
     const files = element.files;
@@ -218,11 +223,15 @@ export class EventsComponent implements OnInit {
     }
 
     const filesToUpload = Array.from(files).slice(0, remainingSlots);
+    let nextIndex = this.chiefGuests.length;
     for (const file of filesToUpload) {
       if (!this.validateImage(file)) {
         this.errorMessage = `Guest photo "${file.name}" is invalid or exceeds 5 MB. Allowed formats: JPG, JPEG, PNG, WEBP.`;
         continue;
       }
+
+      this.chiefGuestFiles[nextIndex] = file;
+      nextIndex++;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -247,12 +256,24 @@ export class EventsComponent implements OnInit {
   removeChiefGuest(index: number): void {
     this.chiefGuests.splice(index, 1);
     this.chiefGuests = [...this.chiefGuests];
+    delete this.chiefGuestFiles[index];
+    const newChiefGuestFiles: { [key: number]: File } = {};
+    Object.keys(this.chiefGuestFiles).forEach((keyStr) => {
+      const key = Number(keyStr);
+      if (key > index) {
+        newChiefGuestFiles[key - 1] = this.chiefGuestFiles[key];
+      } else if (key < index) {
+        newChiefGuestFiles[key] = this.chiefGuestFiles[key];
+      }
+    });
+    this.chiefGuestFiles = newChiefGuestFiles;
     this.cdr.detectChanges();
     this.errorMessage = '';
   }
 
   // Gallery Photos Multi-Uploader with limit validation & progress simulation
   onOtherPhotosFileChange(event: Event): void {
+    // Step: File selection
     this.errorMessage = '';
     const element = event.target as HTMLInputElement;
     const files = element.files;
@@ -272,6 +293,7 @@ export class EventsComponent implements OnInit {
         continue;
       }
       validFiles.push(file);
+      this.otherPhotoFiles.push(file);
     }
 
     if (validFiles.length === 0) {
@@ -318,6 +340,7 @@ export class EventsComponent implements OnInit {
   removeOtherPhoto(index: number): void {
     this.otherPhotos.splice(index, 1);
     this.otherPhotos = [...this.otherPhotos];
+    this.otherPhotoFiles.splice(index, 1);
     this.cdr.detectChanges();
   }
 
@@ -337,6 +360,11 @@ export class EventsComponent implements OnInit {
         this.otherPhotos.splice(this.draggedIndex!, 1);
         this.otherPhotos.splice(targetIndex, 0, item);
         this.otherPhotos = [...this.otherPhotos];
+
+        const fileItem = this.otherPhotoFiles[this.draggedIndex!];
+        this.otherPhotoFiles.splice(this.draggedIndex!, 1);
+        this.otherPhotoFiles.splice(targetIndex, 0, fileItem);
+
         this.cdr.detectChanges();
       });
     }
@@ -348,6 +376,8 @@ export class EventsComponent implements OnInit {
     this.customEventTitle = '';
     this.chiefGuests = [];
     this.otherPhotos = [];
+    this.chiefGuestFiles = {};
+    this.otherPhotoFiles = [];
     this.errorMessage = '';
     this.resetQuotes();
     this.cdr.detectChanges();
@@ -531,32 +561,39 @@ export class EventsComponent implements OnInit {
     const finalTitle = this.selectedEventTitle === 'Other Events' ? this.customEventTitle.trim() : this.selectedEventTitle;
 
     try {
-      // Resize Chief Guest photos asynchronously
-      const resizedGuests = await Promise.all(
-        this.chiefGuests.map(async (guest) => {
-          let resizedPhoto = guest.photoUrl;
-          if (guest.photoUrl) {
-            resizedPhoto = await this.resizeImage(guest.photoUrl);
-          }
-          return {
-            ...guest,
-            photoUrl: resizedPhoto
-          };
-        })
-      );
+      console.log('--- START RESIZING EVENT IMAGES BEFORE UPLOAD ---');
+      // Step: FormData creation
+      const formData = new FormData();
 
-      // Resize Gallery photos asynchronously
-      const resizedGallery = await Promise.all(
-        this.otherPhotos.map(async (photo) => {
-          return await this.resizeImage(photo);
-        })
-      );
+      // Resize Chief Guest files
+      for (const indexStr of Object.keys(this.chiefGuestFiles)) {
+        const index = Number(indexStr);
+        const file = this.chiefGuestFiles[index];
+        if (file) {
+          // Step: Upload preparation
+          const blob = await this.resizeImage(file);
+          formData.append('chiefGuests[]', blob, file.name);
+        }
+      }
 
+      // Resize Gallery files
+      for (let i = 0; i < this.otherPhotoFiles.length; i++) {
+        const file = this.otherPhotoFiles[i];
+        if (file) {
+          // Step: Upload preparation
+          const blob = await this.resizeImage(file);
+          formData.append('gallery[]', blob, file.name);
+        }
+      }
+      console.log('--- END RESIZING EVENT IMAGES BEFORE UPLOAD ---');
+
+      // The previews in browser ('this.chiefGuests' and 'this.otherPhotos') use the original image Base64 to preserve preview functionality.
+      // We removed the duplicate Base64 resizing call here to ensure images are only resized once.
       const payload = {
         title: finalTitle,
         quote: this.currentEventQuote,
-        chiefGuests: resizedGuests,
-        gallery: resizedGallery
+        chiefGuests: this.chiefGuests,
+        gallery: this.otherPhotos
       };
 
       console.log('Saved Event Details:', payload);
@@ -570,56 +607,94 @@ export class EventsComponent implements OnInit {
     }
   }
 
-  resizeImage(base64Str: string): Promise<string> {
+  resizeImage(file: File): Promise<Blob> {
     return new Promise((resolve, reject) => {
-      if (!base64Str || !base64Str.startsWith('data:')) {
-        return resolve(base64Str);
-      }
-
       const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          return reject(new Error('Could not get canvas 2D context'));
-        }
+      const reader = new FileReader();
 
-        const w = img.width;
-        const h = img.height;
+      reader.onload = (e: any) => {
+        img.onload = () => {
+          // Step: Canvas resize
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            return reject(new Error('Could not get 2D context'));
+          }
 
-        let targetWidth = 0;
-        let targetHeight = 0;
+          const originalWidth = img.width;
+          const originalHeight = img.height;
 
-        if (w >= h) {
-          targetWidth = 798;
-          targetHeight = 532;
-        } else {
-          targetWidth = 532;
-          targetHeight = 798;
-        }
+          // Determine orientation and target dimensions
+          let targetWidth = 0;
+          let targetHeight = 0;
+          let orientation = '';
 
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
+          if (originalWidth === originalHeight) {
+            targetWidth = 798;
+            targetHeight = 798;
+            orientation = 'Square';
+          } else if (originalWidth > originalHeight) {
+            targetWidth = 798;
+            targetHeight = 532;
+            orientation = 'Landscape';
+          } else {
+            targetWidth = 532;
+            targetHeight = 798;
+            orientation = 'Portrait';
+          }
 
-        // Draw image stretched to output size
-        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
 
-        // Detect mimeType to preserve JPEG/PNG formats
-        let mimeType = 'image/jpeg';
-        const match = base64Str.match(/data:([^;]+);/);
-        if (match && match[1]) {
-          mimeType = match[1];
-        }
+          // Draw the image onto the canvas
+          ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
-        const resizedDataUrl = canvas.toDataURL(mimeType);
-        resolve(resizedDataUrl);
+          // Get image type/format to preserve original image format where possible
+          const type = file.type || 'image/jpeg';
+          const quality = type === 'image/jpeg' || type === 'image/jpg' ? 0.85 : undefined;
+
+          // Step: Blob conversion
+          canvas.toBlob((blob) => {
+            if (blob) {
+              // Log to console exactly as requested
+              console.log('----------------------------------------');
+              console.log('Original Image');
+              console.log('----------------------------------------');
+              console.log('File Name:', file.name);
+              console.log('Dimensions:', `${originalWidth} × ${originalHeight}`);
+              console.log('Original Size:', file.size, 'bytes');
+              console.log('----------------------------------------');
+              console.log('Resize Result');
+              console.log('----------------------------------------');
+              console.log('Orientation:', orientation);
+              console.log('Resized Dimensions:', `${targetWidth} × ${targetHeight}`);
+              console.log('Blob Size:', blob.size, 'bytes');
+              console.log('----------------------------------------');
+              console.log('Upload');
+              console.log('----------------------------------------');
+              console.log('Uploading resized Blob...');
+              console.log('File Name:', file.name);
+              console.log('Blob Size:', blob.size, 'bytes');
+
+              // Display the temporary alert exactly as requested
+              alert(
+                `Original:\n${originalWidth} × ${originalHeight}\nFile Size: ${(file.size / 1024).toFixed(2)} KB\n\n` +
+                `Resized:\n${targetWidth} × ${targetHeight}\nBlob Size: ${(blob.size / 1024).toFixed(2)} KB`
+              );
+
+              resolve(blob);
+            } else {
+              reject(new Error('Canvas toBlob conversion failed'));
+            }
+          }, type, quality);
+        };
+
+        img.onerror = (err) => reject(err);
+        img.src = e.target.result;
       };
 
-      img.onerror = (err) => {
-        reject(err);
-      };
-
-      img.src = base64Str;
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
     });
   }
 }
